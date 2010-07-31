@@ -4,9 +4,11 @@
  */
 package com.unknown.entity;
 
+import com.vaadin.data.Item;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,12 +18,15 @@ import java.util.List;
  *
  * @author bobo
  */
-public class DKPList extends VerticalLayout {
+public class DKPList extends Table {
 
     private CharacherDAO characherDAO;
 
     public DKPList(CharacherDAO characherDAO) {
 	this.characherDAO = characherDAO;
+	addContainerProperty("Name", String.class, "");
+	addContainerProperty("DKP", Double.class, 0);
+
     }
 
     public void printList() {
@@ -34,7 +39,9 @@ public class DKPList extends VerticalLayout {
 	    }
 	});
 	for (User user : users) {
-	    addComponent(new Label(user.toString()+":"+user.getDKP()));
+	    Item addItem = addItem(user);
+	    addItem.getItemProperty("Name").setValue(user.getUsername());
+	    addItem.getItemProperty("DKP").setValue(user.getDKP());
 	}
     }
 }

@@ -34,18 +34,23 @@ public class RealDB implements CharacherDAO {
 
     @Override
     public List<User> getUsers() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(RealDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Connection c = null;
         List<User> users = new ArrayList<User>();
         try {
             c = connect();
-            PreparedStatement p = c.prepareStatement("SELECT * FROM characters JOIN character_classes USING(id)");
+            PreparedStatement p = c.prepareStatement("SELECT * FROM characters JOIN character_classes ON characters.character_class_id=character_classes.id");
             ResultSet rs = p.executeQuery();
             Object[] rows;
             while (rs.next()) {
                 Role role = Role.valueOf(rs.getString("character_classes.name"));
                 users.add(new User(rs.getString("characters.name"),role,rs.getBoolean("characters.active")));
             }
-        } catch (SQLException e) {
+        } catch (SQLException e) {e.printStackTrace();
         } finally {
             if (c != null) {
                 try {

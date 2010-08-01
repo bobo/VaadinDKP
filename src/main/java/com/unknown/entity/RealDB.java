@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  */
 public class RealDB implements CharacherDAO {
 
-        public Connection connect() throws SQLException {
+        private Connection connect() throws SQLException {
         String userName = "root", userPassword = "piccolo", databaseURL = "jdbc:mysql://unknown-entity.com:3306/dkp";
         Connection conn = null;
         conn = DriverManager.getConnection(databaseURL, userName, userPassword);
@@ -50,8 +50,7 @@ public class RealDB implements CharacherDAO {
                 Role role = Role.valueOf(rs.getString("character_classes.name"));
                 users.add(new User(rs.getString("characters.name"),role,rs.getBoolean("characters.active")));
             }
-        } catch (SQLException e) {e.printStackTrace();
-        } finally {
+        } catch (SQLException e) {} finally {
             if (c != null) {
                 try {
                     c.close();

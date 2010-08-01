@@ -16,11 +16,7 @@
 package com.unknown.entity;
 
 import com.vaadin.Application;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
-import java.util.Date;
 
 /**
  * The Application's "main" class
@@ -35,12 +31,12 @@ public class MyVaadinApplication extends Application
     {
         window = new Window("My Vaadin Application");
 
-	CharacherDAO characherDAO = new RealDB();
-	Charachters charachters = new Charachters(characherDAO);
+	CharacterDAO characterDAO = new RealDB();
+	Characters charachters = new Characters(characterDAO);
 	window.addComponent(charachters);
 	charachters.printList();
 	setMainWindow(window);
-	DKPList dKPList = new DKPList(characherDAO);
+	DKPList dKPList = new DKPList(characterDAO);
 	window.addComponent(dKPList);
 	dKPList.printList();
 	

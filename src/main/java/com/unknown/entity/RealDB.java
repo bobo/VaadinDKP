@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,7 +22,7 @@ import java.util.logging.Logger;
  *
  * @author alde
  */
-public class RealDB implements CharacherDAO {
+public class RealDB implements CharacterDAO {
 
         private Connection connect() throws SQLException {
         String userName = "root", userPassword = "piccolo", databaseURL = "jdbc:mysql://unknown-entity.com:3306/dkp";
@@ -56,7 +55,7 @@ public class RealDB implements CharacherDAO {
                // dessa ska läggas ihop...
                     
                 }
-                Role role = Role.valueOf(rs.getString("character_classes.name"));
+                Role role = Role.valueOf(rs.getString("character_classes.name").replace(" ", ""));
                 users.add(new User(rs.getString("characters.name"),role,rs.getBoolean("characters.active")));
             }
 

@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author bobo
  */
-public class FakeDB implements CharacherDAO {
+public class FakeDB implements CharacterDAO {
 
     @Override
     public List<User> getUsers() {

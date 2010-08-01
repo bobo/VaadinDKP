@@ -23,7 +23,7 @@ private final User user;
 
 
     public void printInfo() {
-	addComponent(new Label("Charachter information"));
+	addComponent(new Label("Character information"));
 	addComponent(new Label("Name: "+user.getUsername()));
         addComponent(new Label("Class: "+user.getRole().toString()));
 	addComponent(new Label("Status: "+(user.isActive() ? "Active" : "Inactive")));

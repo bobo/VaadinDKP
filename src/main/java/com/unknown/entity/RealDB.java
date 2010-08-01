@@ -45,11 +45,21 @@ public class RealDB implements CharacherDAO {
             c = connect();
             PreparedStatement p = c.prepareStatement("SELECT * FROM characters JOIN character_classes ON characters.character_class_id=character_classes.id");
             ResultSet rs = p.executeQuery();
-            Object[] rows;
+
+            PreparedStatement ps = c.prepareStatement("SELECT * FROM character_rewards JOIN characters WHERE character_rewards.character_id=characters.id");
+            ResultSet rss = ps.executeQuery();
+
             while (rs.next()) {
+                while (rss.next()) {
+               // lägga ihop shares...
+               // character.id -> character_rewards.character_id -> character_rewards.rewards_id -> rewards.id -> rewards.number_of_shares
+               // dessa ska läggas ihop...
+                    
+                }
                 Role role = Role.valueOf(rs.getString("character_classes.name"));
                 users.add(new User(rs.getString("characters.name"),role,rs.getBoolean("characters.active")));
             }
+
         } catch (SQLException e) {} finally {
             if (c != null) {
                 try {

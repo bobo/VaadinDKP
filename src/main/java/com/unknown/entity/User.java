@@ -20,7 +20,7 @@ public class User {
     public User(String username, Role role, boolean active) {
 	this.username = username;
 	this.role = role;
-	this.shares = shares;
+	this.shares = 0;
 	this.dkp = dkp;
         this.active = active;
     }	
@@ -28,6 +28,10 @@ public class User {
     public int getShares() {
 	return shares;
     }
+    public void setShares(int x) {
+        shares = x;
+    }
+
     public void inactivate() {
 	active=false;
     }

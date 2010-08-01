@@ -35,7 +35,7 @@ public class MyVaadinApplication extends Application
     {
         window = new Window("My Vaadin Application");
 
-	CharacherDAO characherDAO = new FakeDB();
+	CharacherDAO characherDAO = new RealDB();
 	Charachters charachters = new Charachters(characherDAO);
 	window.addComponent(charachters);
 	charachters.printList();

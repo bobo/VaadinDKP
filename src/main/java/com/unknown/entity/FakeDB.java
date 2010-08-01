@@ -20,14 +20,14 @@ public class FakeDB implements CharacherDAO {
     @Override
     public List<User> getUsers() {
     return Arrays.asList(
-	    new User("nils", Role.rogue,0, 100),
-	    new User("kalle", Role.druid,10,4),
-    	    new User("kalle2", Role.druid,100,56),
-    	    new User("kalle3", Role.mage,45,12),
-    	    new User("kalle4", Role.warrior,46,453),
-    	    new User("kalle5", Role.paladin,9876,1));
-    }
-
+//	    new User("nils", Role.rogue,0, 100),
+//	    new User("kalle", Role.druid,10,4),
+//    	    new User("kalle2", Role.druid,100,56),
+//    	    new User("kalle3", Role.mage,45,12),
+//    	    new User("kalle4", Role.warrior,46,453),
+//    	    new User("kalle5", Role.paladin,9876,1));
+    );
+}
     @Override
     public Collection<User> getUsersWithRole(final Role role) {
     return Collections2.filter(getUsers(), new HasRolePredicate(role));

@@ -12,9 +12,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -32,23 +35,28 @@ public class RealDB implements CharacherDAO {
     @Override
     public List<User> getUsers() {
         Connection c = null;
+        List<User> users = new ArrayList<User>();
         try {
             c = connect();
-            PreparedStatement p = c.prepareStatement("SELECT * FROM characters");
+            PreparedStatement p = c.prepareStatement("SELECT * FROM characters JOIN character_classes USING(id)");
             ResultSet rs = p.executeQuery();
             Object[] rows;
             while (rs.next()) {
-                rows = new Object[]{rs.getString(1), rs.getInt(2), rs.getInt(3)};
-                Arrays.asList(rows);
+                Role role = Role.valueOf(rs.getString("character_classes.name"));
+                users.add(new User(rs.getString("characters.name"),role,rs.getBoolean("characters.active")));
             }
         } catch (SQLException e) {
         } finally {
             if (c != null) {
-                c.close();
+                try {
+                    c.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(RealDB.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         
-    return Arrays.asList();
+    return users;
     }
 
     @Override

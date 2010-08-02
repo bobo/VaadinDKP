@@ -16,7 +16,9 @@
 package com.unknown.entity;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
 /**
@@ -33,11 +35,14 @@ public class UnknownEntityDKP extends Application
         window = new Window("Unknown Entity DKP");
 //        window.setTheme("ue");
         ItemDAO itemDAO = new ItemDB();
+        HorizontalLayout hzChar = new HorizontalLayout();
 	CharacterDAO characterDAO = new CharacterDB();
 	Characters charachters = new Characters(characterDAO);
-	window.addComponent(charachters);
+	hzChar.addComponent(charachters);
 	charachters.printList();
-	setMainWindow(window);
+	window.addComponent(hzChar);
+        setMainWindow(window);
+
         HorizontalLayout hzl = new HorizontalLayout();
         window.addComponent(hzl);
         hzl.setSpacing(true);
@@ -47,7 +52,6 @@ public class UnknownEntityDKP extends Application
 	ItemList itemList = new ItemList(itemDAO);
         hzl.addComponent(itemList);
         itemList.printList();
-
     }
     
 }

@@ -4,8 +4,12 @@
  */
 package com.unknown.entity;
 
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.FileResource;
+import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -56,7 +60,18 @@ public class Characters extends HorizontalLayout {
             if (foo.equalsIgnoreCase("DeathKnight")) { foo = "Death Knight"; }
             Label label = new Label(foo);       */
             Label label = new Label(r.toString());
-            roleList.addComponent(label);
+            String foo = "";
+            if (r.toString().equals("DeathKnight")) {
+                foo = "dk";
+            } else if (r.toString().equals("Paladin")) {
+                foo = "pala";
+            } else {
+                foo = r.toString();
+            }
+
+            Embedded e = new Embedded("", new ExternalResource("http://www.unknown-entity.com/images/classes/"+foo.toLowerCase()+".png"));
+            roleList.addComponent(e);
+//            roleList.addComponent(label);
             addUsersForRole(r, roleList);
         }
     }
@@ -64,8 +79,9 @@ public class Characters extends HorizontalLayout {
     private void addUsersForRole(Role r, VerticalLayout roleList) {
         for (final User user : characterDAO.getUsersWithRole(r)) {
             final Button userBtn = new Button(user.toString());
-
+            userBtn.setStyleName(Button.STYLE_LINK);
             userBtn.addListener(new Button.ClickListener() {
+
 
                 @Override
                 public void buttonClick(ClickEvent event) {

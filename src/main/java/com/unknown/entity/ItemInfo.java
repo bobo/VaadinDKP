@@ -40,6 +40,7 @@ public class ItemInfo extends Window{
         gl.addComponent(new Label("WowID: "), 0, 1);
 //        gl.addComponent(new Label(""+item.getWowID()), 1, 1);
         final Button wowIdBtn = new Button(""+item.getWowID());
+            wowIdBtn.setStyleName(Button.STYLE_LINK);
             wowIdBtn.addListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
@@ -50,6 +51,7 @@ public class ItemInfo extends Window{
         gl.addComponent(wowIdBtn, 1, 1);
 //        gl.addComponent(new Button(""+item.getWowID_hc()), 1, 1);
         final Button wowIdBtnhc = new Button(""+item.getWowID_hc());
+            wowIdBtnhc.setStyleName(Button.STYLE_LINK);
             wowIdBtnhc.addListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {

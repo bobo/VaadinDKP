@@ -16,6 +16,7 @@
 package com.unknown.entity;
 
 import com.vaadin.Application;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Window;
 
 /**
@@ -30,16 +31,20 @@ public class MyVaadinApplication extends Application
     public void init()
     {
         window = new Window("My Vaadin Application");
-
+        ItemDAO itemDAO = new ItemDB();
 	CharacterDAO characterDAO = new RealDB();
 	Characters charachters = new Characters(characterDAO);
 	window.addComponent(charachters);
 	charachters.printList();
 	setMainWindow(window);
+        HorizontalLayout hzl = new HorizontalLayout();
+        window.addComponent(hzl);
 	DKPList dKPList = new DKPList(characterDAO);
 	window.addComponent(dKPList);
 	dKPList.printList();
-	
+	ItemList itemList = new ItemList(itemDAO);
+        window.addComponent(itemList);
+        itemList.printList();
 
     }
     

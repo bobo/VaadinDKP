@@ -43,7 +43,7 @@ public class ItemDB implements ItemDAO {
             PreparedStatement p = c.prepareStatement("SELECT * FROM items");
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
-                items.add(new Items(rs.getString("name"), rs.getInt("wowid_normal"), rs.getDouble("price_normal"), rs.getInt("wowid_heroic"), rs.getDouble("price_heroic"), rs.getString("slot"), rs.getString("type")));
+                items.add(new Items(rs.getString("name"), rs.getInt("wowid_normal"), rs.getDouble("price_normal"), rs.getInt("wowid_heroic"), rs.getDouble("price_heroic"), rs.getString("slot"), rs.getString("type"), rs.getBoolean("isLegendary")));
             }
         } catch(SQLException e) {}
         return items;

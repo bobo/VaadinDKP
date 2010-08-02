@@ -15,3 +15,12 @@ root {
     display: block;
 }
 
+.item-table legendary-item-color {
+    color: orange;
+    font-weight: bold;
+}
+
+.item-table epic-item-color {
+    color: purple;
+    font-weight: bold;
+}

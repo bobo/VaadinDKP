@@ -31,6 +31,7 @@ public class UnknownEntityDKP extends Application
     public void init()
     {
         window = new Window("Unknown Entity DKP");
+//        window.setTheme("ue");
         ItemDAO itemDAO = new ItemDB();
 	CharacterDAO characterDAO = new CharacterDB();
 	Characters charachters = new Characters(characterDAO);

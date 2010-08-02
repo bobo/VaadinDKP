@@ -18,8 +18,9 @@ public class Items {
     private String type;
     private int wowid_hc;
     private double price_hc;
+    private boolean isLegendary = false;
 
-    public Items(String itemname, int wowid, double price, int wowid_hc, double price_hc, String slot, String type) {
+    public Items(String itemname, int wowid, double price, int wowid_hc, double price_hc, String slot, String type, boolean isLegendary) {
             this.itemname = itemname;
             this.wowid = wowid;
             this.price = price;
@@ -27,6 +28,7 @@ public class Items {
             this.price_hc = price_hc;
             this.slot = slot;
             this.type = type;
+            this.isLegendary = isLegendary;
     }
 
     public String getName() {
@@ -49,5 +51,8 @@ public class Items {
     }
     public String getType() {
         return type;
+    }
+    public boolean isLegendary() {
+        return isLegendary;
     }
 }

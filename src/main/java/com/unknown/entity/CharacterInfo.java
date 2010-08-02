@@ -29,14 +29,14 @@ private final User user;
 
 	addComponent(new Label("DKP"));
 	GridLayout dkpGrid = new GridLayout(2, 4);
-	dkpGrid.addComponent(new Label("Shares"), 0, 0);
-	dkpGrid.addComponent(new Label("DKP Earned"), 0, 1);
-	dkpGrid.addComponent(new Label("DKP Spent"), 0, 2);
-	dkpGrid.addComponent(new Label("DKP Left"), 0, 3);
+	dkpGrid.addComponent(new Label("Shares: "), 0, 0);
+	dkpGrid.addComponent(new Label("DKP Earned: "), 0, 1);
+	dkpGrid.addComponent(new Label("DKP Spent: "), 0, 2);
+	dkpGrid.addComponent(new Label("DKP: "), 0, 3);
 
 	dkpGrid.addComponent(new Label(""+user.getShares()), 1, 0);
-	dkpGrid.addComponent(new Label(""+user.getDKP()), 1, 1);
-	dkpGrid.addComponent(new Label(""+user.getDKP()), 1, 2);
+	dkpGrid.addComponent(new Label(""+user.getDKPEarned()), 1, 1);
+	dkpGrid.addComponent(new Label(""+user.getDKPSpent()), 1, 2);
 	dkpGrid.addComponent(new Label(""+user.getDKP()), 1, 3);
 	addComponent(dkpGrid);
 

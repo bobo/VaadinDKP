@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.unknown.entity;
 
 import com.google.common.base.Predicate;
@@ -24,7 +23,7 @@ import java.util.logging.Logger;
  */
 public class RealDB implements CharacterDAO {
 
-        private Connection connect() throws SQLException {
+    private Connection connect() throws SQLException {
         String userName = "root", userPassword = "piccolo", databaseURL = "jdbc:mysql://unknown-entity.com:3306/dkp";
         Connection conn = null;
         conn = DriverManager.getConnection(databaseURL, userName, userPassword);
@@ -43,28 +42,47 @@ public class RealDB implements CharacterDAO {
         try {
             c = connect();
             PreparedStatement p = c.prepareStatement("SELECT * FROM characters JOIN character_classes ON characters.character_class_id=character_classes.id");
+            PreparedStatement ps = c.prepareStatement("SELECT * FROM rewards JOIN character_rewards JOIN characters WHERE character_rewards.reward_id=rewards.id AND characters.id=?");
+            PreparedStatement ploot = c.prepareStatement("SELECT * FROM loots JOIN characters where loots.character_id=characters.id");
+
             ResultSet rs = p.executeQuery();
 
-            PreparedStatement ps = c.prepareStatement("SELECT * FROM rewards JOIN character_rewards JOIN characters WHERE character_rewards.reward_id=rewards.id AND characters.id=?");
             while (rs.next()) {
                 int shares = 0;
+                double dkp_earned = 0.0;
+                double dkp_spent = 0.0;
+                double dkp = 0.0;
+                double loot_value = 0.0;
+                double share_value = 0.0;
                 ps.setInt(1, rs.getInt("characters.id"));
                 ResultSet rss = ps.executeQuery();
-
+//                ploot.setInt(1, rs.getInt("characters.id"));
+                ResultSet rsloot = ploot.executeQuery();
+                while (rsloot.next()) {
+                    if (rsloot.getInt("loots.character_id") == rs.getInt("characters.id")) {
+                        dkp_spent = dkp_spent + rsloot.getDouble("loots.price");
+                        System.out.println("kesther: "+dkp_spent);
+                    }
+                    loot_value = loot_value + rsloot.getDouble("loots.price");
+                    System.out.println("total loot: " + loot_value);
+                }
                 while (rss.next()) {
-               // lägga ihop shares...
-               // character.id -> character_rewards.character_id -> character_rewards.rewards_id -> rewards.id -> rewards.number_of_shares
-               // dessa ska läggas ihop...
                     if (rs.getInt("characters.id") == rss.getInt("character_rewards.character_id")) {
-                        shares = shares+rss.getInt("rewards.number_of_shares");
-                        
+                        shares = shares + rss.getInt("rewards.number_of_shares");
                     }
                 }
+                if (shares != 0) {
+                    share_value = loot_value / shares;
+                }
+                dkp_earned = shares * share_value;
+                dkp = dkp_earned - dkp_spent;
                 Role role = Role.valueOf(rs.getString("character_classes.name").replace(" ", ""));
-                users.add(new User(rs.getString("characters.name"),role,rs.getBoolean("characters.active"),shares));
+                users.add(new User(rs.getString("characters.name"), role, rs.getBoolean("characters.active"), shares, dkp_earned, dkp_spent, dkp));
             }
 
-        } catch (SQLException e) {} finally {
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             if (c != null) {
                 try {
                     c.close();
@@ -73,27 +91,26 @@ public class RealDB implements CharacterDAO {
                 }
             }
         }
-        
-    return users;
+
+        return users;
     }
 
     @Override
     public Collection<User> getUsersWithRole(final Role role) {
-    return Collections2.filter(getUsers(), new HasRolePredicate(role));
+        return Collections2.filter(getUsers(), new HasRolePredicate(role));
     }
 
     private static class HasRolePredicate implements Predicate<User> {
 
-	private final Role role;
+        private final Role role;
 
-	public HasRolePredicate(Role role) {
-	    this.role = role;
-	}
+        public HasRolePredicate(Role role) {
+            this.role = role;
+        }
 
-	@Override
-	public boolean apply(User user) {
-	    return user.getRole().equals(role);
-	}
+        @Override
+        public boolean apply(User user) {
+            return user.getRole().equals(role);
+        }
     }
-
 }

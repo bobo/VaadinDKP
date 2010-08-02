@@ -4,15 +4,11 @@
  */
 package com.unknown.entity;
 
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.FileResource;
-import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,19 +53,6 @@ public class Characters extends HorizontalLayout {
         for (Role r : roles) {
             VerticalLayout roleList = new VerticalLayout();
             addComponent(roleList);
-            /*            String foo = r.toString();
-            if (foo.equalsIgnoreCase("DeathKnight")) { foo = "Death Knight"; }
-            Label label = new Label(foo);       */
-            Label label = new Label(r.toString());
-            String foo = "";
-            if (r.toString().equals("DeathKnight")) {
-                foo = "dk";
-            } else if (r.toString().equals("Paladin")) {
-                foo = "pala";
-            } else {
-                foo = r.toString();
-            }
-
             Embedded e = new Embedded("", new ThemeResource("../ue/img/"+r.toString().toLowerCase()+".png"));
             roleList.addComponent(e);
             addUsersForRole(r, roleList);
@@ -81,7 +64,6 @@ public class Characters extends HorizontalLayout {
             final Button userBtn = new Button(user.toString());
             userBtn.setStyleName(Button.STYLE_LINK);
             userBtn.addListener(new Button.ClickListener() {
-
 
                 @Override
                 public void buttonClick(ClickEvent event) {

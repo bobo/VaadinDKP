@@ -56,7 +56,6 @@ public class CharacterDB implements CharacterDAO {
                 double share_value = 0.0;
                 ps.setInt(1, rs.getInt("characters.id"));
                 ResultSet rss = ps.executeQuery();
-//                ploot.setInt(1, rs.getInt("characters.id"));
                 ResultSet rsloot = ploot.executeQuery();
                 while (rsloot.next()) {
                     if (rsloot.getInt("loots.character_id") == rs.getInt("characters.id")) {

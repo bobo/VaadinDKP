@@ -16,9 +16,7 @@
 package com.unknown.entity;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
 /**

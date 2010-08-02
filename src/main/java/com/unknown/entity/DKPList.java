@@ -7,7 +7,6 @@ package com.unknown.entity;
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import java.util.Collections;
 import java.util.Comparator;

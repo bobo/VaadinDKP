@@ -48,8 +48,18 @@ public class ItemInfo extends Window{
                 }
             });
         gl.addComponent(wowIdBtn, 1, 1);
-//        gl.addComponent(new Label(""+item.getWowID_hc()), 2, 1);
-        gl.addComponent(new Button(""+item.getWowID_hc()), 1, 1);
+        gl.addComponent(new Label(""+item.getWowID_hc()), 2, 1);
+//        gl.addComponent(new Button(""+item.getWowID_hc()), 1, 1);
+        final Button wowIdBtnhc = new Button(""+item.getWowID_hc());
+            wowIdBtnhc.addListener(new Button.ClickListener() {
+                @Override
+                public void buttonClick(ClickEvent event) {
+                    String url= "http://www.wowhead.com/item="+item.getWowID_hc();
+                    getWindow().open(new ExternalResource(url), "_blank");
+                }
+            });
+        gl.addComponent(wowIdBtnhc, 1, 2);
+
         gl.addComponent(new Label("Price: "), 0, 2);
         gl.addComponent(new Label(""+item.getPrice()), 1, 2);
         gl.addComponent(new Label(""+item.getPrice_hc()), 2, 2);

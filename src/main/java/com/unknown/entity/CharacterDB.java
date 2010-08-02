@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author alde
  */
-public class RealDB implements CharacterDAO {
+public class CharacterDB implements CharacterDAO {
 
     private Connection connect() throws SQLException {
         String userName = "root", userPassword = "piccolo", databaseURL = "jdbc:mysql://unknown-entity.com:3306/dkp";
@@ -35,7 +35,7 @@ public class RealDB implements CharacterDAO {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(RealDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         Connection c = null;
         List<User> users = new ArrayList<User>();
@@ -87,7 +87,7 @@ public class RealDB implements CharacterDAO {
                 try {
                     c.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(RealDB.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

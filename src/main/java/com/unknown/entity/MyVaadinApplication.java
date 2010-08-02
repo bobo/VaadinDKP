@@ -32,18 +32,19 @@ public class MyVaadinApplication extends Application
     {
         window = new Window("My Vaadin Application");
         ItemDAO itemDAO = new ItemDB();
-	CharacterDAO characterDAO = new RealDB();
+	CharacterDAO characterDAO = new CharacterDB();
 	Characters charachters = new Characters(characterDAO);
 	window.addComponent(charachters);
 	charachters.printList();
 	setMainWindow(window);
         HorizontalLayout hzl = new HorizontalLayout();
         window.addComponent(hzl);
+        hzl.setSpacing(true);
 	DKPList dKPList = new DKPList(characterDAO);
-	window.addComponent(dKPList);
+	hzl.addComponent(dKPList);
 	dKPList.printList();
 	ItemList itemList = new ItemList(itemDAO);
-        window.addComponent(itemList);
+        hzl.addComponent(itemList);
         itemList.printList();
 
     }

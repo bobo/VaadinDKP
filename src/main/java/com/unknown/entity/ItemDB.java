@@ -34,7 +34,7 @@ public class ItemDB implements ItemDAO {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(RealDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         Connection c = null;
         List<Items> items = new ArrayList<Items>();

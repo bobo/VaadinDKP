@@ -12,7 +12,7 @@
         <init-param>
             <description>Vaadin application class to start</description>
             <param-name>application</param-name>
-            <param-value>com.unknown.entity.MyVaadinApplication</param-value>
+            <param-value>com.unknown.entity.UnknownEntityDKP</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

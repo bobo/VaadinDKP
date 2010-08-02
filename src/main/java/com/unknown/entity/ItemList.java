@@ -9,8 +9,7 @@ import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Table;
-import java.util.Collections;
-import java.util.Comparator;
+import java.awt.Color;
 import java.util.List;
 
 /**
@@ -48,10 +47,10 @@ public class ItemList extends Table {
     }
 
     public void printList() {
-    List<Items> items = itemDAO.getItems();
+    List<Items> itemses = itemDAO.getItems();
 //	Collections.sort(items);
 
-	for (final Items item : items) {
+	for (final Items item : itemses) {
 	    Item addItem = addItem(item);
 	    addItem.getItemProperty("Name").setValue(item.getName());
 //	    addItem.getItemProperty("WowID (N)").setValue(item.getWowID());

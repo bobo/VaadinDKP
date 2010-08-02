@@ -61,10 +61,8 @@ public class CharacterDB implements CharacterDAO {
                 while (rsloot.next()) {
                     if (rsloot.getInt("loots.character_id") == rs.getInt("characters.id")) {
                         dkp_spent = dkp_spent + rsloot.getDouble("loots.price");
-                        System.out.println("kesther: "+dkp_spent);
                     }
                     loot_value = loot_value + rsloot.getDouble("loots.price");
-                    System.out.println("total loot: " + loot_value);
                 }
                 while (rss.next()) {
                     if (rs.getInt("characters.id") == rss.getInt("character_rewards.character_id")) {

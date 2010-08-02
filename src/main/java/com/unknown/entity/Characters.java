@@ -7,6 +7,7 @@ package com.unknown.entity;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.FileResource;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
@@ -69,9 +70,8 @@ public class Characters extends HorizontalLayout {
                 foo = r.toString();
             }
 
-            Embedded e = new Embedded("", new ExternalResource("http://www.unknown-entity.com/images/classes/"+foo.toLowerCase()+".png"));
+            Embedded e = new Embedded("", new ThemeResource("../ue/img/"+r.toString().toLowerCase()+".png"));
             roleList.addComponent(e);
-//            roleList.addComponent(label);
             addUsersForRole(r, roleList);
         }
     }

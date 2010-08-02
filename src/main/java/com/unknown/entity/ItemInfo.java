@@ -35,8 +35,8 @@ public class ItemInfo extends Window{
 
         GridLayout gl = new GridLayout(3, 3);
         gl.setSpacing(true);
-        gl.addComponent(new Label("Normal"), 1, 0);
-        gl.addComponent(new Label("Heroic"), 2, 0);
+        gl.addComponent(new Label("Normal "), 1, 0);
+        gl.addComponent(new Label("Heroic "), 2, 0);
         gl.addComponent(new Label("WowID: "), 0, 1);
 //        gl.addComponent(new Label(""+item.getWowID()), 1, 1);
         final Button wowIdBtn = new Button(""+item.getWowID());

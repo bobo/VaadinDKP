@@ -17,10 +17,10 @@ public class User {
     private double  dkp;
     private boolean active = true;
 
-    public User(String username, Role role, boolean active) {
+    public User(String username, Role role, boolean active, int shares) {
 	this.username = username;
 	this.role = role;
-	this.shares = 0;
+	this.shares = shares;
 	this.dkp = dkp;
         this.active = active;
     }	

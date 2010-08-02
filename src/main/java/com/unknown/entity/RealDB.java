@@ -45,18 +45,23 @@ public class RealDB implements CharacterDAO {
             PreparedStatement p = c.prepareStatement("SELECT * FROM characters JOIN character_classes ON characters.character_class_id=character_classes.id");
             ResultSet rs = p.executeQuery();
 
-            PreparedStatement ps = c.prepareStatement("SELECT * FROM character_rewards JOIN characters WHERE character_rewards.character_id=characters.id");
-            ResultSet rss = ps.executeQuery();
-
+            PreparedStatement ps = c.prepareStatement("SELECT * FROM rewards JOIN character_rewards JOIN characters WHERE character_rewards.reward_id=rewards.id AND characters.id=?");
             while (rs.next()) {
+                int shares = 0;
+                ps.setInt(1, rs.getInt("characters.id"));
+                ResultSet rss = ps.executeQuery();
+
                 while (rss.next()) {
                // lägga ihop shares...
                // character.id -> character_rewards.character_id -> character_rewards.rewards_id -> rewards.id -> rewards.number_of_shares
                // dessa ska läggas ihop...
-                    
+                    if (rs.getInt("characters.id") == rss.getInt("character_rewards.character_id")) {
+                        shares = shares+rss.getInt("rewards.number_of_shares");
+                        
+                    }
                 }
                 Role role = Role.valueOf(rs.getString("character_classes.name").replace(" ", ""));
-                users.add(new User(rs.getString("characters.name"),role,rs.getBoolean("characters.active")));
+                users.add(new User(rs.getString("characters.name"),role,rs.getBoolean("characters.active"),shares));
             }
 
         } catch (SQLException e) {} finally {

@@ -12,19 +12,21 @@ package com.unknown.entity;
 public class Items {
 
     private final String itemname;
-    private final int wowid;
+    private int wowid;
     private double price;
     private String slot;
     private String type;
-    private boolean heroic = false;
+    private int wowid_hc;
+    private double price_hc;
 
-    public Items(String itemname, int wowid, double price, String slot, String type, boolean heroic) {
+    public Items(String itemname, int wowid, double price, int wowid_hc, double price_hc, String slot, String type) {
             this.itemname = itemname;
             this.wowid = wowid;
             this.price = price;
+            this.wowid_hc = wowid_hc;
+            this.price_hc = price_hc;
             this.slot = slot;
             this.type = type;
-            this.heroic = heroic;
     }
 
     public String getName() {
@@ -32,6 +34,12 @@ public class Items {
     }
     public int getWowID() {
         return wowid;
+    }
+    public int getWowID_hc() {
+        return wowid_hc;
+    }
+    public double getPrice_hc() {
+        return price_hc;
     }
     public double getPrice() {
         return price;
@@ -41,8 +49,5 @@ public class Items {
     }
     public String getType() {
         return type;
-    }
-    public boolean isHeroic() {
-         return heroic;
     }
 }

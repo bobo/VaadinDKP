@@ -71,7 +71,7 @@ public class Characters extends HorizontalLayout {
                 public void buttonClick(ClickEvent event) {
                     CharacterInfo info = new CharacterInfo(user);
                     info.printInfo();
-
+                    info.setCaption(user.getUsername());
                     getApplication().getMainWindow().addWindow(info);
                     info.center();
                     info.setWidth("400px");

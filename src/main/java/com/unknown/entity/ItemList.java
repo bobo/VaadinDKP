@@ -24,11 +24,12 @@ public class ItemList extends Table {
     public ItemList(ItemDAO itemDAO) {
 	this.itemDAO = itemDAO;
 	addContainerProperty("Name", String.class, "");
-	addContainerProperty("WowID", Integer.class, 0);
-        addContainerProperty("Price", Double.class, 0);
+//	addContainerProperty("WowID (N)", Integer.class, 0);
+        addContainerProperty("Price Normal", Double.class, 0);
+//        addContainerProperty("WowID (H)", Integer.class, 0);
+        addContainerProperty("Price Heroic", Double.class, 0);
         addContainerProperty("Slot", String.class, "");
         addContainerProperty("Type", String.class, "");
-        addContainerProperty("Heroic", Boolean.class, false);
 
 	this.addListener(new ItemClickListener() {
 
@@ -37,6 +38,7 @@ public class ItemList extends Table {
 		Items item = (Items) event.getItemId();
 		ItemInfo info = new ItemInfo(item);
 		info.printInfo();
+                info.setCaption(item.getName());
 		getApplication().getMainWindow().addWindow(info);
 		info.center();
 		info.setWidth("400px");
@@ -52,11 +54,12 @@ public class ItemList extends Table {
 	for (final Items item : items) {
 	    Item addItem = addItem(item);
 	    addItem.getItemProperty("Name").setValue(item.getName());
-	    addItem.getItemProperty("WowID").setValue(item.getWowID());
-            addItem.getItemProperty("Price").setValue(item.getPrice());
+//	    addItem.getItemProperty("WowID (N)").setValue(item.getWowID());
+            addItem.getItemProperty("Price Normal").setValue(item.getPrice());
+//            addItem.getItemProperty("WowID (H)").setValue(item.getWowID_hc());
+            addItem.getItemProperty("Price Heroic").setValue(item.getPrice_hc());
             addItem.getItemProperty("Slot").setValue(item.getSlot());
             addItem.getItemProperty("Type").setValue(item.getType());
-            addItem.getItemProperty("Heroic").setValue(item.isHeroic());
 	}
     }
 }

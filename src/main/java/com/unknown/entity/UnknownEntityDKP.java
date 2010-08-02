@@ -23,14 +23,14 @@ import com.vaadin.ui.Window;
  * The Application's "main" class
  */
 @SuppressWarnings("serial")
-public class MyVaadinApplication extends Application
+public class UnknownEntityDKP extends Application
 {
     private Window window;
 
     @Override
     public void init()
     {
-        window = new Window("My Vaadin Application");
+        window = new Window("Unknown Entity DKP");
         ItemDAO itemDAO = new ItemDB();
 	CharacterDAO characterDAO = new CharacterDB();
 	Characters charachters = new Characters(characterDAO);

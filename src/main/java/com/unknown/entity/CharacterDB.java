@@ -1,4 +1,5 @@
 /*
+ *
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -74,7 +75,7 @@ public class CharacterDB implements CharacterDAO {
                 dkp_earned = shares * share_value;
                 dkp = dkp_earned - dkp_spent;
                 Role role = Role.valueOf(rs.getString("character_classes.name").replace(" ", ""));
-                users.add(new User(rs.getString("characters.name"), role, rs.getBoolean("characters.active"), shares, dkp_earned, dkp_spent, dkp));
+                users.add(new User(rs.getInt("id"), rs.getString("characters.name"), role, rs.getBoolean("characters.active"), shares, dkp_earned, dkp_spent, dkp));
             }
 
         } catch (SQLException e) {

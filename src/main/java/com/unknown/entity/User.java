@@ -11,6 +11,7 @@ package com.unknown.entity;
 
 public class User {
 
+    private final int id;
     private final String username;
     private final Role role;
     private int shares;
@@ -19,8 +20,9 @@ public class User {
     private double dkp;
     private boolean active = true;
 
-    public User(String username, Role role, boolean active, int shares, double dkp_earned, double dkp_spent, double dkp) {
-	this.username = username;
+    public User(int id, String username, Role role, boolean active, int shares, double dkp_earned, double dkp_spent, double dkp) {
+	this.id = id;
+        this.username = username;
 	this.role = role;
 	this.shares = shares;
 	this.dkp = dkp;
@@ -28,6 +30,10 @@ public class User {
         this.dkp_spent = dkp_spent;
         this.active = active;
     }	
+    
+    public int getID() {
+        return id;
+    }
 
     public int getShares() {
 	return shares;

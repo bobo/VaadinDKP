@@ -5,7 +5,6 @@
 
 package com.unknown.entity;
 
-import com.google.common.base.Predicate;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -48,19 +47,4 @@ public class ItemDB implements ItemDAO {
         } catch(SQLException e) {}
         return items;
     }
-
-    private static class HasRolePredicate implements Predicate<User> {
-
-	private final Role role;
-
-	public HasRolePredicate(Role role) {
-	    this.role = role;
-	}
-
-	@Override
-	public boolean apply(User user) {
-	    return user.getRole().equals(role);
-	}
-    }
-
 }

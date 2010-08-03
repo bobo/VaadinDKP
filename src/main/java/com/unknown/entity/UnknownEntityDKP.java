@@ -22,6 +22,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The Application's "main" class
@@ -31,6 +33,13 @@ public class UnknownEntityDKP extends Application
 {
     private Window window;
 
+    public void TestSQL() {
+                try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     @Override
     public void init()
     {
@@ -76,12 +85,13 @@ public class UnknownEntityDKP extends Application
 
             @Override
             public void buttonClick(ClickEvent event) {
-                AddUser addUser = new AddUser();
+                CharacterAdd addUser = new CharacterAdd();
                 addUser.printInfo();
+                addUser.setCaption("Add character");
                 getMainWindow().addWindow(addUser);
                 addUser.center();
-                addUser.setWidth("400px");
-                addUser.setHeight("500px");
+                addUser.setWidth("300px");
+                addUser.setHeight("250px");
             }
         });
         VerticalLayout selection = new VerticalLayout();

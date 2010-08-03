@@ -2,11 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.unknown.entity;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,13 +19,6 @@ import java.util.logging.Logger;
  */
 public class ItemDB implements ItemDAO {
 
-    private Connection connect() throws SQLException {
-        String userName = "root", userPassword = "piccolo", databaseURL = "jdbc:mysql://unknown-entity.com:3306/dkp";
-        Connection conn = null;
-        conn = DriverManager.getConnection(databaseURL, userName, userPassword);
-        return conn;
-    }
-
     @Override
     public List<Items> getItems() {
         try {
@@ -38,13 +29,14 @@ public class ItemDB implements ItemDAO {
         Connection c = null;
         List<Items> items = new ArrayList<Items>();
         try {
-            c = connect();
+            c = new DBConnection().getConnection();
             PreparedStatement p = c.prepareStatement("SELECT * FROM items");
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
                 items.add(new Items(rs.getInt("id"), rs.getString("name"), rs.getInt("wowid_normal"), rs.getDouble("price_normal"), rs.getInt("wowid_heroic"), rs.getDouble("price_heroic"), rs.getString("slot"), rs.getString("type"), rs.getBoolean("isLegendary")));
             }
-        } catch(SQLException e) {}
+        } catch (SQLException e) {
+        }
         return items;
     }
 }

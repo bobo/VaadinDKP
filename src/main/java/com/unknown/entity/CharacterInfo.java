@@ -5,13 +5,13 @@
 
 package com.unknown.entity;
 
-import com.mysql.jdbc.Connection;
 import com.vaadin.data.Item;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
-import java.sql.DriverManager;
+import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -58,13 +58,6 @@ private final User user;
 
     }
 
-    private Connection connect() throws SQLException {
-        String userName = "root", userPassword = "piccolo", databaseURL = "jdbc:mysql://unknown-entity.com:3306/dkp";
-        Connection conn = null;
-        conn = (Connection) DriverManager.getConnection(databaseURL, userName, userPassword);
-        return conn;
-    }
-
     private Table lootList(User user) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -78,7 +71,7 @@ private final User user;
         boolean isEmpty = true;
         Connection c = null;
         try {
-            c = connect();
+            c = new DBConnection().getConnection();
             PreparedStatement p = c.prepareStatement("SELECT * FROM loots JOIN items WHERE loots.character_id=? AND loots.item_id=items.id");
             p.setInt(1, user.getID());
             ResultSet rs = p.executeQuery();

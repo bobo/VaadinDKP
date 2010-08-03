@@ -55,13 +55,6 @@ public class RaidInfo extends Window {
         addComponent(hzl);
     }
 
-    private Connection connect() throws SQLException {
-        String userName = "root", userPassword = "piccolo", databaseURL = "jdbc:mysql://unknown-entity.com:3306/dkp";
-        Connection conn = null;
-        conn = (Connection) DriverManager.getConnection(databaseURL, userName, userPassword);
-        return conn;
-    }
-
     private Table charList(Raids raid) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -73,8 +66,8 @@ public class RaidInfo extends Window {
         tbl.setHeight(150);
         Connection c = null;
         try {
-            c = connect();
-            PreparedStatement p = c.prepareStatement("SELECT * FROM rewards JOIN character_rewards JOIN characters ON rewards.raid_id=? AND rewards.id=character_rewards.reward_id AND character_rewards.character_id=characters.id");
+                 c = new DBConnection().getConnection();
+                 PreparedStatement p = c.prepareStatement("SELECT * FROM rewards JOIN character_rewards JOIN characters ON rewards.raid_id=? AND rewards.id=character_rewards.reward_id AND character_rewards.character_id=characters.id");
             p.setInt(1, raid.getID());
             ResultSet rs = p.executeQuery();
             int i=0;
@@ -102,7 +95,7 @@ public class RaidInfo extends Window {
         tbl.setHeight(150);
         Connection c = null;
         try {
-            c = connect();
+            c = new DBConnection().getConnection();
             PreparedStatement p = c.prepareStatement("SELECT * FROM loots JOIN raids JOIN characters JOIN items WHERE loots.raid_id=raids.id AND character_id=characters.id AND loots.item_id=items.id AND raids.id=?");
             p.setInt(1, raid.getID());
             ResultSet rs = p.executeQuery();

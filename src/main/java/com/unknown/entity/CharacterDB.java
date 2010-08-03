@@ -8,7 +8,6 @@ package com.unknown.entity;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,13 +23,6 @@ import java.util.logging.Logger;
  */
 public class CharacterDB implements CharacterDAO {
 
-    private Connection connect() throws SQLException {
-        String userName = "root", userPassword = "piccolo", databaseURL = "jdbc:mysql://unknown-entity.com:3306/dkp";
-        Connection conn = null;
-        conn = DriverManager.getConnection(databaseURL, userName, userPassword);
-        return conn;
-    }
-
     @Override
     public List<User> getUsers() {
         try {
@@ -38,10 +30,11 @@ public class CharacterDB implements CharacterDAO {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         Connection c = null;
         List<User> users = new ArrayList<User>();
         try {
-            c = connect();
+            c = new DBConnection().getConnection();
             PreparedStatement p = c.prepareStatement("SELECT * FROM characters JOIN character_classes ON characters.character_class_id=character_classes.id");
             PreparedStatement ps = c.prepareStatement("SELECT * FROM rewards JOIN character_rewards JOIN characters WHERE character_rewards.reward_id=rewards.id AND characters.id=?");
             PreparedStatement ploot = c.prepareStatement("SELECT * FROM loots JOIN characters where loots.character_id=characters.id");

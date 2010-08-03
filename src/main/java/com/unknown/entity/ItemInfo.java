@@ -87,13 +87,6 @@ public class ItemInfo extends Window {
         addComponent(hzl);
     }
 
-    private Connection connect() throws SQLException {
-        String userName = "root", userPassword = "piccolo", databaseURL = "jdbc:mysql://unknown-entity.com:3306/dkp";
-        Connection conn = null;
-        conn = (Connection) DriverManager.getConnection(databaseURL, userName, userPassword);
-        return conn;
-    }
-
     private Table lootList(Items item) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -108,7 +101,7 @@ public class ItemInfo extends Window {
         tbl.setHeight(150);
         Connection c = null;
         try {
-            c = connect();
+            c = new DBConnection().getConnection();
             PreparedStatement p = c.prepareStatement("SELECT * FROM loots JOIN characters JOIN items JOIN raids WHERE loots.character_id=characters.id AND loots.item_id=? AND items.id=loots.item_id AND raids.id=loots.raid_id");
             p.setInt(1, item.getID());
             ResultSet rs = p.executeQuery();

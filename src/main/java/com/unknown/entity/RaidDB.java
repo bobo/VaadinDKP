@@ -6,7 +6,6 @@
 package com.unknown.entity;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,13 +20,6 @@ import java.util.logging.Logger;
  */
 public class RaidDB implements RaidDAO {
 
-private Connection connect() throws SQLException {
-        String userName = "root", userPassword = "piccolo", databaseURL = "jdbc:mysql://unknown-entity.com:3306/dkp";
-        Connection conn = null;
-        conn = DriverManager.getConnection(databaseURL, userName, userPassword);
-        return conn;
-    }
-
     @Override
     public List<Raids> getRaids() {
         try {
@@ -38,7 +30,7 @@ private Connection connect() throws SQLException {
         Connection c = null;
         List<Raids> raid = new ArrayList<Raids>();
         try {
-            c = connect();
+            c = new DBConnection().getConnection();
             PreparedStatement p = c.prepareStatement("SELECT * FROM raids JOIN zones ON raids.zone_id=zones.id");
             ResultSet rs = p.executeQuery();
             while (rs.next()) {

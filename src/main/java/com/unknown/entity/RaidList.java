@@ -21,7 +21,7 @@ public class RaidList extends Table {
 
     public RaidList(RaidDAO raidDAO) {
         this.raidDAO = raidDAO;
-        addContainerProperty("Name", String.class, "");
+        addContainerProperty("Zone", String.class, "");
         addContainerProperty("Comment", String.class, "");
         addContainerProperty("Date", String.class, "");
 
@@ -46,7 +46,7 @@ public class RaidList extends Table {
 
         for (final Raids raid : raids) {
             Item addItem = addItem(raid);
-            addItem.getItemProperty("Name").setValue(raid.getName());
+            addItem.getItemProperty("Zone").setValue(raid.getName());
             addItem.getItemProperty("Comment").setValue(raid.getComment());
             addItem.getItemProperty("Date").setValue(raid.getDate());
 

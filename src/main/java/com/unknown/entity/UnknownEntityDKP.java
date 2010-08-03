@@ -16,6 +16,8 @@
 package com.unknown.entity;
 
 import com.vaadin.Application;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -68,8 +70,24 @@ public class UnknownEntityDKP extends Application
         vertRaid.addComponent(raidList);
         raidList.printList();
         hzl.addComponent(vertRaid);
-
         
+        final Button adduserBtn = new Button("Add Character");
+        adduserBtn.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                AddUser addUser = new AddUser();
+                addUser.printInfo();
+                getMainWindow().addWindow(addUser);
+                addUser.center();
+                addUser.setWidth("400px");
+                addUser.setHeight("500px");
+            }
+        });
+        VerticalLayout selection = new VerticalLayout();
+        selection.addComponent(adduserBtn);
+        window.addComponent(selection);
+
     }
     
 }

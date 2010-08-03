@@ -33,22 +33,6 @@ public class Characters extends HorizontalLayout {
     public void printList() {
         List<Role> roles = Arrays.asList(Role.values());
         Collections.sort(roles, new ToStringComparator());
-        final Button adduserBtn = new Button("Add Character");
-        adduserBtn.addListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                AddUser addUser = new AddUser();
-                addUser.printInfo();
-                getApplication().getMainWindow().addWindow(addUser);
-                addUser.center();
-                addUser.setWidth("400px");
-                addUser.setHeight("500px");
-            }
-        });
-//        VerticalLayout selection = new VerticalLayout();
-//        addComponent(selection);
-//        selection.addComponent(adduserBtn);
 
         for (Role r : roles) {
             VerticalLayout roleList = new VerticalLayout();

@@ -12,6 +12,7 @@ import com.vaadin.ui.Window;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.management.relation.RoleStatus;
 
 /**
  *
@@ -35,10 +36,13 @@ public class AddUser extends Window {
         Label name = new Label("Name");
         adduser.addComponent(name, 0, 0);
         TextField entername = new TextField("");
-        adduser.addComponent(entername, 0, 1);
+        adduser.addComponent(entername, 1, 0);
         Label role = new Label("Class");
-        adduser.addComponent(role, 1, 0);
+        adduser.addComponent(role, 0, 1);
         ComboBox addrole = new ComboBox();
+        for (Role roles : Role.values()) {
+            addrole.addItem(roles);
+        }
         adduser.addComponent(addrole, 1, 1);
 
     }

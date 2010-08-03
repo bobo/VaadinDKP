@@ -11,6 +11,7 @@ package com.unknown.entity;
  */
 public class Items {
 
+    private final int id;
     private final String itemname;
     private int wowid;
     private double price;
@@ -20,7 +21,8 @@ public class Items {
     private double price_hc;
     private boolean isLegendary = false;
 
-    public Items(String itemname, int wowid, double price, int wowid_hc, double price_hc, String slot, String type, boolean isLegendary) {
+    public Items(int id, String itemname, int wowid, double price, int wowid_hc, double price_hc, String slot, String type, boolean isLegendary) {
+            this.id = id;
             this.itemname = itemname;
             this.wowid = wowid;
             this.price = price;
@@ -29,6 +31,10 @@ public class Items {
             this.slot = slot;
             this.type = type;
             this.isLegendary = isLegendary;
+    }
+
+    public int getID() {
+        return id;
     }
 
     public String getName() {

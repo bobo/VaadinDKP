@@ -35,8 +35,8 @@ public class RaidList extends Table {
                 info.setCaption(raid.getName());
                 getApplication().getMainWindow().addWindow(info);
                 info.center();
-                info.setWidth("400px");
-                info.setHeight("400px");
+                info.setWidth("600px");
+                info.setHeight("320px");
             }
         });
     }

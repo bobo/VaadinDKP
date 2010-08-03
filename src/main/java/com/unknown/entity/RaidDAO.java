@@ -12,8 +12,8 @@ import java.util.List;
  * @author alde
  */
 
-public interface ItemDAO {
+public interface RaidDAO {
 
-    public List<Items> getItems();
+    public List<Raids> getRaids();
 
 }

@@ -17,6 +17,8 @@ package com.unknown.entity;
 
 import com.vaadin.Application;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 /**
@@ -44,12 +46,30 @@ public class UnknownEntityDKP extends Application
         HorizontalLayout hzl = new HorizontalLayout();
         window.addComponent(hzl);
         hzl.setSpacing(true);
+
+        VerticalLayout vertDKP = new VerticalLayout();
+        vertDKP.addComponent(new Label("DKP"));
 	DKPList dKPList = new DKPList(characterDAO);
-	hzl.addComponent(dKPList);
+	vertDKP.addComponent(dKPList);
 	dKPList.printList();
+        hzl.addComponent(vertDKP);
+
+        VerticalLayout vertItem = new VerticalLayout();
+        vertItem.addComponent(new Label("Items"));
 	ItemList itemList = new ItemList(itemDAO);
-        hzl.addComponent(itemList);
+        vertItem.addComponent(itemList);
         itemList.printList();
+        hzl.addComponent(vertItem);
+
+        RaidDAO raidDAO = new RaidDB();
+        VerticalLayout vertRaid = new VerticalLayout();
+        vertRaid.addComponent(new Label("Raids"));
+        RaidList raidList = new RaidList(raidDAO);
+        vertRaid.addComponent(raidList);
+        raidList.printList();
+        hzl.addComponent(vertRaid);
+
+        
     }
     
 }

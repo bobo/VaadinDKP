@@ -30,11 +30,14 @@ import com.unknown.entity.items.ItemDAO;
 import com.unknown.entity.items.ItemAdd;
 import com.vaadin.Application;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LoginForm;
+import com.vaadin.ui.PopupView;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.util.List;
@@ -49,6 +52,9 @@ public class UnknownEntityDKP extends Application
 
     public HorizontalLayout HorizontalSegment(final DKPList dKPList, ItemList itemList, RaidList raidList ) {
          final HorizontalLayout hzl = new HorizontalLayout();
+
+         final Object username = getMainWindow().getApplication().getUser();
+
         hzl.setSpacing(true);
 
         VerticalLayout vertDKP = new VerticalLayout();
@@ -78,7 +84,9 @@ public class UnknownEntityDKP extends Application
                 dKPList.printList();
             }
         });
-        vertDKP.addComponent(addUsrBtn);
+        if (username != null && username.toString().equals("admin")) {
+            vertDKP.addComponent(addUsrBtn);
+        }
 
         hzl.addComponent(vertDKP);
 
@@ -99,8 +107,9 @@ public class UnknownEntityDKP extends Application
                 addItem.setHeight("420px");
             }
         });
-
-        vertItem.addComponent(addItmBtn);
+        if (username != null && username.toString().equals("admin")) {
+            vertItem.addComponent(addItmBtn);
+        }
         hzl.addComponent(vertItem);
 
 
@@ -108,7 +117,7 @@ public class UnknownEntityDKP extends Application
         vertRaid.addComponent(new Label("Raids"));
         vertRaid.addComponent(raidList);
         raidList.printList();
-        HorizontalLayout hRaid = new HorizontalLayout();
+
         final Button addRaidBtn = new Button("Add Raid");
         addRaidBtn.addListener(new Button.ClickListener() {
 
@@ -123,17 +132,10 @@ public class UnknownEntityDKP extends Application
                 addRaid.setHeight("420px");
             }
         });
-        final Button editRaidBtn = new Button("Edit Raid");
-        editRaidBtn.addListener(new Button.ClickListener() {
+        if (username != null && username.toString().equals("admin")) {
+            vertRaid.addComponent(addRaidBtn);
+        }
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-            }
-        });
-        
-        hRaid.addComponent(addRaidBtn);
-        hRaid.addComponent(editRaidBtn);
-        vertRaid.addComponent(hRaid);
         hzl.addComponent(vertRaid);
 
        return hzl;
@@ -155,7 +157,7 @@ public class UnknownEntityDKP extends Application
         CharacterDAO characterDAO = new CharacterDB();
         ItemDAO itemDAO = new ItemDB();
 
-        final Button loginButton = new Button("Login");
+        final Button loginButton = new Button();
         final Button updateButton = new Button("Update");
         final Characters charList = new Characters(characterDAO);
         final DKPList dKPList = new DKPList(characterDAO);
@@ -165,7 +167,33 @@ public class UnknownEntityDKP extends Application
 
         // Paint stuff
 
-        window.addComponent(loginButton);
+        HorizontalLayout hlogin = new HorizontalLayout();
+        hlogin.addComponent(loginButton);
+        hlogin.setSpacing(true);
+        loginButton.setStyleName(Button.STYLE_LINK);
+        loginButton.setIcon(new ThemeResource("../ue/img/key3.png"));
+        final Object username = getMainWindow().getApplication().getUser();
+        if (username != null && username.toString().equals("admin")) {
+            hlogin.addComponent(new Label("Welcome "+username.toString()));
+        }
+
+        window.addComponent(hlogin);
+
+        loginButton.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                if (getMainWindow().getApplication().getUser() == null) {
+                    LoginWindow loginWindow = new LoginWindow();
+                    loginWindow.center();
+                    loginWindow.setCaption("Login...");
+                    getMainWindow().addWindow(loginWindow);
+                    loginWindow.attach();
+                } else {
+                    window.addComponent(new Label("User: "+username));
+                }
+            }
+        });
 
         // Character List based on Class
         HorizontalLayout hzChar = new HorizontalLayout();
@@ -180,10 +208,8 @@ public class UnknownEntityDKP extends Application
 
             @Override
             public void buttonClick(ClickEvent event) {
-                raidList.printList();
-                dKPList.printList();
-                charList.printList();
-                itemList.printList();
+            window.removeAllComponents();
+                Drawings();
             }
         });
         window.addComponent(updateButton);

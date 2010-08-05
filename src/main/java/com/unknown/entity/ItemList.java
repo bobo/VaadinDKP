@@ -26,6 +26,8 @@ public class ItemList extends Table {
         addContainerProperty("Slot", String.class, "");
         addContainerProperty("Type", String.class, "");
 
+        this.setHeight("500px");
+        
         this.addListener(new ItemClickListener() {
 
             @Override
@@ -41,8 +43,12 @@ public class ItemList extends Table {
             }
         });
     }
+    public void clear()  {
+        this.removeAllItems();
+    }
 
     public void printList() {
+        clear();
         List<Items> itemses = itemDAO.getItems();
 
         for (final Items item : itemses) {

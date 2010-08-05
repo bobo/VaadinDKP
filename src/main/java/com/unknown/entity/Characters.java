@@ -29,8 +29,12 @@ public class Characters extends HorizontalLayout {
         setSpacing(true);
 
     }
+    private void clear() {
+        this.removeAllComponents();
+    }
 
     public void printList() {
+        clear();
         List<Role> roles = Arrays.asList(Role.values());
         Collections.sort(roles, new ToStringComparator());
 

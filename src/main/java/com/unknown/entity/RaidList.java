@@ -25,6 +25,7 @@ public class RaidList extends Table {
         addContainerProperty("Comment", String.class, "");
         addContainerProperty("Date", String.class, "");
 
+        this.setHeight("500px");
         this.addListener(new ItemClickListener() {
 
             @Override
@@ -40,8 +41,12 @@ public class RaidList extends Table {
             }
         });
     }
+    public void clear()  {
+        this.removeAllItems();
+    }
 
     public void printList() {
+        clear();
         List<Raids> raids = raidDAO.getRaids();
 
         for (final Raids raid : raids) {

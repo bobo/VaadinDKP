@@ -24,6 +24,8 @@ public class DKPList extends Table {
 	this.characterDAO = characterDAO;
 	addContainerProperty("Name", String.class, "");
 	addContainerProperty("DKP", Double.class, 0);
+        this.setWidth("180px");
+        this.setHeight("500px");
 	this.addListener(new ItemClickListener() {
 
 	    @Override
@@ -40,8 +42,13 @@ public class DKPList extends Table {
 	});
     }
 
+    public void clear()  {
+        this.removeAllItems();
+    }
+
     public void printList() {
-	List<User> users = characterDAO.getUsers();
+        clear();
+        List<User> users = characterDAO.getUsers();
 	Collections.sort(users, new Comparator<User>() {
 
 	    @Override

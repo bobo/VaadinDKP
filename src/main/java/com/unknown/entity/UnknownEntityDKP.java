@@ -15,6 +15,19 @@
  */
 package com.unknown.entity;
 
+import com.unknown.entity.raids.RaidDB;
+import com.unknown.entity.raids.RaidDAO;
+import com.unknown.entity.raids.RaidList;
+import com.unknown.entity.raids.RaidAdd;
+import com.unknown.entity.character.CharacterAdd;
+import com.unknown.entity.character.DKPList;
+import com.unknown.entity.character.CharacterDB;
+import com.unknown.entity.character.CharacterDAO;
+import com.unknown.entity.character.Characters;
+import com.unknown.entity.items.ItemDB;
+import com.unknown.entity.items.ItemList;
+import com.unknown.entity.items.ItemDAO;
+import com.unknown.entity.items.ItemAdd;
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -89,15 +102,32 @@ public class UnknownEntityDKP extends Application
         vertRaid.addComponent(new Label("Raids"));
         vertRaid.addComponent(raidList);
         raidList.printList();
+        HorizontalLayout hRaid = new HorizontalLayout();
         final Button addRaidBtn = new Button("Add Raid");
         addRaidBtn.addListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
+                RaidAdd addRaid = new RaidAdd();
+                addRaid.printInfo();
+                addRaid.setCaption("Add Raid");
+                getMainWindow().addWindow(addRaid);
+                addRaid.center();
+                addRaid.setWidth("300px");
+                addRaid.setHeight("420px");
             }
         });
+        final Button editRaidBtn = new Button("Edit Raid");
+        editRaidBtn.addListener(new Button.ClickListener() {
 
-        vertRaid.addComponent(addRaidBtn);
+            @Override
+            public void buttonClick(ClickEvent event) {
+            }
+        });
+        
+        hRaid.addComponent(addRaidBtn);
+        hRaid.addComponent(editRaidBtn);
+        vertRaid.addComponent(hRaid);
         hzl.addComponent(vertRaid);
 
        return hzl;

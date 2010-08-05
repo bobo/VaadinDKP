@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package com.unknown.entity;
+package com.unknown.entity.raids;
 
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
@@ -26,6 +26,7 @@ public class RaidList extends Table {
         addContainerProperty("Date", String.class, "");
 
         this.setHeight("500px");
+        this.setWidth("300px");
         this.addListener(new ItemClickListener() {
 
             @Override

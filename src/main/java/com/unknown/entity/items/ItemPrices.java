@@ -3,7 +3,9 @@
  * and open the template in the editor.
  */
 
-package com.unknown.entity;
+package com.unknown.entity.items;
+
+import com.unknown.entity.Slots;
 
 /**
  *

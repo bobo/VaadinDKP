@@ -3,8 +3,10 @@
  * and open the template in the editor.
  */
 
-package com.unknown.entity;
+package com.unknown.entity.character;
 
+import com.unknown.entity.DBConnection;
+import com.unknown.entity.User;
 import com.vaadin.data.Item;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;

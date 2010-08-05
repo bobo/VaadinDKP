@@ -2,8 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity;
+package com.unknown.entity.items;
 
+import com.unknown.entity.character.CharacterDB;
+import com.unknown.entity.DBConnection;
+import com.unknown.entity.Slots;
+import com.unknown.entity.Type;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

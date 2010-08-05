@@ -3,8 +3,10 @@
  * and open the template in the editor.
  */
 
-package com.unknown.entity;
+package com.unknown.entity.raids;
 
+import com.unknown.entity.DBConnection;
+import com.unknown.entity.character.CharacterDB;
 import com.vaadin.data.Item;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;

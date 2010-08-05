@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package com.unknown.entity;
+package com.unknown.entity.items;
 
 import java.util.List;
 
@@ -12,8 +12,8 @@ import java.util.List;
  * @author alde
  */
 
-public interface RaidDAO {
+public interface ItemDAO {
 
-    public List<Raids> getRaids();
+    public List<Items> getItems();
 
 }

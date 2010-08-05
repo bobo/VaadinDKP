@@ -21,7 +21,7 @@ public final class DBConnection {
         conn = DriverManager.getConnection(databaseURL, userName, userPassword);
         return conn;
     }
-    DBConnection() throws SQLException {
+    public DBConnection() throws SQLException {
         this.conn = connect();
     }
     public Connection getConnection() {

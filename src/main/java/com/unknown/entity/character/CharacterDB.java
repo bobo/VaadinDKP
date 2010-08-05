@@ -3,10 +3,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity;
+package com.unknown.entity.character;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.unknown.entity.DBConnection;
+import com.unknown.entity.Role;
+import com.unknown.entity.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

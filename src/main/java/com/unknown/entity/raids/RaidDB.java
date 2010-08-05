@@ -2,8 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity;
 
+package com.unknown.entity.raids;
+
+import com.unknown.entity.DBConnection;
+import com.unknown.entity.character.CharacterDB;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,28 +18,27 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author bobo
+ * @author alde
  */
-public class ItemDB implements ItemDAO {
+public class RaidDB implements RaidDAO {
 
     @Override
-    public List<Items> getItems() {
+    public List<Raids> getRaids() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
         }
         Connection c = null;
-        List<Items> items = new ArrayList<Items>();
+        List<Raids> raid = new ArrayList<Raids>();
         try {
             c = new DBConnection().getConnection();
-            PreparedStatement p = c.prepareStatement("SELECT * FROM items");
+            PreparedStatement p = c.prepareStatement("SELECT * FROM raids JOIN zones ON raids.zone_id=zones.id");
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
-                items.add(new Items(rs.getInt("id"), rs.getString("name"), rs.getInt("wowid_normal"), rs.getDouble("price_normal"), rs.getInt("wowid_heroic"), rs.getDouble("price_heroic"), rs.getString("slot"), rs.getString("type"), rs.getBoolean("isLegendary")));
+                raid.add(new Raids(rs.getString("zones.name"), rs.getString("raids.comment"), rs.getString("raids.date"), rs.getInt("raids.id")));
             }
-        } catch (SQLException e) {
-        }
-        return items;
+        } catch(SQLException e) {}
+        return raid;
     }
 }

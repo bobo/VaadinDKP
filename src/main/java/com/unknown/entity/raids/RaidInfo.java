@@ -16,6 +16,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,14 +26,16 @@ import java.util.logging.Logger;
  */
 public class RaidInfo extends Window {
 
-	private final Raids raid;
+	private final Raid raid;
+	private final RaidDAO raidDAO;
 
-	public RaidInfo(Raids raid) {
+	public RaidInfo(Raid raid, RaidDAO raidDAO) {
 		this.raid = raid;
 		center();
 		setWidth("600px");
 		setHeight("320px");
-        setCaption(raid.getName());
+		setCaption(raid.getName());
+		this.raidDAO = raidDAO;
 
 	}
 
@@ -61,7 +64,7 @@ public class RaidInfo extends Window {
 		addComponent(hzl);
 	}
 
-	private Table charList(Raids raid) {
+	private Table charList(Raid raid) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException ex) {
@@ -88,32 +91,19 @@ public class RaidInfo extends Window {
 		return tbl;
 	}
 
-	private Table lootList(Raids raid) {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException ex) {
-			Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
-		}
+	private Table lootList(Raid raid) {
 		Table tbl = new Table();
 		tbl.addContainerProperty("Name", String.class, "");
 		tbl.addContainerProperty("Item", String.class, "");
 		tbl.addContainerProperty("Price", Double.class, 0);
 		tbl.addContainerProperty("Heroic", String.class, "");
 		tbl.setHeight(150);
-		Connection c = null;
-		try {
-			c = new DBConnection().getConnection();
-			PreparedStatement p = c.prepareStatement("SELECT * FROM loots JOIN raids JOIN characters JOIN items WHERE loots.raid_id=raids.id AND character_id=characters.id AND loots.item_id=items.id AND raids.id=?");
-			p.setInt(1, raid.getID());
-			ResultSet rs = p.executeQuery();
-			while (rs.next()) {
-				Item addItem = tbl.addItem(new Integer(rs.getInt("raids.id")));
-				addItem.getItemProperty("Name").setValue(rs.getString("characters.name"));
-				addItem.getItemProperty("Item").setValue(rs.getString("items.name"));
-				addItem.getItemProperty("Price").setValue(rs.getDouble("loots.price"));
-				addItem.getItemProperty("Heroic").setValue(rs.getBoolean("loots.heroic"));
-			}
-		} catch (SQLException e) {
+		for (RaidItem item : raid.getRaidItems()) {
+			Item addItem = tbl.addItem(new Integer(item.getId()));
+			addItem.getItemProperty("Name").setValue(item.getLooter());
+			addItem.getItemProperty("Item").setValue(item.getName());
+			addItem.getItemProperty("Price").setValue(item.getPrice());
+			addItem.getItemProperty("Heroic").setValue(item.isHeroic());
 		}
 
 		return tbl;

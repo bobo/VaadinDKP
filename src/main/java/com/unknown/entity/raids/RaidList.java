@@ -31,7 +31,7 @@ public class RaidList extends Table {
 
             @Override
             public void itemClick(ItemClickEvent event) {
-                Raids raid = (Raids) event.getItemId();
+                Raid raid = (Raid) event.getItemId();
                 RaidInfo info = new RaidInfo(raid);
                 info.printInfo();
                 getApplication().getMainWindow().addWindow(info);
@@ -44,9 +44,9 @@ public class RaidList extends Table {
 
     public void printList() {
         clear();
-        List<Raids> raids = raidDAO.getRaids();
+        List<Raid> raids = raidDAO.getRaids();
 
-        for (final Raids raid : raids) {
+        for (final Raid raid : raids) {
             Item addItem = addItem(raid);
             addItem.getItemProperty("Zone").setValue(raid.getName());
             addItem.getItemProperty("Comment").setValue(raid.getComment());

@@ -14,6 +14,6 @@ import java.util.List;
 
 public interface RaidDAO {
 
-    public List<Raids> getRaids();
+    public List<Raid> getRaids();
 
 }

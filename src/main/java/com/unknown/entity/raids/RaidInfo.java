@@ -27,15 +27,13 @@ import java.util.logging.Logger;
 public class RaidInfo extends Window {
 
 	private final Raid raid;
-	private final RaidDAO raidDAO;
 
-	public RaidInfo(Raid raid, RaidDAO raidDAO) {
+	public RaidInfo(Raid raid) {
 		this.raid = raid;
 		center();
 		setWidth("600px");
 		setHeight("320px");
 		setCaption(raid.getName());
-		this.raidDAO = raidDAO;
 
 	}
 

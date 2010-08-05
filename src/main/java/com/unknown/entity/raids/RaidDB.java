@@ -60,6 +60,7 @@ public class RaidDB implements RaidDAO {
 				item.setName(rs.getString("items.name"));
 				item.setPrice(rs.getDouble("loots.price"));
 				item.setHeroic(rs.getBoolean("loots.heroic"));
+				raidItems.add(item);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

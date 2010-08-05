@@ -12,10 +12,7 @@ package com.unknown.entity.raids;
 public class RaidChar {
 	private int id;
 	private String name;
-
-        public void setId(Integer integer) {
-	}
-
+        
 	public int getId() {
 		return id;
 	}

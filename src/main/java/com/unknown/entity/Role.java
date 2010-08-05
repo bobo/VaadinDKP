@@ -1,8 +1,5 @@
 package com.unknown.entity;
 
-import java.util.Arrays;
-import java.util.List;
-
 public enum Role {
     Druid(Armor.leather),
     Hunter(Armor.mail),
@@ -14,9 +11,12 @@ public enum Role {
     Warlock(Armor.cloth),
     Warrior(Armor.plate),
     DeathKnight(Armor.plate);
-    private final List<Armor> armor;
+    private final Armor armor;
 
-    private Role(Armor... armor) {
-	this.armor = Arrays.asList(armor);
+    private Role(Armor armor) {
+	this.armor = armor;
+    }
+    public Armor getArmor() {
+        return this.armor;
     }
 }

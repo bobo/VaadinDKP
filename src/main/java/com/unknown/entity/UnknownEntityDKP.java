@@ -29,6 +29,7 @@ import com.unknown.entity.items.ItemList;
 import com.unknown.entity.items.ItemDAO;
 import com.unknown.entity.items.ItemAdd;
 import com.vaadin.Application;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
@@ -46,19 +47,20 @@ public class UnknownEntityDKP extends Application
 {
     private Window window;
 
-    public HorizontalLayout HorizontalSegment(DKPList dKPList, ItemList itemList, RaidList raidList ) {
+    public HorizontalLayout HorizontalSegment(final DKPList dKPList, ItemList itemList, RaidList raidList ) {
          final HorizontalLayout hzl = new HorizontalLayout();
         hzl.setSpacing(true);
 
         VerticalLayout vertDKP = new VerticalLayout();
         vertDKP.addComponent(new Label("DKP"));
 	vertDKP.addComponent(dKPList);
-        ComboBox filterDKP = new ComboBox("Filter");
+        final ComboBox filterDKP = new ComboBox("Filter");
         vertDKP.addComponent(filterDKP);
         for (Armor armor : Armor.values()) {
             filterDKP.addItem(armor);
         }
-	dKPList.printList();
+
+            dKPList.printList();
         final Button addUsrBtn = new Button("Add Character");
         addUsrBtn.addListener(new Button.ClickListener() {
             @Override
@@ -70,6 +72,13 @@ public class UnknownEntityDKP extends Application
                 addUser.center();
                 addUser.setWidth("300px");
                 addUser.setHeight("250px");
+            }
+        });
+        filterDKP.addListener(new ComboBox.ValueChangeListener() {
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                dKPList.printList();
             }
         });
         vertDKP.addComponent(addUsrBtn);
@@ -138,23 +147,40 @@ public class UnknownEntityDKP extends Application
     {
         window = new Window("Unknown Entity DKP");
 //        window.setTheme("ue");
-        ItemDAO itemDAO = new ItemDB();
-        HorizontalLayout hzChar = new HorizontalLayout();
-	CharacterDAO characterDAO = new CharacterDB();
-        final Characters charList = new Characters(characterDAO);
-        RaidDAO raidDAO = new RaidDB();
-        hzChar.addComponent(charList);
-	charList.printList();
-	window.addComponent(hzChar);
         setMainWindow(window);
+
+        Drawings();
+    }
+
+    private void Drawings() {
+        //  ----------- Declarations of Variables
+        RaidDAO raidDAO = new RaidDB();
+        CharacterDAO characterDAO = new CharacterDB();
+        ItemDAO itemDAO = new ItemDB();
+
+        final Button loginButton = new Button("Login");
+        final Button updateButton = new Button("Update");
+        final Characters charList = new Characters(characterDAO);
         final DKPList dKPList = new DKPList(characterDAO);
         final RaidList raidList = new RaidList(raidDAO);
-	final ItemList itemList = new ItemList(itemDAO);
+        final ItemList itemList = new ItemList(itemDAO);
         final HorizontalLayout hzl = HorizontalSegment(dKPList, itemList, raidList);
+
+        // Paint stuff
+
+        window.addComponent(loginButton);
+
+        // Character List based on Class
+        HorizontalLayout hzChar = new HorizontalLayout();
+        hzChar.addComponent(charList);
+        charList.printList();
+        window.addComponent(hzChar);
+
+        // DKP Table, Item Table, Raid Table
         window.addComponent(hzl);
-        
-        final Button updateButton = new Button("Update");
+
         updateButton.addListener(new Button.ClickListener() {
+
             @Override
             public void buttonClick(ClickEvent event) {
                 raidList.printList();
@@ -163,7 +189,6 @@ public class UnknownEntityDKP extends Application
                 itemList.printList();
             }
         });
-
         window.addComponent(updateButton);
     }
     

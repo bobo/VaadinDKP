@@ -58,24 +58,10 @@ public class DKPList extends Table {
 	    }
 	});
 	for (final User user : users) {
-	    Item addItem = addItem(user);
-	    addItem.getItemProperty("Name").setValue(user.getUsername());
-	    addItem.getItemProperty("DKP").setValue(user.getDKP());
-
-	}
+                Item addItem = addItem(user);
+                addItem.getItemProperty("Name").setValue(user.getUsername());
+                addItem.getItemProperty("DKP").setValue(user.getDKP());
+            }
+	
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

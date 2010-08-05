@@ -20,6 +20,7 @@ public class Raid {
 	private final String date;
 	private final int id;
 	private final List<RaidItem> raidItems = new ArrayList<RaidItem>();
+        private final List<RaidChar> raidChars = new ArrayList<RaidChar>();
 
 	public Raid(String raidname, String comment, String date, int id) {
 		this.raidname = raidname;
@@ -52,5 +53,11 @@ public class Raid {
 		return ImmutableList.copyOf(raidItems);
 	}
 
+        public void addRaidChars(Collection<RaidChar> chars) {
+                raidChars.addAll(chars);
+        }
 
+        public ImmutableList<RaidChar> getRaidChars() {
+                return ImmutableList.copyOf(raidChars);
+        }
 }

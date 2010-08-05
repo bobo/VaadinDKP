@@ -63,30 +63,14 @@ public class RaidInfo extends Window {
 	}
 
 	private Table charList(Raid raid) {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException ex) {
-			Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		Table tbl = new Table();
-		tbl.addContainerProperty("Name", String.class, "");
-		tbl.setHeight(150);
-		Connection c = null;
-		try {
-			c = new DBConnection().getConnection();
-			PreparedStatement p = c.prepareStatement("SELECT * FROM rewards JOIN character_rewards JOIN characters ON rewards.raid_id=? AND rewards.id=character_rewards.reward_id AND character_rewards.character_id=characters.id");
-			p.setInt(1, raid.getID());
-			ResultSet rs = p.executeQuery();
-			int i = 0;
-			while (rs.next()) {
-				i++;
-				Item addItem = tbl.addItem(new Integer(i));
-				addItem.getItemProperty("Name").setValue(rs.getString("characters.name"));
-			}
-		} catch (SQLException e) {
-		}
-
-		return tbl;
+                Table tbl = new Table();
+                tbl.addContainerProperty("Name", String.class, "");
+                tbl.setHeight(150);
+                for (RaidChar rchar : raid.getRaidChars()) {
+                    Item addItem = tbl.addItem(new Integer(rchar.getId()));
+                    addItem.getItemProperty("Name").setValue(rchar.getName());
+                }
+                return tbl;
 	}
 
 	private Table lootList(Raid raid) {

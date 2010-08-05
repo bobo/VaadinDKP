@@ -37,6 +37,7 @@ public class RaidDB implements RaidDAO {
 			while (rs.next()) {
 				final Raid raid = new Raid(rs.getString("zones.name"), rs.getString("raids.comment"), rs.getString("raids.date"), rs.getInt("raids.id"));
 				raid.addRaidItems(getItemsForRaid(raid.getID()));
+                                raid.addRaidChars(getCharsForRaid(raid.getID()));
 				raids.add(raid);
 			}
 		} catch (SQLException e) {
@@ -68,4 +69,23 @@ public class RaidDB implements RaidDAO {
 
 		return raidItems;
 	}
+
+        public List<RaidChar> getCharsForRaid(int raidId) {
+                Connection c = null;
+                List<RaidChar> raidChars = new ArrayList<RaidChar>();
+		try {
+			c = new DBConnection().getConnection();
+			PreparedStatement p = c.prepareStatement("SELECT * FROM rewards JOIN character_rewards JOIN characters ON rewards.raid_id=? AND rewards.id=character_rewards.reward_id AND character_rewards.character_id=characters.id");
+			p.setInt(1, raidId);
+			ResultSet rs = p.executeQuery();
+			while (rs.next()) {
+				RaidChar rchar = new RaidChar();
+                                rchar.setId(new Integer(rs.getInt("character.id")));
+                                rchar.setName(rs.getString("characters.name"));
+			}
+		} catch (SQLException e) {
+		}
+
+		return raidChars;
+        }
 }

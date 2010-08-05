@@ -34,11 +34,7 @@ public class RaidList extends Table {
                 Raids raid = (Raids) event.getItemId();
                 RaidInfo info = new RaidInfo(raid);
                 info.printInfo();
-                info.setCaption(raid.getName());
                 getApplication().getMainWindow().addWindow(info);
-                info.center();
-                info.setWidth("600px");
-                info.setHeight("320px");
             }
         });
     }

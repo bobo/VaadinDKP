@@ -67,11 +67,8 @@ public class UnknownEntityDKP extends Application
             public void buttonClick(ClickEvent event) {
                 CharacterAdd addUser = new CharacterAdd();
                 addUser.printInfo();
-                addUser.setCaption("Add Character");
                 getMainWindow().addWindow(addUser);
-                addUser.center();
-                addUser.setWidth("300px");
-                addUser.setHeight("250px");
+
             }
         });
         filterDKP.addListener(new ComboBox.ValueChangeListener() {

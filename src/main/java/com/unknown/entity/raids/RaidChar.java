@@ -12,6 +12,7 @@ package com.unknown.entity.raids;
 public class RaidChar {
 	private int id;
 	private String name;
+        private int shares;
         
 	public int getId() {
 		return id;
@@ -28,4 +29,12 @@ public class RaidChar {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+        public int getShares() {
+            return shares;
+        }
+
+        public void setShares(int shares) {
+            this.shares = shares;
+        }
 }

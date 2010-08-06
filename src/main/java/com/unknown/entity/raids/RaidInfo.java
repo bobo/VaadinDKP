@@ -7,6 +7,8 @@ package com.unknown.entity.raids;
 import com.unknown.entity.DBConnection;
 import com.unknown.entity.character.CharacterDB;
 import com.vaadin.data.Item;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
@@ -46,11 +48,11 @@ public class RaidInfo extends Window {
 
 		HorizontalLayout hzl = new HorizontalLayout();
 		hzl.setSpacing(true);
-		Table Attendants = charList(raid);
-		if (Attendants.size() > 0) {
-			hzl.addComponent(Attendants);
+		Table Rewards = rewardList(raid);
+		if (Rewards.size() > 0) {
+			hzl.addComponent(Rewards);
 		} else {
-			hzl.addComponent(new Label("No members in this raid."));
+			hzl.addComponent(new Label("No rewards in this raid."));
 		}
 
 		Table Loots = lootList(raid);
@@ -60,17 +62,6 @@ public class RaidInfo extends Window {
 			hzl.addComponent(new Label("No loot in this raid."));
 		}
 		addComponent(hzl);
-	}
-
-	private Table charList(Raid raid) {
-                Table tbl = new Table();
-                tbl.addContainerProperty("Name", String.class, "");
-                tbl.setHeight(150);
-                for (RaidChar rchar : raid.getRaidChars()) {
-                    Item addItem = tbl.addItem(new Integer(rchar.getId()));
-                    addItem.getItemProperty("Name").setValue(rchar.getName());
-                }
-                return tbl;
 	}
 
 	private Table lootList(Raid raid) {
@@ -90,4 +81,29 @@ public class RaidInfo extends Window {
 
 		return tbl;
 	}
+
+    private Table rewardList(Raid raid) {
+                Table tbl = new Table();
+                tbl.addContainerProperty("Comment", String.class, "");
+                tbl.addContainerProperty("Shares", Integer.class, "");
+                tbl.setHeight(150);
+                for (RaidReward rewards : raid.getRaidRewards()) {
+                    Item addItem = tbl.addItem(rewards);
+                    addItem.getItemProperty("Comment").setValue(rewards.getComment());
+                    addItem.getItemProperty("Shares").setValue(rewards.getShares());
+                }
+                tbl.addListener(new ItemClickListener() {
+
+                    @Override
+                    public void itemClick(ItemClickEvent event) {
+                        RaidReward raid = (RaidReward) event.getItemId();
+                        RaidCharWindow info = new RaidCharWindow(raid);
+                        info.printInfo();
+                        getApplication().getMainWindow().addWindow(info);
+                    }
+                });
+
+                return tbl;
+
+    }
 }

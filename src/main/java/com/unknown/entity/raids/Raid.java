@@ -21,6 +21,7 @@ public class Raid {
 	private final int id;
 	private final List<RaidItem> raidItems = new ArrayList<RaidItem>();
         private final List<RaidChar> raidChars = new ArrayList<RaidChar>();
+        private final List<RaidReward> raidRewards = new ArrayList<RaidReward>();
 
 	public Raid(String raidname, String comment, String date, int id) {
 		this.raidname = raidname;
@@ -59,5 +60,12 @@ public class Raid {
 
         public ImmutableList<RaidChar> getRaidChars() {
                 return ImmutableList.copyOf(raidChars);
+        }
+
+        public ImmutableList<RaidReward> getRaidRewards() {
+                return ImmutableList.copyOf(raidRewards);
+        }
+        public void addRaidRewards(Collection<RaidReward> rewards) {
+                raidRewards.addAll(rewards);
         }
 }

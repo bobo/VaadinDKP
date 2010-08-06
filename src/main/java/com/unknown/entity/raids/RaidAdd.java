@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -39,37 +40,16 @@ public class RaidAdd extends Window {
 
     public void printInfo() {
 
+        RaidDAO raidDAO = new RaidDB();
+        List<String> zoneList = raidDAO.getRaidZoneList();
+
         VerticalLayout addItem = new VerticalLayout();
         addComponent(addItem);
         final ComboBox zone = new ComboBox("Zone");
         final TextField comment = new TextField("Comment");
         final TextField datum = new TextField("Date");
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        Connection c = null;
-        try {
-            c = new DBConnection().getConnection();
-            PreparedStatement ps = c.prepareStatement("INSERT INTO raids (zone_id, date, comment) VALUES(?,?,?)");
-            PreparedStatement pzone = c.prepareStatement("SELECT * FROM zones");
-            ResultSet rzone = pzone.executeQuery();
-            while (rzone.next()) {
-                zone.addItem(rzone.getString("name"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (c != null) {
-                try {
-                    c.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        for (String zones : zoneList) {
+            zone.addItem(zones);
         }
         zone.setImmediate(true);
         zone.setNullSelectionAllowed(false);
@@ -114,40 +94,7 @@ public class RaidAdd extends Window {
     }
 
     private int addRaid(String zone, String comment, String date) {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        Connection c = null;
-        int result = 0;
-        int zoneId = 0;
-
-        try {
-            c = new DBConnection().getConnection();
-            PreparedStatement ps = c.prepareStatement("INSERT INTO raids (zone_id, date, comment) VALUES(?,?,?)");
-            PreparedStatement pzone = c.prepareStatement("SELECT * FROM zones WHERE name=?");
-            pzone.setString(1, zone);
-            ResultSet rzone = pzone.executeQuery();
-            while (rzone.next()) {
-                zoneId = rzone.getInt("id");
-            }
-            ps.setInt(1, zoneId);
-            ps.setString(2, date);
-            ps.setString(3, comment);
-            result = ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (c != null) {
-                try {
-                    c.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-        return result;
+        RaidDAO raidDao = new RaidDB();
+        return raidDao.addNewRaid(zone, comment, date);
     }
 }

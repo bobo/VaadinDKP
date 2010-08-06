@@ -45,12 +45,13 @@ public class RaidCharWindow extends Window {
                 tbl.addContainerProperty("Name", String.class, "");
                 tbl.addContainerProperty("Shares", Integer.class, "");
                 tbl.setHeight(150);
-                
-                for (RaidChar raidreward : raid.getRaidChars()) {
-                        if (raidreward.getRaidId() == raid.getID()) {
-                                Item addItem = tbl.addItem(new Integer(raidreward.getId()));
-                                addItem.getItemProperty("Name").setValue(raidreward.getName());
-                                addItem.getItemProperty("Shares").setValue(raidreward.getShares());
+                int i = 0;
+                for (RaidChar rchar : raid.getRaidChars()) {
+                        i++;
+                        if (rchar.getRaidId() == raid.getID()) {
+                                Item addItem = tbl.addItem(i);
+                                addItem.getItemProperty("Name").setValue(rchar.getName());
+                                addItem.getItemProperty("Shares").setValue(rchar.getShares());
                         }
                 }
                 return tbl;

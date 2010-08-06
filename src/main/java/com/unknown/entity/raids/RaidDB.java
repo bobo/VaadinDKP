@@ -82,7 +82,7 @@ public class RaidDB implements RaidDAO {
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
                 RaidChar rchar = new RaidChar();
-                rchar.setId(new Integer(rs.getInt("rewards.id")));
+                rchar.setId(rs.getInt("rewards.id"));
                 rchar.setName(rs.getString("characters.name"));
                 rchar.setShares(rs.getInt("rewards.number_of_shares"));
                 rchar.setComment(rs.getString("rewards.comment"));

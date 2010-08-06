@@ -45,9 +45,9 @@ public class RaidCharWindow extends Window {
                 tbl.addContainerProperty("Name", String.class, "");
                 tbl.addContainerProperty("Shares", Integer.class, "");
                 tbl.setHeight(150);
-                ;
+                
                 for (RaidChar raidreward : raid.getRaidChars()) {
-                        if (raidreward.getId() == raid.getID()) {
+                        if (raidreward.getRaidId() == raid.getID()) {
                                 Item addItem = tbl.addItem(new Integer(raidreward.getId()));
                                 addItem.getItemProperty("Name").setValue(raidreward.getName());
                                 addItem.getItemProperty("Shares").setValue(raidreward.getShares());

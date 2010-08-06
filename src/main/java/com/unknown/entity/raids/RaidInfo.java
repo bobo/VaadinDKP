@@ -82,7 +82,7 @@ public class RaidInfo extends Window {
 		return tbl;
 	}
 
-    private Table rewardList(Raid raid) {
+    private Table rewardList(final Raid raid) {
                 Table tbl = new Table();
                 tbl.addContainerProperty("Comment", String.class, "");
                 tbl.addContainerProperty("Shares", Integer.class, "");
@@ -96,9 +96,10 @@ public class RaidInfo extends Window {
 
                     @Override
                     public void itemClick(ItemClickEvent event) {
-                        RaidReward raid = (RaidReward) event.getItemId();
+                        RaidReward rreward = (RaidReward) event.getItemId();
                         RaidCharWindow info = new RaidCharWindow(raid);
                         info.printInfo();
+                        addComponent(new Label("Raid id; "+rreward.getId()));
                         getApplication().getMainWindow().addWindow(info);
                     }
                 });

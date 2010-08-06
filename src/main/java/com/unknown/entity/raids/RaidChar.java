@@ -11,8 +11,24 @@ package com.unknown.entity.raids;
  */
 public class RaidChar {
 	private int id;
+        private int raidid;
 	private String name;
+        private String comment;
         private int shares;
+
+        public int getRaidId() {
+                return raidid;
+        }
+
+        public void setRaidId(int raidid) {
+                this.raidid = raidid;
+        }
+        public String getComment() {
+                return comment;
+        }
+        public void setComment(String comment) {
+                this.comment = comment;
+        }
         
 	public int getId() {
 		return id;

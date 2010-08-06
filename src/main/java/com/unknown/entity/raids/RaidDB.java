@@ -84,6 +84,9 @@ public class RaidDB implements RaidDAO {
                 RaidChar rchar = new RaidChar();
                 rchar.setId(new Integer(rs.getInt("characters.id")));
                 rchar.setName(rs.getString("characters.name"));
+                rchar.setShares(rs.getInt("rewards.number_of_shares"));
+                rchar.setComment(rs.getString("rewards.comment"));
+                rchar.setRaidId(rs.getInt("raids.id"));
                 raidChars.add(rchar);
             }
         } catch (SQLException e) {

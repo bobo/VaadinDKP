@@ -22,6 +22,7 @@ public class Raid {
 	private final List<RaidItem> raidItems = new ArrayList<RaidItem>();
         private final List<RaidChar> raidChars = new ArrayList<RaidChar>();
         private final List<RaidReward> raidRewards = new ArrayList<RaidReward>();
+        private final List<Integer> rewardIdArray = new ArrayList<Integer>();
 
 	public Raid(String raidname, String comment, String date, int id) {
 		this.raidname = raidname;

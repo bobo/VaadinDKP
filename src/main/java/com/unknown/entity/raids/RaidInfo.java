@@ -4,8 +4,6 @@
  */
 package com.unknown.entity.raids;
 
-import com.unknown.entity.DBConnection;
-import com.unknown.entity.character.CharacterDB;
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -13,14 +11,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -97,9 +87,9 @@ public class RaidInfo extends Window {
                     @Override
                     public void itemClick(ItemClickEvent event) {
                         RaidReward rreward = (RaidReward) event.getItemId();
-                        RaidCharWindow info = new RaidCharWindow(raid);
+                        RaidCharWindow info = new RaidCharWindow(raid, rreward);
                         info.printInfo();
-                        addComponent(new Label("Raid id; "+rreward.getId()));
+                        addComponent(new Label("Raid id; "+rreward));
                         getApplication().getMainWindow().addWindow(info);
                     }
                 });

@@ -18,14 +18,16 @@ import java.util.List;
 public class RaidCharWindow extends Window {
 
         private final Raid raid;
+        private final RaidReward reward;
 
-        RaidCharWindow(Raid raid) {
+        RaidCharWindow(Raid raid, RaidReward reward) {
 
                 this.raid = raid;
+                this.reward = reward;
                 center();
                 setWidth("600px");
                 setHeight("320px");
-                setCaption(raid.getComment());
+                setCaption(reward.getComment()+" ID:" +reward.getId());
         }
 
         public void printInfo() {
@@ -45,11 +47,9 @@ public class RaidCharWindow extends Window {
                 tbl.addContainerProperty("Name", String.class, "");
                 tbl.addContainerProperty("Shares", Integer.class, "");
                 tbl.setHeight(150);
-                int i = 0;
                 for (RaidChar rchar : raid.getRaidChars()) {
-                        i++;
                         if (rchar.getRaidId() == raid.getID()) {
-                                Item addItem = tbl.addItem(i);
+                                Item addItem = tbl.addItem(rchar);
                                 addItem.getItemProperty("Name").setValue(rchar.getName());
                                 addItem.getItemProperty("Shares").setValue(rchar.getShares());
                         }

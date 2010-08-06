@@ -20,6 +20,7 @@ public class RaidReward {
 	private String name;
         private int shares;
         private final List<RaidChar> raidChars = new ArrayList<RaidChar>();
+        private int raidId;
 
 	public void setId(Integer integer) {
 	}
@@ -62,4 +63,12 @@ public class RaidReward {
         public ImmutableList<RaidChar> getRewardChars() {
                 return ImmutableList.copyOf(raidChars);
         }
+
+    public int getRaidId() {
+                return raidId;
+    }
+    public void setRaidId(int raidId) {
+            this.raidId = raidId;
+    }
+
     }

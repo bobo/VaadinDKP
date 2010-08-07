@@ -171,6 +171,7 @@ public class RaidDB implements RaidDAO {
                 rrewards.setId(rs.getInt("rewards.id"));
                 rrewards.setComment(rs.getString("rewards.comment"));
                 rrewards.setShares(rs.getInt("rewards.number_of_shares"));
+				rrewards.addRewardChars(getCharsForReward(rrewards.getId()));
                 raidRewards.add(rrewards);
 				System.out.println("rreward"+rrewards.toString());
             }
@@ -181,4 +182,8 @@ public class RaidDB implements RaidDAO {
         return raidRewards;
 
     }
+
+	private Collection<RaidChar> getCharsForReward(int id) {
+		throw new RuntimeException("fix me");
+	}
 }

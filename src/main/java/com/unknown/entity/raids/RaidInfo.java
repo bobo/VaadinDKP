@@ -78,19 +78,21 @@ public class RaidInfo extends Window {
                 tbl.addContainerProperty("Comment", String.class, "");
                 tbl.addContainerProperty("Shares", Integer.class, "");
                 tbl.setHeight(150);
-                for (RaidReward rewards : raid.getRaidRewards()) {
-                    Item addItem = tbl.addItem(rewards);
-                    addItem.getItemProperty("Comment").setValue(rewards.getComment());
-                    addItem.getItemProperty("Shares").setValue(rewards.getShares());
+                for (RaidReward reward : raid.getRaidRewards()) {
+                    Item addItem = tbl.addItem(reward);
+                    addItem.getItemProperty("Comment").setValue(reward.getComment());
+                    addItem.getItemProperty("Shares").setValue(reward.getShares());
                 }
                 tbl.addListener(new ItemClickListener() {
 
                     @Override
                     public void itemClick(ItemClickEvent event) {
                         RaidReward rreward = (RaidReward) event.getItemId();
-                        RaidCharWindow info = new RaidCharWindow(raid, rreward);
+                        RaidCharWindow info = new RaidCharWindow(rreward.getRewardChars());
                         info.printInfo();
                         addComponent(new Label("Raid id; "+rreward.getRaidId()));
+						addComponent(new Label("RaidReward id; "+rreward.getId()));
+
                         getApplication().getMainWindow().addWindow(info);
                     }
                 });

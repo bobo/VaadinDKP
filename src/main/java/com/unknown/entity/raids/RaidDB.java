@@ -161,9 +161,8 @@ public class RaidDB implements RaidDAO {
         List<RaidReward> raidRewards = new ArrayList<RaidReward>();
         try {
             c = new DBConnection().getConnection();
-            PreparedStatement p = c.prepareStatement("SELECT * FROM rewards JOIN raids WHERE rewards.raid_id=? AND raids.id=?");
+            PreparedStatement p = c.prepareStatement("SELECT * FROM rewards WHERE rewards.raid_id=?");
             p.setInt(1, raidId);
-            p.setInt(2, raidId);
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
                 RaidReward rrewards = new RaidReward();

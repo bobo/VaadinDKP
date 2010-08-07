@@ -19,6 +19,10 @@ import com.unknown.entity.raids.*;
 import com.unknown.entity.character.*;
 import com.unknown.entity.items.*;
 import com.vaadin.Application;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.QueryContainer;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -108,6 +112,7 @@ public class UnknownEntityDKP extends Application {
         }
 
         private VerticalLayout VerticalDKPListLayout(final DKPList dKPList, final Object username) throws UnsupportedOperationException {
+                final IndexedContainer ic = new IndexedContainer();
                 VerticalLayout vertDKP = new VerticalLayout();
                 vertDKP.addComponent(new Label("DKP"));
                 vertDKP.addComponent(dKPList);
@@ -117,14 +122,15 @@ public class UnknownEntityDKP extends Application {
                 for (Armor armor : Armor.values()) {
                         filterDKP.addItem(armor);
                 }
-                String filter = "";
-                if (filterDKP.getValue() == null) {
-                        filter = "";
-                } else {
-                        filter = filterDKP.getValue().toString();
-                }
-                dKPList.printList(filter);
-                vertDKP.addComponent(new Label("Filter: " + filter));
+                filterDKP.addListener(new ValueChangeListener() {
+
+                        @Override
+                        public void valueChange(ValueChangeEvent event) {
+                                        dKPList.filter(filterDKP.getValue());
+                        }
+                });
+                
+                dKPList.printList();
                 final Button addUsrBtn = new Button("Add Character");
                 addUsrBtn.addListener(new Button.ClickListener() {
 

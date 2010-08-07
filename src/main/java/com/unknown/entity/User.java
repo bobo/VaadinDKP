@@ -19,7 +19,7 @@ public class User {
     private double dkp_spent;
     private double dkp;
     private boolean active = true;
-    private String armor;
+    private Armor armor;
 
     public User(int id, String username, Role role, boolean active, int shares, double dkp_earned, double dkp_spent, double dkp) {
 	this.id = id;
@@ -30,6 +30,7 @@ public class User {
         this.dkp_earned = dkp_earned;
         this.dkp_spent = dkp_spent;
         this.active = active;
+        this.armor = role.getArmor();
     }	
     
     public int getID() {
@@ -80,7 +81,7 @@ public class User {
         return dkp_earned;
     }
 
-    public String getArmor() {
-        return this.role.getArmor().toString();
+    public Armor getArmor() {
+        return armor;
     }
 }

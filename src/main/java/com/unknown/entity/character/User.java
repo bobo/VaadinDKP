@@ -4,8 +4,12 @@
  */
 package com.unknown.entity.character;
 
+import com.google.common.collect.ImmutableList;
 import com.unknown.entity.Armor;
 import com.unknown.entity.Role;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -22,6 +26,8 @@ public class User {
         private double dkp;
         private boolean active = true;
         private Armor armor;
+        private final List<CharacterItem> charItems = new ArrayList<CharacterItem>();
+
 
         public User(int id, String username, Role role, boolean active, int shares, double dkp_earned, double dkp_spent, double dkp) {
                 this.id = id;
@@ -86,5 +92,13 @@ public class User {
 
         public Armor getArmor() {
                 return armor;
+        }
+
+        public void addCharItems(Collection<CharacterItem> items) {
+                charItems.addAll(items);
+        }
+
+        public ImmutableList<CharacterItem> getCharItems() {
+                return ImmutableList.copyOf(charItems);
         }
 }

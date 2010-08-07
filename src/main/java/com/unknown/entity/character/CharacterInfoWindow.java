@@ -74,32 +74,15 @@ public class CharacterInfoWindow extends Window {
         }
 
         private Table lootList(User user) {
-                try {
-                        Class.forName("com.mysql.jdbc.Driver");
-                } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
-                }
                 Table tbl = new Table();
                 tbl.addContainerProperty("Name", String.class, "");
                 tbl.addContainerProperty("Price", Double.class, 0);
                 tbl.setHeight(150);
-                boolean isEmpty = true;
-                Connection c = null;
-                try {
-                        c = new DBConnection().getConnection();
-                        PreparedStatement p = c.prepareStatement("SELECT * FROM loots JOIN items WHERE loots.character_id=? AND loots.item_id=items.id");
-                        p.setInt(1, user.getID());
-                        ResultSet rs = p.executeQuery();
-                        while (rs.next()) {
-                                Item addItem = tbl.addItem(new Integer(rs.getInt("loots.id")));
-                                addItem.getItemProperty("Name").setValue(rs.getString("items.name"));
-                                addItem.getItemProperty("Price").setValue(rs.getDouble("loots.price"));
-                                isEmpty = false;
-
-                        }
-                } catch (SQLException e) {
+                for (CharacterItem charitem : user.getCharItems()) {
+                        Item addItem = tbl.addItem(charitem.getId());
+                                addItem.getItemProperty("Name").setValue(charitem.getName());
+                                addItem.getItemProperty("Price").setValue(charitem.getPrice());
                 }
-
                 return tbl;
         }
 }

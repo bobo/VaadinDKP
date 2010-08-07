@@ -39,6 +39,7 @@ public class CharacterDB implements CharacterDAO {
                         c = new DBConnection().getConnection();
                         PreparedStatement p = c.prepareStatement("SELECT * FROM characters JOIN character_classes ON characters.character_class_id=character_classes.id");
 
+
                         ResultSet rs = p.executeQuery();
 
                         while (rs.next()) {
@@ -58,6 +59,27 @@ public class CharacterDB implements CharacterDAO {
                 }
 
                 return users;
+        }
+
+        private List<CharacterItem> getItemsForCharacter(int charId) {
+                Connection c = null;
+                List<CharacterItem> itemlist = new ArrayList<CharacterItem>();
+                try {
+                        c = new DBConnection().getConnection();
+                        PreparedStatement p = c.prepareStatement("SELECT * FROM loots JOIN items WHERE loots.character_id=? AND loots.item_id=items.id");
+                        p.setInt(1, charId);
+                        ResultSet rs = p.executeQuery();
+                        while (rs.next()) {
+                                CharacterItem charitem = new CharacterItem();
+                                charitem.setId(rs.getInt("loots.id"));
+                                charitem.setName(rs.getString("items.name"));
+                                charitem.setPrice(rs.getDouble("loots.price"));
+                                charitem.setHeroic(rs.getBoolean("loots.heroic"));
+                                itemlist.add(charitem);
+                        }
+                } catch (SQLException e) {
+                }
+                return itemlist;
         }
 
         private void DoSQLMagicForCharacters(Connection c, ResultSet rs, List<User> users) throws SQLException {
@@ -89,7 +111,10 @@ public class CharacterDB implements CharacterDAO {
                 dkp_earned = shares * share_value;
                 dkp = dkp_earned - dkp_spent;
                 Role role = Role.valueOf(rs.getString("character_classes.name").replace(" ", ""));
-                users.add(new User(rs.getInt("id"), rs.getString("characters.name"), role, rs.getBoolean("characters.active"), shares, dkp_earned, dkp_spent, dkp));
+                User user = new User(rs.getInt("id"), rs.getString("characters.name"), role, rs.getBoolean("characters.active"), shares, dkp_earned, dkp_spent, dkp);
+                user.addCharItems(getItemsForCharacter(rs.getInt("id")));
+                users.add(user);
+
         }
 
         @Override

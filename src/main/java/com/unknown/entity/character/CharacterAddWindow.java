@@ -75,18 +75,19 @@ public class CharacterAddWindow extends Window {
 
                         @Override
                         public void buttonClick(ClickEvent event) {
-                                final String cname = (String) nameField.getValue();
-                                final String crole = classCombo.getValue().toString();
+                                final String charactername = (String) nameField.getValue();
+                                final String characterclass = classCombo.getValue().toString();
 
-                                final boolean cactive = (Boolean) activeCheck.getValue();
+                                final boolean characteractive = (Boolean) activeCheck.getValue();
 
                                 int success = 0;
                                 try {
-                                        success = addChar(cname, crole, cactive);
+                                        success = addChar(charactername, characterclass, characteractive);
                                 } catch (SQLException ex) {
                                         Logger.getLogger(CharacterAddWindow.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                                 addComponent(new Label("Update :" + success));
+                                close();
                         }
                 });
                 final Button cbtn = new Button("Close");

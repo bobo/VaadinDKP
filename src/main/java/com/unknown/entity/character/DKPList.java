@@ -30,6 +30,23 @@ public class DKPList extends Table {
         public DKPList(CharacterDAO characterDAO) {
                 this.characterDAO = characterDAO;
 
+                SetColumnHeaders();
+
+                this.setWidth("180px");
+                this.setHeight("500px");
+                this.addListener(new ItemClickListener() {
+
+                        @Override
+                        public void itemClick(ItemClickEvent event) {
+                                User user = (User) event.getItemId();
+                                CharacterInfoWindow info = new CharacterInfoWindow(user);
+                                info.printInfo();
+                                getApplication().getMainWindow().addWindow(info);
+                        }
+                });
+        }
+
+        private void SetColumnHeaders() throws UnsupportedOperationException {
                 ic.addContainerProperty("Name", String.class, "");
                 ic.addContainerProperty("Armor", Armor.class, "");
                 this.setContainerDataSource(ic);
@@ -40,22 +57,6 @@ public class DKPList extends Table {
                         Logger.getLogger(DKPList.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 addContainerProperty("DKP", Double.class, 0);
-                this.setWidth("180px");
-                this.setHeight("500px");
-                this.addListener(new ItemClickListener() {
-
-                        @Override
-                        public void itemClick(ItemClickEvent event) {
-                                User user = (User) event.getItemId();
-                                CharacterInfoWindow info = new CharacterInfoWindow(user);
-                                info.printInfo();
-                                info.setCaption(user.getUsername());
-                                getApplication().getMainWindow().addWindow(info);
-                                info.center();
-                                info.setWidth("400px");
-                                info.setHeight("400px");
-                        }
-                });
         }
 
         public void clear() {
@@ -74,22 +75,26 @@ public class DKPList extends Table {
                 });
                 for (final User user : users) {
                         Item addItem = addItem(user);
-                        addItem.getItemProperty("Name").setValue(user.getUsername());
-                        addItem.getItemProperty("Armor").setValue(user.getArmor());
-                        addItem.getItemProperty("DKP").setValue(user.getDKP());
-
+                        DkpListAddItem(addItem, user);
                 }
+        }
 
+        private void DkpListAddItem(Item addItem, final User user) throws ConversionException, ReadOnlyException {
+                addItem.getItemProperty("Name").setValue(user.getUsername());
+                addItem.getItemProperty("Armor").setValue(user.getArmor());
+                addItem.getItemProperty("DKP").setValue(user.getDKP());
         }
 
         public void filter(Object value) {
-                String foo;
-                if (value == null) {
-                        foo = "";
-                } else {
-                        foo = value.toString();
-                }
                 ic.removeAllContainerFilters();
-                ic.addContainerFilter("Armor", foo, true, false);
+                ic.addContainerFilter("Armor", filterString(value), true, false);
+        }
+
+        private String filterString(Object value) {
+                if (value == null) {
+                        return "";
+                } else {
+                        return value.toString();
+                }
         }
 }

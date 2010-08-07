@@ -23,7 +23,9 @@ public class LoginWindow extends Window{
     private Button submit = new Button("Login");
 
     public LoginWindow() {
-
+        this.center();
+        this.setModal(true);
+        this.setCaption("Login...");
         password.setSecret(true);
         addComponent(userName);
         userName.focus();

@@ -185,8 +185,6 @@ public class UnknownEntityDKP extends Application
             public void buttonClick(ClickEvent event) {
                 if (getMainWindow().getApplication().getUser() == null) {
                     LoginWindow loginWindow = new LoginWindow();
-                    loginWindow.center();
-                    loginWindow.setCaption("Login...");
                     getMainWindow().addWindow(loginWindow);
                     loginWindow.attach();
                 } else {

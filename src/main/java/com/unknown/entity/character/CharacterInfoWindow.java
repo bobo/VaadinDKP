@@ -4,7 +4,6 @@
  */
 package com.unknown.entity.character;
 
-import com.unknown.entity.DBConnection;
 import com.vaadin.data.Item;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.GridLayout.OutOfBoundsException;
@@ -12,13 +11,7 @@ import com.vaadin.ui.GridLayout.OverlapsException;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
-import java.sql.Connection;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

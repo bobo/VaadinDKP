@@ -47,7 +47,7 @@ public class DKPList extends Table {
         this.removeAllItems();
     }
 
-    public void printList() {
+    public void printList(String filter) {
         clear();
         List<User> users = characterDAO.getUsers();
 	Collections.sort(users, new Comparator<User>() {
@@ -58,9 +58,11 @@ public class DKPList extends Table {
 	    }
 	});
 	for (final User user : users) {
+                if (filter==null || filter.isEmpty()) {
                 Item addItem = addItem(user);
                 addItem.getItemProperty("Name").setValue(user.getUsername());
                 addItem.getItemProperty("DKP").setValue(user.getDKP());
+                }
             }
 	
     }

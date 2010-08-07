@@ -22,58 +22,63 @@ import java.util.List;
  */
 public class CharacterList extends HorizontalLayout {
 
-    CharacterDAO characterDAO;
+        CharacterDAO characterDAO;
 
-    public CharacterList(CharacterDAO characherDAO) {
-        this.characterDAO = characherDAO;
-    }
-    private void clear() {
-        this.removeAllComponents();
-    }
-
-    public void printList() {
-        clear();
-        List<Role> roles = Arrays.asList(Role.values());
-        Collections.sort(roles, new ToStringComparator());
-
-        for (Role r : roles) {
-            VerticalLayout roleList = new VerticalLayout();
-            addComponent(roleList);
-            Embedded e = new Embedded("", new ThemeResource("../ue/img/"+r.toString().toLowerCase()+".png"));
-            roleList.addComponent(e);
-            addUsersForRole(r, roleList);
+        public CharacterList(CharacterDAO characherDAO) {
+                this.characterDAO = characherDAO;
         }
-    }
 
-    private void addUsersForRole(Role r, VerticalLayout roleList) {
-        for (final User user : characterDAO.getUsersWithRole(r)) {
-            final Button userBtn = new Button(user.toString());
-            userBtn.setStyleName(Button.STYLE_LINK);
-            userBtn.addListener(new Button.ClickListener() {
+        private void clear() {
+                this.removeAllComponents();
+        }
+
+        public void printList() {
+                clear();
+                List<Role> roles = Arrays.asList(Role.values());
+                Collections.sort(roles, new ToStringComparator());
+
+                for (Role r : roles) {
+                        VerticalLayout roleList = new VerticalLayout();
+                        addComponent(roleList);
+                        Embedded e = new Embedded("", new ThemeResource("../ue/img/" + r.toString().toLowerCase() + ".png"));
+                        roleList.addComponent(e);
+                        addUsersForRole(r, roleList);
+                }
+        }
+
+        private void addUsersForRole(Role r, VerticalLayout roleList) {
+                for (final User user : characterDAO.getUsersWithRole(r)) {
+                        final Button userBtn = new Button(user.toString());
+                        userBtn.setStyleName(Button.STYLE_LINK);
+                        userBtn.addListener(new Button.ClickListener() {
+
+                                @Override
+                                public void buttonClick(ClickEvent event) {
+                                        final Object username = getApplication().getUser();
+                                        if (username != null && username.toString().equals("admin")) {
+
+                                                CharacterEditWindow info = new CharacterEditWindow(user);
+                                                info.printInfo();
+                                                getApplication().getMainWindow().addWindow(info);
+                                        } else {
+                                                CharacterInfoWindow info = new CharacterInfoWindow(user);
+                                                info.printInfo();
+                                                getApplication().getMainWindow().addWindow(info);
+                                        }
+                                }
+                        });
+                        roleList.addComponent(userBtn);
+                }
+        }
+
+        private static class ToStringComparator implements Comparator<Role> {
+
+                public ToStringComparator() {
+                }
 
                 @Override
-                public void buttonClick(ClickEvent event) {
-                    CharacterInfoWindow info = new CharacterInfoWindow(user);
-                    info.printInfo();
-                    info.setCaption(user.getUsername());
-                    getApplication().getMainWindow().addWindow(info);
-                    info.center();
-                    info.setWidth("400px");
-                    info.setHeight("400px");
+                public int compare(Role t, Role t1) {
+                        return t.toString().compareTo(t1.toString());
                 }
-            });
-            roleList.addComponent(userBtn);
         }
-    }
-
-    private static class ToStringComparator implements Comparator<Role> {
-
-        public ToStringComparator() {
-        }
-
-        @Override
-        public int compare(Role t, Role t1) {
-            return t.toString().compareTo(t1.toString());
-        }
-    }
 }

@@ -57,7 +57,7 @@ public class Characters extends HorizontalLayout {
 
                 @Override
                 public void buttonClick(ClickEvent event) {
-                    CharacterInfo info = new CharacterInfo(user);
+                    CharacterInfoWindow info = new CharacterInfoWindow(user);
                     info.printInfo();
                     info.setCaption(user.getUsername());
                     getApplication().getMainWindow().addWindow(info);

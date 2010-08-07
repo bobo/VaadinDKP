@@ -33,7 +33,7 @@ public class ItemList extends Table {
             @Override
             public void itemClick(ItemClickEvent event) {
                 Items item = (Items) event.getItemId();
-                ItemInfo info = new ItemInfo(item);
+                ItemInfoWindow info = new ItemInfoWindow(item);
                 info.printInfo();
                 info.setCaption(item.getName());
                 getApplication().getMainWindow().addWindow(info);

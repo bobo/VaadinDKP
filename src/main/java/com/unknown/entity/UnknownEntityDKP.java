@@ -18,8 +18,8 @@ package com.unknown.entity;
 import com.unknown.entity.raids.RaidDB;
 import com.unknown.entity.raids.RaidDAO;
 import com.unknown.entity.raids.RaidList;
-import com.unknown.entity.raids.RaidAdd;
-import com.unknown.entity.character.CharacterAdd;
+import com.unknown.entity.raids.RaidAddWindow;
+import com.unknown.entity.character.CharacterAddWindow;
 import com.unknown.entity.character.DKPList;
 import com.unknown.entity.character.CharacterDB;
 import com.unknown.entity.character.CharacterDAO;
@@ -27,7 +27,7 @@ import com.unknown.entity.character.Characters;
 import com.unknown.entity.items.ItemDB;
 import com.unknown.entity.items.ItemList;
 import com.unknown.entity.items.ItemDAO;
-import com.unknown.entity.items.ItemAdd;
+import com.unknown.entity.items.ItemAddWindow;
 import com.vaadin.Application;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.ThemeResource;
@@ -71,7 +71,7 @@ public class UnknownEntityDKP extends Application
         addUsrBtn.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                CharacterAdd addUser = new CharacterAdd();
+                CharacterAddWindow addUser = new CharacterAddWindow();
                 addUser.printInfo();
                 getMainWindow().addWindow(addUser);
 
@@ -98,7 +98,7 @@ public class UnknownEntityDKP extends Application
         addItmBtn.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                ItemAdd addItem = new ItemAdd();
+                ItemAddWindow addItem = new ItemAddWindow();
                 addItem.printInfo();
                 addItem.setCaption("Add Item");
                 getMainWindow().addWindow(addItem);
@@ -123,7 +123,7 @@ public class UnknownEntityDKP extends Application
 
             @Override
             public void buttonClick(ClickEvent event) {
-                RaidAdd addRaid = new RaidAdd();
+                RaidAddWindow addRaid = new RaidAddWindow();
                 addRaid.printInfo();
                 addRaid.setCaption("Add Raid");
                 getMainWindow().addWindow(addRaid);

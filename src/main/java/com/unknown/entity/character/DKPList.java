@@ -32,7 +32,7 @@ public class DKPList extends Table {
 	    @Override
 	    public void itemClick(ItemClickEvent event) {
 		User user = (User) event.getItemId();
-		CharacterInfo info = new CharacterInfo(user);
+		CharacterInfoWindow info = new CharacterInfoWindow(user);
 		info.printInfo();
                 info.setCaption(user.getUsername());
 		getApplication().getMainWindow().addWindow(info);

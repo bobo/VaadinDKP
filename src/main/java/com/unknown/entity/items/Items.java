@@ -5,6 +5,12 @@
 
 package com.unknown.entity.items;
 
+import com.google.common.collect.ImmutableList;
+import com.unknown.entity.character.CharacterItem;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /**
  *
  * @author alde
@@ -20,6 +26,7 @@ public class Items {
     private int wowid_hc;
     private double price_hc;
     private boolean isLegendary = false;
+    private List<ItemLooter> looterList = new ArrayList<ItemLooter>();
 
     public Items(int id, String itemname, int wowid, double price, int wowid_hc, double price_hc, String slot, String type, boolean isLegendary) {
             this.id = id;
@@ -61,4 +68,12 @@ public class Items {
     public boolean isLegendary() {
         return isLegendary;
     }
+
+    public void addItemList(Collection<ItemLooter> looters) {
+                looterList.addAll(looters);
+        }
+
+        public ImmutableList<ItemLooter> getItemList() {
+                return ImmutableList.copyOf(looterList);
+        }
 }

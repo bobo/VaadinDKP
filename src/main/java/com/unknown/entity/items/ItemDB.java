@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,10 +36,35 @@ public class ItemDB implements ItemDAO {
             PreparedStatement p = c.prepareStatement("SELECT * FROM items");
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
-                items.add(new Items(rs.getInt("id"), rs.getString("name"), rs.getInt("wowid_normal"), rs.getDouble("price_normal"), rs.getInt("wowid_heroic"), rs.getDouble("price_heroic"), rs.getString("slot"), rs.getString("type"), rs.getBoolean("isLegendary")));
+                Items tempitem = new Items(rs.getInt("id"), rs.getString("name"), rs.getInt("wowid_normal"), rs.getDouble("price_normal"), rs.getInt("wowid_heroic"), rs.getDouble("price_heroic"), rs.getString("slot"), rs.getString("type"), rs.getBoolean("isLegendary"));
+                tempitem.addItemList(getLootersFormItems(rs.getInt("id")));
+                items.add(tempitem);
             }
         } catch (SQLException e) {
         }
         return items;
     }
+
+        private Collection<ItemLooter> getLootersFormItems(int itemId) {
+                List<ItemLooter> looters = new ArrayList<ItemLooter>();
+                                Connection c = null;
+                try {
+                        c = new DBConnection().getConnection();
+                        PreparedStatement p = c.prepareStatement("SELECT * FROM loots JOIN characters JOIN items JOIN raids WHERE loots.character_id=characters.id AND loots.item_id=? AND items.id=loots.item_id AND raids.id=loots.raid_id");
+                        p.setInt(1, itemId);
+                        ResultSet rs = p.executeQuery();
+                        while (rs.next()) {
+                                ItemLooter templooter = new ItemLooter();
+                                templooter.setName(rs.getString("characters.name"));
+                                templooter.setPrice(rs.getDouble("loots.price"));
+                                templooter.setRaid(rs.getString("raids.comment"));
+                                templooter.setDate(rs.getString("raids.date"));
+                                templooter.setId(rs.getInt("loots.id"));
+                                looters.add(templooter);
+                        }
+                } catch (SQLException e) {
+                }
+
+                return looters;
+        }
 }

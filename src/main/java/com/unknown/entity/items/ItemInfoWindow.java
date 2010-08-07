@@ -98,33 +98,20 @@ public class ItemInfoWindow extends Window {
         }
 
         private Table lootList(Items item) {
-                try {
-                        Class.forName("com.mysql.jdbc.Driver");
-                } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
-                }
                 Table tbl = new Table();
                 tbl.addContainerProperty("Name", String.class, "");
                 tbl.addContainerProperty("Price", Double.class, 0);
                 tbl.addContainerProperty("Raid", String.class, "");
                 tbl.addContainerProperty("Date", String.class, "");
                 tbl.setHeight(150);
-                Connection c = null;
-                try {
-                        c = new DBConnection().getConnection();
-                        PreparedStatement p = c.prepareStatement("SELECT * FROM loots JOIN characters JOIN items JOIN raids WHERE loots.character_id=characters.id AND loots.item_id=? AND items.id=loots.item_id AND raids.id=loots.raid_id");
-                        p.setInt(1, item.getID());
-                        ResultSet rs = p.executeQuery();
-                        while (rs.next()) {
-                                Item addItem = tbl.addItem(new Integer(rs.getInt("loots.id")));
-                                addItem.getItemProperty("Name").setValue(rs.getString("characters.name"));
-                                addItem.getItemProperty("Price").setValue(rs.getDouble("loots.price"));
-                                addItem.getItemProperty("Raid").setValue(rs.getString("raids.comment"));
-                                addItem.getItemProperty("Date").setValue(rs.getString("raids.date"));
-                        }
-                } catch (SQLException e) {
-                }
+                for (ItemLooter looters : item.getItemList()) {
+                        Item addItem = tbl.addItem(looters.getId());
+                        addItem.getItemProperty("Name").setValue(looters.getName());
+                        addItem.getItemProperty("Price").setValue(looters.getPrice());
+                        addItem.getItemProperty("Raid").setValue(looters.getRaid());
+                        addItem.getItemProperty("Date").setValue(looters.getDate());
 
+                }
                 return tbl;
         }
 }

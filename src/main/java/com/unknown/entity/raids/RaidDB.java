@@ -5,7 +5,7 @@
 package com.unknown.entity.raids;
 
 import com.unknown.entity.DBConnection;
-import com.unknown.entity.character.CharacterDB;
+import com.unknown.entity.character.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

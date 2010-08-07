@@ -15,8 +15,8 @@ import java.util.List;
  */
 public interface CharacterDAO {
 
-    public List<Character> getUsers();
+    public List<User> getUsers();
 
-    public Collection<Character> getUsersWithRole(Role role);
+    public Collection<User> getUsersWithRole(Role role);
 
 }

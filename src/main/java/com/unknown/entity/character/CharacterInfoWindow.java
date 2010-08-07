@@ -26,9 +26,9 @@ import java.util.logging.Logger;
  */
 public class CharacterInfoWindow extends Window {
 
-        private final Character user;
+        private final User user;
 
-        public CharacterInfoWindow(Character user) {
+        public CharacterInfoWindow(User user) {
                 this.user = user;
                 this.setCaption(user.getUsername());
                 this.center();
@@ -73,7 +73,7 @@ public class CharacterInfoWindow extends Window {
                 addComponent(new Label("Status: " + (user.isActive() ? "Active" : "Inactive")));
         }
 
-        private Table lootList(Character user) {
+        private Table lootList(User user) {
                 try {
                         Class.forName("com.mysql.jdbc.Driver");
                 } catch (ClassNotFoundException ex) {

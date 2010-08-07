@@ -12,7 +12,7 @@ import com.unknown.entity.Role;
  * @author bobo
  */
 
-public class Character {
+public class User {
 
     private final int id;
     private final String username;
@@ -24,7 +24,7 @@ public class Character {
     private boolean active = true;
     private Armor armor;
 
-    public Character(int id, String username, Role role, boolean active, int shares, double dkp_earned, double dkp_spent, double dkp) {
+    public User(int id, String username, Role role, boolean active, int shares, double dkp_earned, double dkp_spent, double dkp) {
 	this.id = id;
         this.username = username;
 	this.role = role;

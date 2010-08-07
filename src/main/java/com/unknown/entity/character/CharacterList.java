@@ -46,7 +46,7 @@ public class CharacterList extends HorizontalLayout {
     }
 
     private void addUsersForRole(Role r, VerticalLayout roleList) {
-        for (final Character user : characterDAO.getUsersWithRole(r)) {
+        for (final User user : characterDAO.getUsersWithRole(r)) {
             final Button userBtn = new Button(user.toString());
             userBtn.setStyleName(Button.STYLE_LINK);
             userBtn.addListener(new Button.ClickListener() {

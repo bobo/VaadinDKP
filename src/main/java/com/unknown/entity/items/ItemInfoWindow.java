@@ -4,9 +4,9 @@
  */
 package com.unknown.entity.items;
 
-import com.unknown.entity.character.CharacterDB;
-import com.unknown.entity.DBConnection;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property.ConversionException;
+import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -17,13 +17,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -99,19 +92,27 @@ public class ItemInfoWindow extends Window {
 
         private Table lootList(Items item) {
                 Table tbl = new Table();
+                ItemTableHeaders(tbl);
+                tbl.setHeight(150);
+                for (ItemLooter looters : item.getItemList()) {
+                        Item addItem = tbl.addItem(looters.getId());
+                        ItemTableRowAdd(addItem, looters);
+
+                }
+                return tbl;
+        }
+
+        private void ItemTableRowAdd(Item addItem, ItemLooter looters) throws ConversionException, ReadOnlyException {
+                addItem.getItemProperty("Name").setValue(looters.getName());
+                addItem.getItemProperty("Price").setValue(looters.getPrice());
+                addItem.getItemProperty("Raid").setValue(looters.getRaid());
+                addItem.getItemProperty("Date").setValue(looters.getDate());
+        }
+
+        private void ItemTableHeaders(Table tbl) throws UnsupportedOperationException {
                 tbl.addContainerProperty("Name", String.class, "");
                 tbl.addContainerProperty("Price", Double.class, 0);
                 tbl.addContainerProperty("Raid", String.class, "");
                 tbl.addContainerProperty("Date", String.class, "");
-                tbl.setHeight(150);
-                for (ItemLooter looters : item.getItemList()) {
-                        Item addItem = tbl.addItem(looters.getId());
-                        addItem.getItemProperty("Name").setValue(looters.getName());
-                        addItem.getItemProperty("Price").setValue(looters.getPrice());
-                        addItem.getItemProperty("Raid").setValue(looters.getRaid());
-                        addItem.getItemProperty("Date").setValue(looters.getDate());
-
-                }
-                return tbl;
         }
 }

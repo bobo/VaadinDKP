@@ -16,6 +16,7 @@ public class ItemPrices {
     private Slots slot;
     private double price;
     private double price_heroic;
+
     public ItemPrices(Slots slot, double price, double price_heroic) {
         this.slot = slot;
         this.price = price;

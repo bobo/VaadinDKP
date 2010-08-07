@@ -5,6 +5,7 @@
 
 package com.unknown.entity.items;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -16,4 +17,5 @@ public interface ItemDAO {
 
     public List<Items> getItems();
 
+        public List<ItemPrices> getDefaultPrices() throws SQLException;
 }

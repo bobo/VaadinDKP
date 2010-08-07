@@ -21,6 +21,7 @@ import com.vaadin.ui.Label;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +43,12 @@ public class ItemAddWindow extends Window {
         public void printInfo() {
 
                 DefaultPrices def = new DefaultPrices();
-                final List<ItemPrices> prices = def.getPrices();
+                List<ItemPrices> prices = new ArrayList<ItemPrices>();
+                try {
+                        prices = def.getPrices();
+                } catch (SQLException ex) {
+                        Logger.getLogger(ItemAddWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
                 VerticalLayout addItem = new VerticalLayout();
                 addComponent(addItem);
@@ -54,6 +60,8 @@ public class ItemAddWindow extends Window {
                 final ComboBox slot = new ComboBox("Slot");
                 final ComboBox type = new ComboBox("Type");
                 final CheckBox legendary = new CheckBox(" Legendary");
+
+                final List<ItemPrices> defaultprices = prices;
 
                 name.setImmediate(true);
                 name.focus();
@@ -92,7 +100,7 @@ public class ItemAddWindow extends Window {
 
                                 double defprice = 0.0;
                                 double defpricehc = 0.0;
-                                for (ItemPrices ip : prices) {
+                                for (ItemPrices ip : defaultprices) {
                                         if (ip.getSlotString().equals(slotvalue)) {
                                                 defprice = ip.getPrice();
                                                 defpricehc = ip.getPriceHeroic();

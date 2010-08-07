@@ -35,7 +35,7 @@ public class RaidInfo extends Window {
 		addComponent(new Label("Zone: " + raid.getName()));
 		addComponent(new Label("Comment: " + raid.getComment()));
 		addComponent(new Label("Date: " + raid.getDate()));
-
+		addComponent(new Label("id: "+raid.getID()));
 		HorizontalLayout hzl = new HorizontalLayout();
 		hzl.setSpacing(true);
 		Table Rewards = rewardList(raid);
@@ -74,6 +74,7 @@ public class RaidInfo extends Window {
 
     private Table rewardList(final Raid raid) {
                 Table tbl = new Table();
+				System.out.println("getting rewardlist for : "+raid.getID());
                 tbl.addContainerProperty("Comment", String.class, "");
                 tbl.addContainerProperty("Shares", Integer.class, "");
                 tbl.setHeight(150);
@@ -89,7 +90,7 @@ public class RaidInfo extends Window {
                         RaidReward rreward = (RaidReward) event.getItemId();
                         RaidCharWindow info = new RaidCharWindow(raid, rreward);
                         info.printInfo();
-                        addComponent(new Label("Raid id; "+rreward));
+                        addComponent(new Label("Raid id; "+rreward.getRaidId()));
                         getApplication().getMainWindow().addWindow(info);
                     }
                 });

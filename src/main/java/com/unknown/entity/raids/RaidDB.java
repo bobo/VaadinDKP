@@ -37,7 +37,8 @@ public class RaidDB implements RaidDAO {
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
                 final Raid raid = new Raid(rs.getString("zones.name"), rs.getString("raids.comment"), rs.getString("raids.date"), rs.getInt("raids.id"));
-                raid.addRaidItems(getItemsForRaid(raid.getID()));
+				System.out.println("getting stuff for raid: "+raid.getID());
+				raid.addRaidItems(getItemsForRaid(raid.getID()));
                 raid.addRaidChars(getCharsForRaid(raid.getID()));
                 raid.addRaidRewards(getRewardsForRaid(raid.getID()));
                 raids.add(raid);
@@ -157,19 +158,21 @@ public class RaidDB implements RaidDAO {
     }
 
     private Collection<RaidReward> getRewardsForRaid(int raidId) {
-        Connection c = null;
+        System.out.println("getting rewards for raid: "+raidId);
+		Connection c = null;
         List<RaidReward> raidRewards = new ArrayList<RaidReward>();
         try {
             c = new DBConnection().getConnection();
             PreparedStatement p = c.prepareStatement("SELECT * FROM rewards WHERE rewards.raid_id=?");
             p.setInt(1, raidId);
-            ResultSet rs = p.executeQuery();
+	            ResultSet rs = p.executeQuery();
             while (rs.next()) {
                 RaidReward rrewards = new RaidReward();
-                rrewards.setId(new Integer(rs.getInt("rewards.id")));
+                rrewards.setId(rs.getInt("rewards.id"));
                 rrewards.setComment(rs.getString("rewards.comment"));
                 rrewards.setShares(rs.getInt("rewards.number_of_shares"));
                 raidRewards.add(rrewards);
+				System.out.println("rreward"+rrewards.toString());
             }
         } catch (SQLException e) {
             e.printStackTrace();

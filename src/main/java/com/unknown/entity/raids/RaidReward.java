@@ -33,9 +33,6 @@ public class RaidReward {
                 this.raidId = raidId;
 	}
 
-        public void setId(Integer integer) {
-        }
-
         public int getId() {
                 return id;
         }
@@ -83,4 +80,6 @@ public class RaidReward {
         public void setRaidId(int raidId) {
                 this.raidId = raidId;
         }
+
+
 }

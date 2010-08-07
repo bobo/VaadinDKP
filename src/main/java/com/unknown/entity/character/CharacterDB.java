@@ -173,4 +173,41 @@ public class CharacterDB implements CharacterDAO {
                         return role;
                 }
         }
+
+        @Override
+        public int updateCharacter(User user, String name, String charclass, boolean active) {
+                Connection c = null;
+                int success = 0;
+
+                try {
+                        c = new DBConnection().getConnection();
+                        PreparedStatement pclass = c.prepareStatement("SELECT * FROM character_classes WHERE name=?");
+                        pclass.setString(1, fixRole(charclass));
+                        ResultSet rclass = pclass.executeQuery();
+                        int classid = 0;
+                        while (rclass.next()) {
+                                classid = rclass.getInt("id");
+                        }
+
+                        PreparedStatement p = c.prepareStatement("UPDATE characters SET name=? , character_class_id=? , active=? , user_id=NULL WHERE id=?");
+                        p.setString(1, name);
+                        p.setInt(2, classid);
+                        p.setBoolean(3, active);
+                        p.setInt(4, user.getID());
+
+                        success = p.executeUpdate();
+
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                } finally {
+                        if (c != null) {
+                                try {
+                                        c.close();
+                                } catch (SQLException ex) {
+                                        Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                        }
+                }
+                return success;
+        }
 }

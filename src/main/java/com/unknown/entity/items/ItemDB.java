@@ -112,8 +112,7 @@ public class ItemDB implements ItemDAO {
                 int success = 0;
                 try {
                         c = new DBConnection().getConnection();
-                        PreparedStatement p = c.prepareStatement("UPDATE items SET name=? AND wowid_normal=? AND wowid_heroic=? AND price_normal=? AND price_heroic=? AND slot=? AND type=? AND isLegendary=? WHERE id=?");
-                        p.setInt(9, item.getID());
+                        PreparedStatement p = c.prepareStatement("UPDATE items SET name=? , wowid_normal=? , wowid_heroic=? , price_normal=? , price_heroic=? , slot=? , type=? , isLegendary=? WHERE id=?");
                         p.setString(1, newname);
                         p.setInt(2, newwowid);
                         p.setInt(3, newwowidhc);
@@ -122,9 +121,12 @@ public class ItemDB implements ItemDAO {
                         p.setString(6, newslot.toString());
                         p.setString(7, newtype.toString());
                         p.setBoolean(8, legendary);
+                        p.setInt(9, item.getID());
+
                         success = p.executeUpdate();
                         
-                } catch (SQLException e) {                        
+                } catch (SQLException e) {
+                        e.printStackTrace();
                 } finally {
                         if (c != null) {
                                 try {

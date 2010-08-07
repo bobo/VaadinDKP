@@ -2,11 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.unknown.entity.character;
 
 import com.unknown.entity.Role;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property.ConversionException;
+import com.vaadin.data.Property.ReadOnlyException;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.GridLayout;
@@ -22,15 +25,18 @@ import com.vaadin.ui.Window;
  * @author alde
  */
 public class CharacterEditWindow extends Window {
+
         private final User user;
 
         public CharacterEditWindow(User user) {
                 this.user = user;
                 this.setCaption(user.getUsername());
-                this.center();
+                this.setPositionX(200);
+                this.setPositionY(400);
                 this.setWidth("400px");
-                this.setHeight("400px");
+                this.setHeight("500px");
         }
+
         public void printInfo() {
                 CharacterInformation();
                 CharacterDKP();
@@ -40,17 +46,55 @@ public class CharacterEditWindow extends Window {
 
         private void CharacterInformation() {
                 addComponent(new Label("Character information"));
-                TextField name = new TextField("Name: ",user.getUsername());
-                ComboBox characterClass = new ComboBox("Class: ");
+
+                final TextField name = new TextField("Name: ", user.getUsername());
+                final ComboBox characterClass = CharacterEditClassComboBox();
+                final CheckBox active = new CheckBox("Status: ", user.isActive());
+                Button updateButton = CharacterEditUpdateButton(name, characterClass, active);
+
+                addComponent(name);
+                addComponent(characterClass);
+                addComponent(active);
+
+                addComponent(updateButton);
+        }
+
+        private Button CharacterEditUpdateButton(final TextField name, final ComboBox characterClass, final CheckBox active) {
+                Button updateButton = new Button("Update");
+                updateButton.addListener(new Button.ClickListener() {
+
+                        @Override
+                        public void buttonClick(ClickEvent event) {
+                                int success = updateCharacter(name.getValue().toString(), characterClass.getValue().toString(), (Boolean) active.getValue());
+                                addComponent(new Label("Success: " + success));
+                        }
+                });
+                return updateButton;
+        }
+
+        private ComboBox CharacterEditClassComboBox() throws ConversionException, UnsupportedOperationException, ReadOnlyException {
+                final ComboBox characterClass = new ComboBox("Class: ");
                 for (Role role : Role.values()) {
                         characterClass.addItem(role);
                 }
                 characterClass.setValue(user.getRole());
                 characterClass.setNullSelectionAllowed(false);
-                CheckBox active = new CheckBox("Status: ", user.isActive());
-                addComponent(name);
-                addComponent(characterClass);
-                addComponent(active);
+                return characterClass;
+        }
+
+        private void CharacterLootTableSetColumnHeaders(Table tbl) throws UnsupportedOperationException {
+                tbl.addContainerProperty("Name", String.class, "");
+                tbl.addContainerProperty("Price", Double.class, 0);
+        }
+
+        private void CharacterLootTableSetRow(Item addItem, CharacterItem charitem) throws ReadOnlyException, ConversionException {
+                addItem.getItemProperty("Name").setValue(charitem.getName());
+                addItem.getItemProperty("Price").setValue(charitem.getPrice());
+        }
+
+        private int updateCharacter(String name, String charclass, boolean active) {
+                CharacterDAO charDao = new CharacterDB();
+                return charDao.updateCharacter(user, name, charclass, active);
         }
 
         private void CharacterLoots() {
@@ -78,13 +122,11 @@ public class CharacterEditWindow extends Window {
 
         private Table lootList(User user) {
                 Table tbl = new Table();
-                tbl.addContainerProperty("Name", String.class, "");
-                tbl.addContainerProperty("Price", Double.class, 0);
+                CharacterLootTableSetColumnHeaders(tbl);
                 tbl.setHeight(150);
                 for (CharacterItem charitem : user.getCharItems()) {
                         Item addItem = tbl.addItem(charitem.getId());
-                        addItem.getItemProperty("Name").setValue(charitem.getName());
-                        addItem.getItemProperty("Price").setValue(charitem.getPrice());
+                        CharacterLootTableSetRow(addItem, charitem);
                 }
                 return tbl;
 

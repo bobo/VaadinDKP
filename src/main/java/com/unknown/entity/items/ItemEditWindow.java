@@ -15,8 +15,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.GridLayout.OutOfBoundsException;
-import com.vaadin.ui.GridLayout.OverlapsException;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
@@ -41,25 +39,9 @@ public class ItemEditWindow extends Window {
 
         public void printInfo() {
                 addComponent(new Label("Item information"));
-
-                TextField name = new TextField("Name: ", item.getName());
-                name.setWidth("300px");
-                name.setImmediate(true);
-                ComboBox slot = new ComboBox("Slot: ");
-                for (Slots slots : Slots.values()) {
-                        slot.addItem(slots);
-                }
-                slot.setNullSelectionAllowed(false);
-                slot.setValue(Slots.valueOf(item.getSlot().replace("-", "")));
-                slot.setImmediate(true);
-
-                ComboBox type = new ComboBox("Type: ");
-                for (Type types : Type.values()) {
-                        type.addItem(types);
-                }
-                type.setNullSelectionAllowed(false);
-                type.setValue(item.getType());
-                type.setImmediate(true);
+                final TextField name = EditInfoName();
+                final ComboBox slot = EditInfoSlot();
+                final ComboBox type = EditInfoType();
 
                 addComponent(name);
                 addComponent(slot);
@@ -70,20 +52,72 @@ public class ItemEditWindow extends Window {
                 gl.addComponent(new Label("Normal "), 1, 0);
                 gl.addComponent(new Label("Heroic "), 2, 0);
                 gl.addComponent(new Label("WowID: "), 0, 1);
-                final Button wowIdBtn = new Button("" + item.getWowID());
-                wowIdBtn.setStyleName(Button.STYLE_LINK);
-                wowIdBtn.addListener(new Button.ClickListener() {
+                
+                Button wowIdBtn = EditInfoWowIdButton();
+                final TextField wowIdfield = EditInfoWowIdField();
+                gl.addComponent(wowIdBtn, 1, 1);
+                gl.addComponent(wowIdfield, 1, 2);
+                
+                Button wowIdBtnhc = EditInfoWowIdHcButton();
+                final TextField wowIdfieldhc = EditInfoWowIdHcField();
+                gl.addComponent(wowIdBtnhc, 2, 1);
+                gl.addComponent(wowIdfieldhc, 2, 2);
+
+                gl.addComponent(new Label("Price: "), 0, 3);
+                final TextField price = EditInfoPriceField();
+                final TextField pricehc = EditInfoPriceHcField();
+
+                gl.addComponent(price, 1, 3);
+                gl.addComponent(pricehc, 2, 3);
+                addComponent(gl);
+
+                final CheckBox islegendary = new CheckBox("Legendary", item.isLegendary());
+
+                Button updateButton = new Button("Update");
+
+                updateButton.addListener(new Button.ClickListener() {
 
                         @Override
                         public void buttonClick(ClickEvent event) {
-                                String url = "http://www.wowhead.com/item=" + item.getWowID();
-                                getWindow().open(new ExternalResource(url), "_blank");
+                                final String newname = name.getValue().toString();
+                final Slots newslot = (Slots) slot.getValue();
+                final Type newtype = (Type) type.getValue();
+                final int newwowid = Integer.parseInt(wowIdfield.getValue().toString());
+                final int newwowidhc = Integer.parseInt(wowIdfieldhc.getValue().toString());
+                final double newprice = Double.parseDouble(price.getValue().toString());
+                final double newpricehc = Double.parseDouble(pricehc.getValue().toString());
+                final boolean legendary = (Boolean) islegendary.getValue();
+                                final int success = updateItem(newname, newslot, newtype, newwowid, newwowidhc, newprice, newpricehc, legendary);
+                                System.out.println("New Price Heroic"+newpricehc);
+                addComponent(new Label("Success: " + success));
                         }
                 });
-                TextField wowIdfield = new TextField();
-                wowIdfield.setValue("" + item.getWowID());
-                gl.addComponent(wowIdBtn, 1, 1);
-                gl.addComponent(wowIdfield, 1, 2);
+                addComponent(updateButton);
+                ItemLootedByTable();
+        }
+
+        private TextField EditInfoPriceHcField() throws ReadOnlyException, ConversionException {
+                final TextField pricehc = new TextField();
+                pricehc.setImmediate(true);
+                pricehc.setValue(item.getPrice_hc());
+                return pricehc;
+        }
+
+        private TextField EditInfoPriceField() throws ReadOnlyException, ConversionException {
+                final TextField price = new TextField();
+                price.setImmediate(true);
+                price.setValue(item.getPrice());
+                return price;
+        }
+
+        private TextField EditInfoWowIdHcField() throws ConversionException, ReadOnlyException {
+                final TextField wowIdfieldhc = new TextField();
+                wowIdfieldhc.setImmediate(true);
+                wowIdfieldhc.setValue("" + item.getWowID_hc());
+                return wowIdfieldhc;
+        }
+
+        private Button EditInfoWowIdHcButton() {
                 final Button wowIdBtnhc = new Button("" + item.getWowID_hc());
                 wowIdBtnhc.setStyleName(Button.STYLE_LINK);
                 wowIdBtnhc.addListener(new Button.ClickListener() {
@@ -94,45 +128,57 @@ public class ItemEditWindow extends Window {
                                 getWindow().open(new ExternalResource(url), "_blank");
                         }
                 });
-                TextField wowIdfieldhc = new TextField();
-                wowIdfieldhc.setValue("" + item.getWowID_hc());
-                gl.addComponent(wowIdBtnhc, 2, 1);
-                gl.addComponent(wowIdfieldhc, 2, 2);
-                gl.addComponent(new Label("Price: "), 0, 3);
-                TextField price = new TextField();
-                price.setImmediate(true);
-                TextField pricehc = new TextField();
-                pricehc.setImmediate(true);
-                price.setValue(item.getPrice());
-                pricehc.setValue(item.getPrice_hc());
-                gl.addComponent(price, 1, 3);
-                gl.addComponent(pricehc, 2, 3);
-                addComponent(gl);
+                return wowIdBtnhc;
+        }
 
-                CheckBox islegendary = new CheckBox("Legendary", item.isLegendary());
+        private TextField EditInfoWowIdField() throws ReadOnlyException, ConversionException {
+                final TextField wowIdfield = new TextField();
+                wowIdfield.setImmediate(true);
+                wowIdfield.setValue("" + item.getWowID());
+                return wowIdfield;
+        }
 
-                Button updateButton = new Button("Update");
-
-                final String newname = name.getValue().toString();
-                final Slots newslot = (Slots) slot.getValue();
-                final Type newtype = (Type) type.getValue();
-                final int newwowid = Integer.parseInt(wowIdfield.getValue().toString());
-                final int newwowidhc = Integer.parseInt(wowIdfieldhc.getValue().toString());
-                final double newprice = Double.parseDouble(price.getValue().toString());
-                final double newpricehc = Double.parseDouble(pricehc.getValue().toString());
-                final boolean legendary = (Boolean) islegendary.getValue();
-                
-                updateButton.addListener(new Button.ClickListener() {
+        private Button EditInfoWowIdButton() {
+                final Button wowIdBtn = new Button("" + item.getWowID());
+                wowIdBtn.setStyleName(Button.STYLE_LINK);
+                wowIdBtn.addListener(new Button.ClickListener() {
 
                         @Override
                         public void buttonClick(ClickEvent event) {
-                                final int success = updateItem(newname, newslot, newtype, newwowid, newwowidhc, newprice, newpricehc, legendary);
-
-                addComponent(new Label("Success: " + success));
+                                String url = "http://www.wowhead.com/item=" + item.getWowID();
+                                getWindow().open(new ExternalResource(url), "_blank");
                         }
                 });
-                addComponent(updateButton);
-                ItemLootedByTable();
+                return wowIdBtn;
+        }
+
+        private ComboBox EditInfoType() throws ConversionException, ReadOnlyException, UnsupportedOperationException {
+                final ComboBox type = new ComboBox("Type: ");
+                for (Type types : Type.values()) {
+                        type.addItem(types);
+                }
+                type.setNullSelectionAllowed(false);
+                type.setValue(item.getType());
+                type.setImmediate(true);
+                return type;
+        }
+
+        private ComboBox EditInfoSlot() throws UnsupportedOperationException, ConversionException, ReadOnlyException {
+                final ComboBox slot = new ComboBox("Slot: ");
+                for (Slots slots : Slots.values()) {
+                        slot.addItem(slots);
+                }
+                slot.setNullSelectionAllowed(false);
+                slot.setValue(Slots.valueOf(item.getSlot().replace("-", "")));
+                slot.setImmediate(true);
+                return slot;
+        }
+
+        private TextField EditInfoName() {
+                final TextField name = new TextField("Name: ", item.getName());
+                name.setWidth("300px");
+                name.setImmediate(true);
+                return name;
         }
 
         private void ItemLootedByTable() {

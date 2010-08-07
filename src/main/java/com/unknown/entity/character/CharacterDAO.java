@@ -20,4 +20,6 @@ public interface CharacterDAO {
         public Collection<User> getUsersWithRole(Role role);
 
         public int addNewCharacter(String name, String role, Boolean isActive) throws SQLException;
+
+        public int updateCharacter(User user, String name, String charclass, boolean active);
 }

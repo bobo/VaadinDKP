@@ -53,7 +53,7 @@ public enum Type {
             return "Death Knight, Druid, Mage, Rogue";
         }
     },
-    other {
+    Other {
         @Override
         public String toString() {
             return "Other";

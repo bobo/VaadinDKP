@@ -12,7 +12,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
 
-
 /**
  *
  * @author bobo
@@ -34,6 +33,13 @@ public class CharacterInfoWindow extends Window {
                 CharacterDKP();
                 CharacterLoots();
 
+        }
+
+        private void CharacterInformation() {
+                addComponent(new Label("Character information"));
+                addComponent(new Label("Name: " + user.getUsername()));
+                addComponent(new Label("Class: " + user.getRole().toString()));
+                addComponent(new Label("Status: " + (user.isActive() ? "Active" : "Inactive")));
         }
 
         private void CharacterLoots() {
@@ -59,13 +65,6 @@ public class CharacterInfoWindow extends Window {
                 addComponent(dkpGrid);
         }
 
-        private void CharacterInformation() {
-                addComponent(new Label("Character information"));
-                addComponent(new Label("Name: " + user.getUsername()));
-                addComponent(new Label("Class: " + user.getRole().toString()));
-                addComponent(new Label("Status: " + (user.isActive() ? "Active" : "Inactive")));
-        }
-
         private Table lootList(User user) {
                 Table tbl = new Table();
                 tbl.addContainerProperty("Name", String.class, "");
@@ -73,8 +72,8 @@ public class CharacterInfoWindow extends Window {
                 tbl.setHeight(150);
                 for (CharacterItem charitem : user.getCharItems()) {
                         Item addItem = tbl.addItem(charitem.getId());
-                                addItem.getItemProperty("Name").setValue(charitem.getName());
-                                addItem.getItemProperty("Price").setValue(charitem.getPrice());
+                        addItem.getItemProperty("Name").setValue(charitem.getName());
+                        addItem.getItemProperty("Price").setValue(charitem.getPrice());
                 }
                 return tbl;
         }

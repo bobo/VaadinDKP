@@ -28,6 +28,11 @@ public class ItemInfoWindow extends Window {
 
         public ItemInfoWindow(Items item) {
                 this.item = item;
+                this.setCaption(item.getName());
+                this.center();
+                this.setWidth("400px");
+                this.setHeight("400px");
+
         }
 
         public void printInfo() {
@@ -85,9 +90,9 @@ public class ItemInfoWindow extends Window {
 
         private void ItemInformation() {
                 addComponent(new Label("Item information"));
+                addComponent(new Label("Name: " + item.getName()));
                 addComponent(new Label("Slot: " + item.getSlot()));
                 addComponent(new Label("Type: " + item.getType()));
-                addComponent(new Label("Name: " + item.getName()));
         }
 
         private Table lootList(Items item) {

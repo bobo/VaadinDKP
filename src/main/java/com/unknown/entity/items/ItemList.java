@@ -16,48 +16,52 @@ import java.util.List;
  */
 public class ItemList extends Table {
 
-    private ItemDAO itemDAO;
+        private ItemDAO itemDAO;
 
-    public ItemList(ItemDAO itemDAO) {
-        this.itemDAO = itemDAO;
-        addContainerProperty("Name", String.class, "");
-        addContainerProperty("Price Normal", Double.class, 0);
-        addContainerProperty("Price Heroic", Double.class, 0);
-        addContainerProperty("Slot", String.class, "");
-        addContainerProperty("Type", String.class, "");
+        public ItemList(ItemDAO itemDAO) {
+                this.itemDAO = itemDAO;
+                addContainerProperty("Name", String.class, "");
+                addContainerProperty("Price Normal", Double.class, 0);
+                addContainerProperty("Price Heroic", Double.class, 0);
+                addContainerProperty("Slot", String.class, "");
+                addContainerProperty("Type", String.class, "");
 
-        this.setHeight("500px");
-        
-        this.addListener(new ItemClickListener() {
+                this.setHeight("500px");
 
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                Items item = (Items) event.getItemId();
-                ItemInfoWindow info = new ItemInfoWindow(item);
-                info.printInfo();
-                info.setCaption(item.getName());
-                getApplication().getMainWindow().addWindow(info);
-                info.center();
-                info.setWidth("400px");
-                info.setHeight("400px");
-            }
-        });
-    }
-    public void clear()  {
-        this.removeAllItems();
-    }
+                this.addListener(new ItemClickListener() {
 
-    public void printList() {
-        clear();
-        List<Items> itemses = itemDAO.getItems();
-
-        for (final Items item : itemses) {
-            Item addItem = addItem(item);
-            addItem.getItemProperty("Name").setValue(item.getName());
-            addItem.getItemProperty("Price Normal").setValue(item.getPrice());
-            addItem.getItemProperty("Price Heroic").setValue(item.getPrice_hc());
-            addItem.getItemProperty("Slot").setValue(item.getSlot());
-            addItem.getItemProperty("Type").setValue(item.getType());
+                        @Override
+                        public void itemClick(ItemClickEvent event) {
+                                final Object username = getApplication().getUser();
+                                Items item = (Items) event.getItemId();
+                                if (username != null && username.toString().equals("admin")) {
+                                        ItemEditWindow info = new ItemEditWindow(item);
+                                        info.printInfo();
+                                        getApplication().getMainWindow().addWindow(info);
+                                } else {
+                                        ItemInfoWindow info = new ItemInfoWindow(item);
+                                        info.printInfo();
+                                        getApplication().getMainWindow().addWindow(info);                                        
+                                }
+                        }
+                });
         }
-    }
+
+        public void clear() {
+                this.removeAllItems();
+        }
+
+        public void printList() {
+                clear();
+                List<Items> itemses = itemDAO.getItems();
+
+                for (final Items item : itemses) {
+                        Item addItem = addItem(item);
+                        addItem.getItemProperty("Name").setValue(item.getName());
+                        addItem.getItemProperty("Price Normal").setValue(item.getPrice());
+                        addItem.getItemProperty("Price Heroic").setValue(item.getPrice_hc());
+                        addItem.getItemProperty("Slot").setValue(item.getSlot());
+                        addItem.getItemProperty("Type").setValue(item.getType().toString());
+                }
+        }
 }

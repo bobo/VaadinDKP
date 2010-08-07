@@ -7,6 +7,7 @@ package com.unknown.entity.items;
 import com.unknown.entity.character.CharacterDB;
 import com.unknown.entity.DBConnection;
 import com.unknown.entity.Slots;
+import com.unknown.entity.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,7 +38,18 @@ public class ItemDB implements ItemDAO {
                         PreparedStatement p = c.prepareStatement("SELECT * FROM items");
                         ResultSet rs = p.executeQuery();
                         while (rs.next()) {
-                                Items tempitem = new Items(rs.getInt("id"), rs.getString("name"), rs.getInt("wowid_normal"), rs.getDouble("price_normal"), rs.getInt("wowid_heroic"), rs.getDouble("price_heroic"), rs.getString("slot"), rs.getString("type"), rs.getBoolean("isLegendary"));
+                                String temp = rs.getString("type");
+                                Type tempType;
+                                if (temp.toString().equals("Hunter, Shaman, Warrior")) {
+                                        tempType = Type.protector;
+                                } else if (temp.toString().equals("Death Knight, Druid, Mage, Rogue")) {
+                                        tempType = Type.vanquisher;
+                                } else if (temp.toString().equals("Paladin, Priest, Warlock")) {
+                                        tempType = Type.conqueror;
+                                } else {
+                                        tempType = Type.valueOf(temp);
+                                }
+                                Items tempitem = new Items(rs.getInt("id"), rs.getString("name"), rs.getInt("wowid_normal"), rs.getDouble("price_normal"), rs.getInt("wowid_heroic"), rs.getDouble("price_heroic"), rs.getString("slot"), tempType, rs.getBoolean("isLegendary"));
                                 tempitem.addItemList(getLootersFormItems(rs.getInt("id")));
                                 items.add(tempitem);
                         }
@@ -93,4 +105,36 @@ public class ItemDB implements ItemDAO {
                 }
                 return prices;
         }
+
+        @Override
+        public int updateItem(Items item, String newname, Slots newslot, Type newtype, int newwowid, int newwowidhc, double newprice, double newpricehc, boolean legendary) {
+                Connection c = null;
+                int success = 0;
+                try {
+                        c = new DBConnection().getConnection();
+                        PreparedStatement p = c.prepareStatement("UPDATE items SET name=? AND wowid_normal=? AND wowid_heroic=? AND price_normal=? AND price_heroic=? AND slot=? AND type=? AND isLegendary=? WHERE id=?");
+                        p.setInt(9, item.getID());
+                        p.setString(1, newname);
+                        p.setInt(2, newwowid);
+                        p.setInt(3, newwowidhc);
+                        p.setDouble(4, newprice);
+                        p.setDouble(5, newpricehc);
+                        p.setString(6, newslot.toString());
+                        p.setString(7, newtype.toString());
+                        p.setBoolean(8, legendary);
+                        success = p.executeUpdate();
+                        
+                } catch (SQLException e) {                        
+                } finally {
+                        if (c != null) {
+                                try {
+                                        c.close();
+                                } catch (SQLException ex) {
+                                        Logger.getLogger(ItemDB.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                        }
+                }
+                return success;
+        }
+
 }

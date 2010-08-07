@@ -36,7 +36,6 @@ public class LoginWindow extends Window{
         this.setWidth("200px");
         this.setHeight("200px");
 
-        super.attach();
         submit.addListener(new LoginListener(this));
 
     }

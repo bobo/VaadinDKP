@@ -46,7 +46,7 @@ public class UnknownEntityDKP extends Application {
                 final Object username = getMainWindow().getApplication().getUser();
 
                 hzl.setSpacing(true);
-                
+
                 // Vertical DKP List
                 VerticalLayout vertDKP = VerticalDKPListLayout(dKPList, username);
                 hzl.addComponent(vertDKP);
@@ -66,23 +66,6 @@ public class UnknownEntityDKP extends Application {
                 vertRaid.addComponent(new Label("Raids"));
                 vertRaid.addComponent(raidList);
                 raidList.printList();
-                final Button addRaidBtn = new Button("Add Raid");
-                addRaidBtn.addListener(new Button.ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                                RaidAddWindow addRaid = new RaidAddWindow();
-                                addRaid.printInfo();
-                                addRaid.setCaption("Add Raid");
-                                getMainWindow().addWindow(addRaid);
-                                addRaid.center();
-                                addRaid.setWidth("300px");
-                                addRaid.setHeight("420px");
-                        }
-                });
-                if (username != null && username.toString().equals("admin")) {
-                        vertRaid.addComponent(addRaidBtn);
-                }
                 return vertRaid;
         }
 
@@ -91,23 +74,6 @@ public class UnknownEntityDKP extends Application {
                 vertItem.addComponent(new Label("Items"));
                 vertItem.addComponent(itemList);
                 itemList.printList();
-                final Button addItmBtn = new Button("Add Item");
-                addItmBtn.addListener(new Button.ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                                ItemAddWindow addItem = new ItemAddWindow();
-                                addItem.printInfo();
-                                addItem.setCaption("Add Item");
-                                getMainWindow().addWindow(addItem);
-                                addItem.center();
-                                addItem.setWidth("300px");
-                                addItem.setHeight("420px");
-                        }
-                });
-                if (username != null && username.toString().equals("admin")) {
-                        vertItem.addComponent(addItmBtn);
-                }
                 return vertItem;
         }
 
@@ -126,24 +92,11 @@ public class UnknownEntityDKP extends Application {
 
                         @Override
                         public void valueChange(ValueChangeEvent event) {
-                                        dKPList.filter(filterDKP.getValue());
+                                dKPList.filter(filterDKP.getValue());
                         }
                 });
-                
-                dKPList.printList();
-                final Button addUsrBtn = new Button("Add Character");
-                addUsrBtn.addListener(new Button.ClickListener() {
 
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                                CharacterAddWindow addUser = new CharacterAddWindow();
-                                addUser.printInfo();
-                                getMainWindow().addWindow(addUser);
-                        }
-                });
-                if (username != null && username.toString().equals("admin")) {
-                        vertDKP.addComponent(addUsrBtn);
-                }
+                dKPList.printList();
                 return vertDKP;
         }
 
@@ -171,7 +124,7 @@ public class UnknownEntityDKP extends Application {
                 final HorizontalLayout hzl = HorizontalSegment(dKPList, itemList, raidList);
 
                 // Login button as an image
-                LoginButton(loginButton);
+                AdminPanel(loginButton);
 
                 // Character List based on Character Class
                 CharacterListOnCharacterClass(charList);
@@ -183,18 +136,61 @@ public class UnknownEntityDKP extends Application {
                 UpdateButton(updateButton);
         }
 
-        private void LoginButton(final Button loginButton) {
+        private void AdminPanel(final Button loginButton) {
                 // Paint stuff
-                HorizontalLayout hlogin = new HorizontalLayout();
-                hlogin.addComponent(loginButton);
-                hlogin.setSpacing(true);
+                HorizontalLayout hadmin = new HorizontalLayout();
+                hadmin.addComponent(loginButton);
+                hadmin.setSpacing(true);
                 loginButton.setStyleName(Button.STYLE_LINK);
                 loginButton.setIcon(new ThemeResource("../ue/img/key3.png"));
                 final Object username = getMainWindow().getApplication().getUser();
                 if (username != null && username.toString().equals("admin")) {
-                        hlogin.addComponent(new Label("Welcome " + username.toString()));
+                        hadmin.addComponent(new Label("Welcome " + username.toString()));
+                        final Button addUsrBtn = new Button("Add Character");
+                        addUsrBtn.addListener(new Button.ClickListener() {
+
+                                @Override
+                                public void buttonClick(ClickEvent event) {
+                                        CharacterAddWindow addUser = new CharacterAddWindow();
+                                        addUser.printInfo();
+                                        getMainWindow().addWindow(addUser);
+                                }
+                        });
+                        hadmin.addComponent(addUsrBtn);
+                        final Button addItmBtn = new Button("Add Item");
+                        addItmBtn.addListener(new Button.ClickListener() {
+
+                                @Override
+                                public void buttonClick(ClickEvent event) {
+                                        ItemAddWindow addItem = new ItemAddWindow();
+                                        addItem.printInfo();
+                                        addItem.setCaption("Add Item");
+                                        getMainWindow().addWindow(addItem);
+                                        addItem.center();
+                                        addItem.setWidth("300px");
+                                        addItem.setHeight("420px");
+                                }
+                        });
+                        hadmin.addComponent(addItmBtn);
+                        final Button addRaidBtn = new Button("Add Raid");
+                        addRaidBtn.addListener(new Button.ClickListener() {
+
+                                @Override
+                                public void buttonClick(ClickEvent event) {
+                                        RaidAddWindow addRaid = new RaidAddWindow();
+                                        addRaid.printInfo();
+                                        addRaid.setCaption("Add Raid");
+                                        getMainWindow().addWindow(addRaid);
+                                        addRaid.center();
+                                        addRaid.setWidth("300px");
+                                        addRaid.setHeight("420px");
+                                }
+                        });
+                        hadmin.addComponent(addRaidBtn);
+
+
                 }
-                window.addComponent(hlogin);
+                window.addComponent(hadmin);
                 loginButton.addListener(new Button.ClickListener() {
 
                         @Override

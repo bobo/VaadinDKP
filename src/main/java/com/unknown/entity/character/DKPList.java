@@ -10,7 +10,6 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Table;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -38,9 +37,18 @@ public class DKPList extends Table {
                         @Override
                         public void itemClick(ItemClickEvent event) {
                                 User user = (User) event.getItemId();
-                                CharacterInfoWindow info = new CharacterInfoWindow(user);
-                                info.printInfo();
-                                getApplication().getMainWindow().addWindow(info);
+                                final Object username = getApplication().getUser();
+                                if (username != null && username.toString().equals("admin")) {
+
+                                        CharacterEditWindow info = new CharacterEditWindow(user);
+                                        info.printInfo();
+                                        getApplication().getMainWindow().addWindow(info);
+                                } else {
+                                        CharacterInfoWindow info = new CharacterInfoWindow(user);
+                                        info.printInfo();
+                                        getApplication().getMainWindow().addWindow(info);
+                                }
+
                         }
                 });
         }

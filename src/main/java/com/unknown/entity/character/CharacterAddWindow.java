@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,6 +51,9 @@ public class CharacterAddWindow extends Window {
                 for (Role roles : Role.values()) {
                         classCombo.addItem(roles);
                 }
+                classCombo.setNullSelectionAllowed(false);
+                Collection<?> itemIds = classCombo.getItemIds();
+                classCombo.setValue(itemIds.iterator().next());
                 adduser.addComponent(classCombo);
 
                 final CheckBox activeCheck = new CheckBox("active", true);

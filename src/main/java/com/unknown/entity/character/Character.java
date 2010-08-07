@@ -2,14 +2,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity;
+package com.unknown.entity.character;
+
+import com.unknown.entity.Armor;
+import com.unknown.entity.Role;
 
 /**
  *
  * @author bobo
  */
 
-public class User {
+public class Character {
 
     private final int id;
     private final String username;
@@ -21,7 +24,7 @@ public class User {
     private boolean active = true;
     private Armor armor;
 
-    public User(int id, String username, Role role, boolean active, int shares, double dkp_earned, double dkp_spent, double dkp) {
+    public Character(int id, String username, Role role, boolean active, int shares, double dkp_earned, double dkp_spent, double dkp) {
 	this.id = id;
         this.username = username;
 	this.role = role;

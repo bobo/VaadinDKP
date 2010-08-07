@@ -22,7 +22,6 @@ import com.vaadin.Application;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.util.QueryContainer;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -117,7 +116,7 @@ public class UnknownEntityDKP extends Application {
 
                 final Button loginButton = new Button();
                 final Button updateButton = new Button("Update");
-                final Characters charList = new Characters(characterDAO);
+                final CharacterList charList = new CharacterList(characterDAO);
                 final DKPList dKPList = new DKPList(characterDAO);
                 final RaidList raidList = new RaidList(raidDAO);
                 final ItemList itemList = new ItemList(itemDAO);
@@ -164,11 +163,7 @@ public class UnknownEntityDKP extends Application {
                                 public void buttonClick(ClickEvent event) {
                                         ItemAddWindow addItem = new ItemAddWindow();
                                         addItem.printInfo();
-                                        addItem.setCaption("Add Item");
                                         getMainWindow().addWindow(addItem);
-                                        addItem.center();
-                                        addItem.setWidth("300px");
-                                        addItem.setHeight("420px");
                                 }
                         });
                         hadmin.addComponent(addItmBtn);
@@ -179,16 +174,10 @@ public class UnknownEntityDKP extends Application {
                                 public void buttonClick(ClickEvent event) {
                                         RaidAddWindow addRaid = new RaidAddWindow();
                                         addRaid.printInfo();
-                                        addRaid.setCaption("Add Raid");
                                         getMainWindow().addWindow(addRaid);
-                                        addRaid.center();
-                                        addRaid.setWidth("300px");
-                                        addRaid.setHeight("420px");
                                 }
                         });
                         hadmin.addComponent(addRaidBtn);
-
-
                 }
                 window.addComponent(hadmin);
                 loginButton.addListener(new Button.ClickListener() {
@@ -218,7 +207,7 @@ public class UnknownEntityDKP extends Application {
                 window.addComponent(updateButton);
         }
 
-        private void CharacterListOnCharacterClass(final Characters charList) {
+        private void CharacterListOnCharacterClass(final CharacterList charList) {
                 HorizontalLayout hzChar = new HorizontalLayout();
                 hzChar.addComponent(charList);
                 charList.printList();

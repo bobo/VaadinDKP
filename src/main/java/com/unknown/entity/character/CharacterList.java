@@ -5,7 +5,6 @@
 package com.unknown.entity.character;
 
 import com.unknown.entity.Role;
-import com.unknown.entity.User;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -21,15 +20,12 @@ import java.util.List;
  *
  * @author bobo
  */
-public class Characters extends HorizontalLayout {
+public class CharacterList extends HorizontalLayout {
 
     CharacterDAO characterDAO;
 
-    public Characters(CharacterDAO characherDAO) {
+    public CharacterList(CharacterDAO characherDAO) {
         this.characterDAO = characherDAO;
-        setMargin(true);
-        setSpacing(true);
-
     }
     private void clear() {
         this.removeAllComponents();
@@ -50,7 +46,7 @@ public class Characters extends HorizontalLayout {
     }
 
     private void addUsersForRole(Role r, VerticalLayout roleList) {
-        for (final User user : characterDAO.getUsersWithRole(r)) {
+        for (final Character user : characterDAO.getUsersWithRole(r)) {
             final Button userBtn = new Button(user.toString());
             userBtn.setStyleName(Button.STYLE_LINK);
             userBtn.addListener(new Button.ClickListener() {

@@ -9,7 +9,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.unknown.entity.DBConnection;
 import com.unknown.entity.Role;
-import com.unknown.entity.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +26,7 @@ import java.util.logging.Logger;
 public class CharacterDB implements CharacterDAO {
 
     @Override
-    public List<User> getUsers() {
+    public List<Character> getUsers() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
@@ -35,7 +34,7 @@ public class CharacterDB implements CharacterDAO {
         }
 
         Connection c = null;
-        List<User> users = new ArrayList<User>();
+        List<Character> users = new ArrayList<Character>();
         try {
             c = new DBConnection().getConnection();
             PreparedStatement p = c.prepareStatement("SELECT * FROM characters JOIN character_classes ON characters.character_class_id=character_classes.id");
@@ -71,7 +70,7 @@ public class CharacterDB implements CharacterDAO {
                 dkp_earned = shares * share_value;
                 dkp = dkp_earned - dkp_spent;
                 Role role = Role.valueOf(rs.getString("character_classes.name").replace(" ", ""));
-                users.add(new User(rs.getInt("id"), rs.getString("characters.name"), role, rs.getBoolean("characters.active"), shares, dkp_earned, dkp_spent, dkp));
+                users.add(new Character(rs.getInt("id"), rs.getString("characters.name"), role, rs.getBoolean("characters.active"), shares, dkp_earned, dkp_spent, dkp));
             }
 
         } catch (SQLException e) {
@@ -90,11 +89,11 @@ public class CharacterDB implements CharacterDAO {
     }
 
     @Override
-    public Collection<User> getUsersWithRole(final Role role) {
+    public Collection<Character> getUsersWithRole(final Role role) {
         return Collections2.filter(getUsers(), new HasRolePredicate(role));
     }
 
-    private static class HasRolePredicate implements Predicate<User> {
+    private static class HasRolePredicate implements Predicate<Character> {
 
         private final Role role;
 
@@ -103,7 +102,7 @@ public class CharacterDB implements CharacterDAO {
         }
 
         @Override
-        public boolean apply(User user) {
+        public boolean apply(Character user) {
             return user.getRole().equals(role);
         }
     }

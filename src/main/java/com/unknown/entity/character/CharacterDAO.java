@@ -6,7 +6,6 @@
 package com.unknown.entity.character;
 
 import com.unknown.entity.Role;
-import com.unknown.entity.User;
 import java.util.Collection;
 import java.util.List;
 
@@ -16,8 +15,8 @@ import java.util.List;
  */
 public interface CharacterDAO {
 
-    public List<User> getUsers();
+    public List<Character> getUsers();
 
-    public Collection<User> getUsersWithRole(Role role);
+    public Collection<Character> getUsersWithRole(Role role);
 
 }

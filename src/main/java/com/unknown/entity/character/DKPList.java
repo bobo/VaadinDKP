@@ -5,7 +5,6 @@
 package com.unknown.entity.character;
 
 import com.unknown.entity.Armor;
-import com.unknown.entity.User;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
@@ -38,7 +37,7 @@ public class DKPList extends Table {
 
                         @Override
                         public void itemClick(ItemClickEvent event) {
-                                User user = (User) event.getItemId();
+                                Character user = (Character) event.getItemId();
                                 CharacterInfoWindow info = new CharacterInfoWindow(user);
                                 info.printInfo();
                                 getApplication().getMainWindow().addWindow(info);
@@ -65,21 +64,21 @@ public class DKPList extends Table {
 
         public void printList() {
                 clear();
-                List<User> users = characterDAO.getUsers();
-                Collections.sort(users, new Comparator<User>() {
+                List<Character> users = characterDAO.getUsers();
+                Collections.sort(users, new Comparator<Character>() {
 
                         @Override
-                        public int compare(User t, User t1) {
+                        public int compare(Character t, Character t1) {
                                 return t.getDKP() < t1.getDKP() ? 1 : 0;
                         }
                 });
-                for (final User user : users) {
+                for (final Character user : users) {
                         Item addItem = addItem(user);
                         DkpListAddItem(addItem, user);
                 }
         }
 
-        private void DkpListAddItem(Item addItem, final User user) throws ConversionException, ReadOnlyException {
+        private void DkpListAddItem(Item addItem, final Character user) throws ConversionException, ReadOnlyException {
                 addItem.getItemProperty("Name").setValue(user.getUsername());
                 addItem.getItemProperty("Armor").setValue(user.getArmor());
                 addItem.getItemProperty("DKP").setValue(user.getDKP());

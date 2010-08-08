@@ -52,12 +52,12 @@ public class ItemEditWindow extends Window {
                 gl.addComponent(new Label("Normal "), 1, 0);
                 gl.addComponent(new Label("Heroic "), 2, 0);
                 gl.addComponent(new Label("WowID: "), 0, 1);
-                
+
                 Button wowIdBtn = EditInfoWowIdButton();
                 final TextField wowIdfield = EditInfoWowIdField();
                 gl.addComponent(wowIdBtn, 1, 1);
                 gl.addComponent(wowIdfield, 1, 2);
-                
+
                 Button wowIdBtnhc = EditInfoWowIdHcButton();
                 final TextField wowIdfieldhc = EditInfoWowIdHcField();
                 gl.addComponent(wowIdBtnhc, 2, 1);
@@ -80,16 +80,16 @@ public class ItemEditWindow extends Window {
                         @Override
                         public void buttonClick(ClickEvent event) {
                                 final String newname = name.getValue().toString();
-                final Slots newslot = (Slots) slot.getValue();
-                final Type newtype = (Type) type.getValue();
-                final int newwowid = Integer.parseInt(wowIdfield.getValue().toString());
-                final int newwowidhc = Integer.parseInt(wowIdfieldhc.getValue().toString());
-                final double newprice = Double.parseDouble(price.getValue().toString());
-                final double newpricehc = Double.parseDouble(pricehc.getValue().toString());
-                final boolean legendary = (Boolean) islegendary.getValue();
+                                final Slots newslot = (Slots) slot.getValue();
+                                final Type newtype = (Type) type.getValue();
+                                final int newwowid = Integer.parseInt(wowIdfield.getValue().toString());
+                                final int newwowidhc = Integer.parseInt(wowIdfieldhc.getValue().toString());
+                                final double newprice = Double.parseDouble(price.getValue().toString());
+                                final double newpricehc = Double.parseDouble(pricehc.getValue().toString());
+                                final boolean legendary = (Boolean) islegendary.getValue();
                                 final int success = updateItem(newname, newslot, newtype, newwowid, newwowidhc, newprice, newpricehc, legendary);
-                                System.out.println("New Price Heroic"+newpricehc);
-                addComponent(new Label("Success: " + success));
+                                System.out.println("New Price Heroic" + newpricehc);
+                                addComponent(new Label("Success: " + success));
                         }
                 });
                 addComponent(updateButton);

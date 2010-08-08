@@ -124,7 +124,7 @@ public class ItemDB implements ItemDAO {
                         p.setInt(9, item.getID());
 
                         success = p.executeUpdate();
-                        
+
                 } catch (SQLException e) {
                         e.printStackTrace();
                 } finally {
@@ -139,4 +139,31 @@ public class ItemDB implements ItemDAO {
                 return success;
         }
 
+        @Override
+        public int addItem(String name, int wowid, int wowid_hc, double price, double price_hc, String slot, String type, boolean isLegendary) throws SQLException {
+                Connection c = null;
+                int result = 0;
+
+                try {
+                        c = new DBConnection().getConnection();
+                        PreparedStatement ps = c.prepareStatement("INSERT INTO items (name, wowid_normal, wowid_heroic, price_normal, price_heroic, slot, type, isLegendary) VALUES(?,?,?,?,?,?,?,?)");
+                        ps.setString(1, name);
+                        ps.setInt(2, wowid);
+                        ps.setInt(3, wowid_hc);
+                        ps.setDouble(4, price);
+                        ps.setDouble(5, price_hc);
+                        ps.setString(6, slot);
+                        ps.setString(7, type);
+                        ps.setBoolean(8, isLegendary);
+
+                        result = ps.executeUpdate();
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                } finally {
+                        if (c != null) {
+                                c.close();
+                        }
+                }
+                return result;
+        }
 }

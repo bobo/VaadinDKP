@@ -5,6 +5,9 @@
 package com.unknown.entity.raids;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.Property.ConversionException;
+import com.vaadin.data.Property.ReadOnlyException;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
@@ -20,9 +23,7 @@ public class RaidCharWindow extends Window {
 	private final List<RaidChar> chars;
 
 	public RaidCharWindow(List<RaidChar> chars) {
-
 		this.chars = chars;
-
 		center();
 		setWidth("600px");
 		setHeight("320px");
@@ -32,25 +33,36 @@ public class RaidCharWindow extends Window {
 		HorizontalLayout hzl = new HorizontalLayout();
 		hzl.setSpacing(true);
 		Table Attendants = charList();
-		if (Attendants.size() > 0) {
-			hzl.addComponent(Attendants);
-		} else {
-			hzl.addComponent(new Label("No members in this raid."));
-		}
+                hzl.addComponent(getAttendants(Attendants));
 		addComponent(hzl);
 	}
 
 	private Table charList() {
 		Table tbl = new Table();
-		tbl.addContainerProperty("Name", String.class, "");
-		tbl.addContainerProperty("Shares", Integer.class, "");
+		RaidCharWindowCharListSetHeaders(tbl);
 		tbl.setHeight(150);
 		for (RaidChar rchar : chars) {
 			Item addItem = tbl.addItem(rchar);
-			addItem.getItemProperty("Name").setValue(rchar.getName());
-			addItem.getItemProperty("Shares").setValue(rchar.getShares());
-
+			RaidCharWindowCharListAddRow(addItem, rchar);
 		}
 		return tbl;
 	}
+
+        private void RaidCharWindowCharListSetHeaders(Table tbl) throws UnsupportedOperationException {
+                tbl.addContainerProperty("Name", String.class, "");
+                tbl.addContainerProperty("Shares", Integer.class, "");
+        }
+
+        private void RaidCharWindowCharListAddRow(Item addItem, RaidChar rchar) throws ReadOnlyException, ConversionException {
+                addItem.getItemProperty("Name").setValue(rchar.getName());
+                addItem.getItemProperty("Shares").setValue(rchar.getShares());
+        }
+
+        private Component getAttendants(Table Attendants) {
+                if (Attendants.size() > 0) {
+			return Attendants;
+		} else {
+			return new Label("No members in this raid.");
+		}
+        }
 }

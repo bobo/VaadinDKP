@@ -28,15 +28,7 @@ public class CharacterList extends HorizontalLayout {
                 this.characterDAO = characherDAO;
         }
 
-        private void clear() {
-                this.removeAllComponents();
-        }
-
-        public void printList() {
-                clear();
-                List<Role> roles = Arrays.asList(Role.values());
-                Collections.sort(roles, new ToStringComparator());
-
+        private void CharacterClassImages(List<Role> roles) {
                 for (Role r : roles) {
                         VerticalLayout roleList = new VerticalLayout();
                         addComponent(roleList);
@@ -46,27 +38,42 @@ public class CharacterList extends HorizontalLayout {
                 }
         }
 
+        private Button CharacterListByRole(final User user) {
+                final Button userBtn = new Button(user.toString());
+                userBtn.setStyleName(Button.STYLE_LINK);
+                userBtn.addListener(new Button.ClickListener() {
+
+                        @Override
+                        public void buttonClick(ClickEvent event) {
+                                final Object username = getApplication().getUser();
+                                if (username != null && username.toString().equals("admin")) {
+                                        CharacterEditWindow info = new CharacterEditWindow(user);
+                                        info.printInfo();
+                                        getApplication().getMainWindow().addWindow(info);
+                                } else {
+                                        CharacterInfoWindow info = new CharacterInfoWindow(user);
+                                        info.printInfo();
+                                        getApplication().getMainWindow().addWindow(info);
+                                }
+                        }
+                });
+                return userBtn;
+        }
+
+        private void clear() {
+                this.removeAllComponents();
+        }
+
+        public void printList() {
+                clear();
+                List<Role> roles = Arrays.asList(Role.values());
+                Collections.sort(roles, new ToStringComparator());
+                CharacterClassImages(roles);
+        }
+
         private void addUsersForRole(Role r, VerticalLayout roleList) {
                 for (final User user : characterDAO.getUsersWithRole(r)) {
-                        final Button userBtn = new Button(user.toString());
-                        userBtn.setStyleName(Button.STYLE_LINK);
-                        userBtn.addListener(new Button.ClickListener() {
-
-                                @Override
-                                public void buttonClick(ClickEvent event) {
-                                        final Object username = getApplication().getUser();
-                                        if (username != null && username.toString().equals("admin")) {
-
-                                                CharacterEditWindow info = new CharacterEditWindow(user);
-                                                info.printInfo();
-                                                getApplication().getMainWindow().addWindow(info);
-                                        } else {
-                                                CharacterInfoWindow info = new CharacterInfoWindow(user);
-                                                info.printInfo();
-                                                getApplication().getMainWindow().addWindow(info);
-                                        }
-                                }
-                        });
+                        Button userBtn = CharacterListByRole(user);
                         roleList.addComponent(userBtn);
                 }
         }

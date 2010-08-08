@@ -61,6 +61,38 @@ public class CharacterDB implements CharacterDAO {
                 return users;
         }
 
+        private User CreateCharacter(ResultSet rs, int shares, double dkp_earned, double dkp_spent, double dkp) throws SQLException {
+                Role role = Role.valueOf(rs.getString("character_classes.name").replace(" ", ""));
+                User user = new User(rs.getInt("id"), rs.getString("characters.name"), role, rs.getBoolean("characters.active"), shares, dkp_earned, dkp_spent, dkp);
+                user.addCharItems(getItemsForCharacter(rs.getInt("id")));
+                return user;
+        }
+
+        private int GetCharacterClassId(Connection c, String charclass) throws SQLException {
+                PreparedStatement pclass = c.prepareStatement("SELECT * FROM character_classes WHERE name=?");
+                pclass.setString(1, fixRole(charclass));
+                ResultSet rclass = pclass.executeQuery();
+                int classid = 0;
+                while (rclass.next()) {
+                        classid = rclass.getInt("id");
+                }
+                return classid;
+        }
+
+        private int GetSharesForCharacterByID(ResultSet rs, ResultSet rss, int shares) throws SQLException {
+                if (rs.getInt("characters.id") == rss.getInt("character_rewards.character_id")) {
+                        shares = shares + rss.getInt("rewards.number_of_shares");
+                }
+                return shares;
+        }
+
+        private double GetDkpSpentForCharacterByID(ResultSet rsloot, ResultSet rs, double dkp_spent) throws SQLException {
+                if (rsloot.getInt("loots.character_id") == rs.getInt("characters.id")) {
+                        dkp_spent = dkp_spent + rsloot.getDouble("loots.price");
+                }
+                return dkp_spent;
+        }
+
         private List<CharacterItem> getItemsForCharacter(int charId) {
                 Connection c = null;
                 List<CharacterItem> itemlist = new ArrayList<CharacterItem>();
@@ -95,24 +127,18 @@ public class CharacterDB implements CharacterDAO {
                 ResultSet rss = ps.executeQuery();
                 ResultSet rsloot = ploot.executeQuery();
                 while (rsloot.next()) {
-                        if (rsloot.getInt("loots.character_id") == rs.getInt("characters.id")) {
-                                dkp_spent = dkp_spent + rsloot.getDouble("loots.price");
-                        }
+                        dkp_spent = GetDkpSpentForCharacterByID(rsloot, rs, dkp_spent);
                         loot_value = loot_value + rsloot.getDouble("loots.price");
                 }
                 while (rss.next()) {
-                        if (rs.getInt("characters.id") == rss.getInt("character_rewards.character_id")) {
-                                shares = shares + rss.getInt("rewards.number_of_shares");
-                        }
+                        shares = GetSharesForCharacterByID(rs, rss, shares);
                 }
                 if (shares != 0) {
                         share_value = loot_value / shares;
                 }
                 dkp_earned = shares * share_value;
                 dkp = dkp_earned - dkp_spent;
-                Role role = Role.valueOf(rs.getString("character_classes.name").replace(" ", ""));
-                User user = new User(rs.getInt("id"), rs.getString("characters.name"), role, rs.getBoolean("characters.active"), shares, dkp_earned, dkp_spent, dkp);
-                user.addCharItems(getItemsForCharacter(rs.getInt("id")));
+                User user = CreateCharacter(rs, shares, dkp_earned, dkp_spent, dkp);
                 users.add(user);
 
         }
@@ -181,13 +207,7 @@ public class CharacterDB implements CharacterDAO {
 
                 try {
                         c = new DBConnection().getConnection();
-                        PreparedStatement pclass = c.prepareStatement("SELECT * FROM character_classes WHERE name=?");
-                        pclass.setString(1, fixRole(charclass));
-                        ResultSet rclass = pclass.executeQuery();
-                        int classid = 0;
-                        while (rclass.next()) {
-                                classid = rclass.getInt("id");
-                        }
+                        int classid = GetCharacterClassId(c, charclass);
 
                         PreparedStatement p = c.prepareStatement("UPDATE characters SET name=? , character_class_id=? , active=? , user_id=NULL WHERE id=?");
                         p.setString(1, name);

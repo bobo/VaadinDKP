@@ -5,6 +5,8 @@
 package com.unknown.entity.character;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.Property.ConversionException;
+import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.GridLayout.OutOfBoundsException;
 import com.vaadin.ui.GridLayout.OverlapsException;
@@ -33,6 +35,16 @@ public class CharacterInfoWindow extends Window {
                 CharacterDKP();
                 CharacterLoots();
 
+        }
+
+        private void CharacterInfoLootTableAddRow(Item addItem, CharacterItem charitem) throws ReadOnlyException, ConversionException {
+                addItem.getItemProperty("Name").setValue(charitem.getName());
+                addItem.getItemProperty("Price").setValue(charitem.getPrice());
+        }
+
+        private void CharacterInfoLootTableSetHeaders(Table tbl) throws UnsupportedOperationException {
+                tbl.addContainerProperty("Name", String.class, "");
+                tbl.addContainerProperty("Price", Double.class, 0);
         }
 
         private void CharacterInformation() {
@@ -67,13 +79,11 @@ public class CharacterInfoWindow extends Window {
 
         private Table lootList(User user) {
                 Table tbl = new Table();
-                tbl.addContainerProperty("Name", String.class, "");
-                tbl.addContainerProperty("Price", Double.class, 0);
+                CharacterInfoLootTableSetHeaders(tbl);
                 tbl.setHeight(150);
                 for (CharacterItem charitem : user.getCharItems()) {
                         Item addItem = tbl.addItem(charitem.getId());
-                        addItem.getItemProperty("Name").setValue(charitem.getName());
-                        addItem.getItemProperty("Price").setValue(charitem.getPrice());
+                        CharacterInfoLootTableAddRow(addItem, charitem);
                 }
                 return tbl;
         }

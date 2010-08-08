@@ -21,9 +21,7 @@ public class RaidList extends Table {
 
     public RaidList(RaidDAO raidDAO) {
         this.raidDAO = raidDAO;
-        addContainerProperty("Zone", String.class, "");
-        addContainerProperty("Comment", String.class, "");
-        addContainerProperty("Date", String.class, "");
+        RaidListSetHeaders();
 
         this.setHeight("500px");
         this.setWidth("300px");
@@ -38,6 +36,18 @@ public class RaidList extends Table {
             }
         });
     }
+
+        private void RaidListAddRow(Item addItem, final Raid raid) throws ReadOnlyException, ConversionException {
+                addItem.getItemProperty("Zone").setValue(raid.getName());
+                addItem.getItemProperty("Comment").setValue(raid.getComment());
+                addItem.getItemProperty("Date").setValue(raid.getDate());
+        }
+
+        private void RaidListSetHeaders() throws UnsupportedOperationException {
+                addContainerProperty("Zone", String.class, "");
+                addContainerProperty("Comment", String.class, "");
+                addContainerProperty("Date", String.class, "");
+        }
     public void clear()  {
         this.removeAllItems();
     }
@@ -48,9 +58,7 @@ public class RaidList extends Table {
 
         for (final Raid raid : raids) {
             Item addItem = addItem(raid);
-            addItem.getItemProperty("Zone").setValue(raid.getName());
-            addItem.getItemProperty("Comment").setValue(raid.getComment());
-            addItem.getItemProperty("Date").setValue(raid.getDate());
+                        RaidListAddRow(addItem, raid);
 
         }
     }

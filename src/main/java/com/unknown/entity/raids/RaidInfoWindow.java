@@ -5,8 +5,11 @@
 package com.unknown.entity.raids;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.Property.ConversionException;
+import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
@@ -18,86 +21,100 @@ import com.vaadin.ui.Window;
  */
 public class RaidInfoWindow extends Window {
 
-	private final Raid raid;
+        private final Raid raid;
 
-	public RaidInfoWindow(Raid raid) {
-		this.raid = raid;
-		center();
-		setWidth("600px");
-		setHeight("320px");
-		setCaption(raid.getName());
+        public RaidInfoWindow(Raid raid) {
+                this.raid = raid;
+                center();
+                setWidth("600px");
+                setHeight("320px");
+                setCaption(raid.getName());
 
-	}
+        }
 
-	public void printInfo() {
-		addComponent(new Label("Raid information"));
+        public void printInfo() {
+                raidInformation();
 
-		addComponent(new Label("Zone: " + raid.getName()));
-		addComponent(new Label("Comment: " + raid.getComment()));
-		addComponent(new Label("Date: " + raid.getDate()));
-		addComponent(new Label("id: "+raid.getID()));
-		HorizontalLayout hzl = new HorizontalLayout();
-		hzl.setSpacing(true);
-		Table Rewards = rewardList(raid);
-		if (Rewards.size() > 0) {
-			hzl.addComponent(Rewards);
-		} else {
-			hzl.addComponent(new Label("No rewards in this raid."));
-		}
+                HorizontalLayout hzl = new HorizontalLayout();
+                hzl.setSpacing(true);
 
-		Table Loots = lootList(raid);
-		if (Loots.size() > 0) {
-			hzl.addComponent(Loots);
-		} else {
-			hzl.addComponent(new Label("No loot in this raid."));
-		}
-		addComponent(hzl);
-	}
+                hzl.addComponent(getTable(rewardList(raid)));
+                hzl.addComponent(getTable(lootList(raid)));
 
-	private Table lootList(Raid raid) {
-		Table tbl = new Table();
-		tbl.addContainerProperty("Name", String.class, "");
-		tbl.addContainerProperty("Item", String.class, "");
-		tbl.addContainerProperty("Price", Double.class, 0);
-		tbl.addContainerProperty("Heroic", String.class, "");
-		tbl.setHeight(150);
-		for (RaidItem item : raid.getRaidItems()) {
-			Item addItem = tbl.addItem(new Integer(item.getId()));
-			addItem.getItemProperty("Name").setValue(item.getLooter());
-			addItem.getItemProperty("Item").setValue(item.getName());
-			addItem.getItemProperty("Price").setValue(item.getPrice());
-			addItem.getItemProperty("Heroic").setValue(item.isHeroic());
-		}
+                addComponent(hzl);
+        }
 
-		return tbl;
-	}
+        private void RaidInfoWindowLootListAddRow(Item addItem, RaidItem item) throws ReadOnlyException, ConversionException {
+                addItem.getItemProperty("Name").setValue(item.getLooter());
+                addItem.getItemProperty("Item").setValue(item.getName());
+                addItem.getItemProperty("Price").setValue(item.getPrice());
+                addItem.getItemProperty("Heroic").setValue(item.isHeroic());
+        }
 
-    private Table rewardList(final Raid raid) {
-                Table tbl = new Table();
-				System.out.println("getting rewardlist for : "+raid.getID());
+        private void RaidInfoWindowLootListSetHeaders(Table tbl) throws UnsupportedOperationException {
+                tbl.addContainerProperty("Name", String.class, "");
+                tbl.addContainerProperty("Item", String.class, "");
+                tbl.addContainerProperty("Price", Double.class, 0);
+                tbl.addContainerProperty("Heroic", String.class, "");
+        }
+
+        private void RaidInfoWindowRewardListAddRow(Item addItem, RaidReward reward) throws ReadOnlyException, ConversionException {
+                addItem.getItemProperty("Comment").setValue(reward.getComment());
+                addItem.getItemProperty("Shares").setValue(reward.getShares());
+        }
+
+        private void RaidInfoWindowRewardListSetHeaders(Table tbl) throws UnsupportedOperationException {
                 tbl.addContainerProperty("Comment", String.class, "");
                 tbl.addContainerProperty("Shares", Integer.class, "");
+        }
+
+        private void raidInformation() {
+                addComponent(new Label("Raid information"));
+                addComponent(new Label("Zone: " + raid.getName()));
+                addComponent(new Label("Comment: " + raid.getComment()));
+                addComponent(new Label("Date: " + raid.getDate()));
+                addComponent(new Label("id: " + raid.getID()));
+        }
+
+        private Table lootList(Raid raid) {
+                Table tbl = new Table();
+                RaidInfoWindowLootListSetHeaders(tbl);
+                tbl.setHeight(150);
+                for (RaidItem item : raid.getRaidItems()) {
+                        Item addItem = tbl.addItem(new Integer(item.getId()));
+                        RaidInfoWindowLootListAddRow(addItem, item);
+                }
+                return tbl;
+        }
+
+        private Table rewardList(final Raid raid) {
+                Table tbl = new Table();
+                RaidInfoWindowRewardListSetHeaders(tbl);
                 tbl.setHeight(150);
                 for (RaidReward reward : raid.getRaidRewards()) {
-                    Item addItem = tbl.addItem(reward);
-                    addItem.getItemProperty("Comment").setValue(reward.getComment());
-                    addItem.getItemProperty("Shares").setValue(reward.getShares());
+                        Item addItem = tbl.addItem(reward);
+                        RaidInfoWindowRewardListAddRow(addItem, reward);
                 }
                 tbl.addListener(new ItemClickListener() {
 
-                    @Override
-                    public void itemClick(ItemClickEvent event) {
-                        RaidReward rreward = (RaidReward) event.getItemId();
-                        RaidCharWindow info = new RaidCharWindow(rreward.getRewardChars());
-                        info.printInfo();
-                        addComponent(new Label("Raid id; "+rreward.getRaidId()));
-						addComponent(new Label("RaidReward id; "+rreward.getId()));
-
-                        getApplication().getMainWindow().addWindow(info);
-                    }
+                        @Override
+                        public void itemClick(ItemClickEvent event) {
+                                RaidReward rreward = (RaidReward) event.getItemId();
+                                RaidCharWindow info = new RaidCharWindow(rreward.getRewardChars());
+                                info.printInfo();
+                                getApplication().getMainWindow().addWindow(info);
+                        }
                 });
 
                 return tbl;
 
-    }
+        }
+
+        private Component getTable(Table rewards) {
+                if (rewards.size() > 0) {
+                        return rewards;
+                } else {
+                        return new Label("No rewards in this raid.");
+                }
+        }
 }

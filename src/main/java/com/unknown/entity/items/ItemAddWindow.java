@@ -4,8 +4,6 @@
  */
 package com.unknown.entity.items;
 
-import com.unknown.entity.character.CharacterDB;
-import com.unknown.entity.DBConnection;
 import com.unknown.entity.Slots;
 import com.unknown.entity.Type;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -18,8 +16,6 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,16 +69,7 @@ public class ItemAddWindow extends Window {
                 type.setImmediate(true);
                 legendary.setImmediate(true);
 
-                addItem.addComponent(name);
-                addItem.addComponent(wowid);
-                addItem.addComponent(wowidheroic);
-                addItem.addComponent(slot);
-                addItem.addComponent(type);
-
-                addItem.addComponent(price);
-                addItem.addComponent(priceheroic);
-
-                addItem.addComponent(legendary);
+                ItemAddWIndowAddComponents(addItem, name, wowid, wowidheroic, slot, type, price, priceheroic, legendary);
 
                 for (Slots slots : Slots.values()) {
                         slot.addItem(slots);
@@ -108,7 +95,6 @@ public class ItemAddWindow extends Window {
                                 }
                                 price.setValue("" + defprice);
                                 priceheroic.setValue("" + defpricehc);
-
                         }
                 });
 
@@ -126,7 +112,12 @@ public class ItemAddWindow extends Window {
                                 final String itype = type.getValue().toString();
                                 final boolean isLegendary = Boolean.parseBoolean(legendary.getValue().toString());
 
-                                int success = addItem(iname, iwowid, iwowidheroic, iprice, ipriceheroic, islot, itype, isLegendary);
+                                int success = 0;
+                                try {
+                                        success = addItem(iname, iwowid, iwowidheroic, iprice, ipriceheroic, islot, itype, isLegendary);
+                                } catch (SQLException ex) {
+                                        Logger.getLogger(ItemAddWindow.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                                 addComponent(new Label("Update :" + success));
                         }
                 });
@@ -145,40 +136,19 @@ public class ItemAddWindow extends Window {
                 addItem.addComponent(hzl);
         }
 
-        private int addItem(String name, int wowid, int wowid_hc, double price, double price_hc, String slot, String type, boolean isLegendary) {
-                try {
-                        Class.forName("com.mysql.jdbc.Driver");
-                } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        private void ItemAddWIndowAddComponents(VerticalLayout addItem, final TextField name, final TextField wowid, final TextField wowidheroic, final ComboBox slot, final ComboBox type, final TextField price, final TextField priceheroic, final CheckBox legendary) {
+                addItem.addComponent(name);
+                addItem.addComponent(wowid);
+                addItem.addComponent(wowidheroic);
+                addItem.addComponent(slot);
+                addItem.addComponent(type);
+                addItem.addComponent(price);
+                addItem.addComponent(priceheroic);
+                addItem.addComponent(legendary);
+        }
 
-                Connection c = null;
-                int result = 0;
-
-                try {
-                        c = new DBConnection().getConnection();
-                        PreparedStatement ps = c.prepareStatement("INSERT INTO items (name, wowid_normal, wowid_heroic, price_normal, price_heroic, slot, type, isLegendary) VALUES(?,?,?,?,?,?,?,?)");
-                        ps.setString(1, name);
-                        ps.setInt(2, wowid);
-                        ps.setInt(3, wowid_hc);
-                        ps.setDouble(4, price);
-                        ps.setDouble(5, price_hc);
-                        ps.setString(6, slot);
-                        ps.setString(7, type);
-                        ps.setBoolean(8, isLegendary);
-
-                        result = ps.executeUpdate();
-                } catch (SQLException e) {
-                        e.printStackTrace();
-                } finally {
-                        if (c != null) {
-                                try {
-                                        c.close();
-                                } catch (SQLException ex) {
-                                        Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                        }
-                }
-                return result;
+        private int addItem(String name, int wowid, int wowid_hc, double price, double price_hc, String slot, String type, boolean isLegendary) throws SQLException {
+                ItemDAO itemDao = new ItemDB();
+                return itemDao.addItem(name, wowid, wowid_hc, price, price_hc, slot, type, isLegendary);
         }
 }

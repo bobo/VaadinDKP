@@ -20,11 +20,7 @@ public class ItemList extends Table {
 
         public ItemList(ItemDAO itemDAO) {
                 this.itemDAO = itemDAO;
-                addContainerProperty("Name", String.class, "");
-                addContainerProperty("Price Normal", Double.class, 0);
-                addContainerProperty("Price Heroic", Double.class, 0);
-                addContainerProperty("Slot", String.class, "");
-                addContainerProperty("Type", String.class, "");
+                ItemListColumnHeaders();
 
                 this.setHeight("500px");
 
@@ -47,6 +43,22 @@ public class ItemList extends Table {
                 });
         }
 
+        private void ItemListAddRow(Item addItem, final Items item) throws ConversionException, ReadOnlyException {
+                addItem.getItemProperty("Name").setValue(item.getName());
+                addItem.getItemProperty("Price Normal").setValue(item.getPrice());
+                addItem.getItemProperty("Price Heroic").setValue(item.getPrice_hc());
+                addItem.getItemProperty("Slot").setValue(item.getSlot());
+                addItem.getItemProperty("Type").setValue(item.getType().toString());
+        }
+
+        private void ItemListColumnHeaders() throws UnsupportedOperationException {
+                addContainerProperty("Name", String.class, "");
+                addContainerProperty("Price Normal", Double.class, 0);
+                addContainerProperty("Price Heroic", Double.class, 0);
+                addContainerProperty("Slot", String.class, "");
+                addContainerProperty("Type", String.class, "");
+        }
+
         public void clear() {
                 this.removeAllItems();
         }
@@ -57,11 +69,7 @@ public class ItemList extends Table {
 
                 for (final Items item : itemses) {
                         Item addItem = addItem(item);
-                        addItem.getItemProperty("Name").setValue(item.getName());
-                        addItem.getItemProperty("Price Normal").setValue(item.getPrice());
-                        addItem.getItemProperty("Price Heroic").setValue(item.getPrice_hc());
-                        addItem.getItemProperty("Slot").setValue(item.getSlot());
-                        addItem.getItemProperty("Type").setValue(item.getType().toString());
+                        ItemListAddRow(addItem, item);
                 }
         }
 }

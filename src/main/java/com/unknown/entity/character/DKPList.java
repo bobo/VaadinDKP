@@ -28,10 +28,10 @@ public class DKPList extends Table {
         public DKPList(CharacterDAO characterDAO) {
                 this.characterDAO = characterDAO;
 
-                SetColumnHeaders();
-
+                DkpListSetColumnHeaders();
                 this.setWidth("180px");
                 this.setHeight("500px");
+
                 this.addListener(new ItemClickListener() {
 
                         @Override
@@ -53,7 +53,7 @@ public class DKPList extends Table {
                 });
         }
 
-        private void SetColumnHeaders() throws UnsupportedOperationException {
+        private void DkpListSetColumnHeaders() throws UnsupportedOperationException {
                 ic.addContainerProperty("Name", String.class, "");
                 ic.addContainerProperty("Armor", Armor.class, "");
                 this.setContainerDataSource(ic);
@@ -82,11 +82,11 @@ public class DKPList extends Table {
                 });
                 for (final User user : users) {
                         Item addItem = addItem(user);
-                        DkpListAddItem(addItem, user);
+                        DkpListAddRow(addItem, user);
                 }
         }
 
-        private void DkpListAddItem(Item addItem, final User user) throws ConversionException, ReadOnlyException {
+        private void DkpListAddRow(Item addItem, final User user) throws ConversionException, ReadOnlyException {
                 addItem.getItemProperty("Name").setValue(user.getUsername());
                 addItem.getItemProperty("Armor").setValue(user.getArmor());
                 addItem.getItemProperty("DKP").setValue(user.getDKP());

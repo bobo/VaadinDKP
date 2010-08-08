@@ -48,7 +48,7 @@ public class RaidDB implements RaidDAO {
                 return raids;
         }
 
-        public List<RaidItem> getItemsForRaid(int raidId) {
+        public List<RaidItem> getItemsForRaid(int raidId) throws SQLException {
 
                 Connection c = null;
                 List<RaidItem> raidItems = new ArrayList<RaidItem>();
@@ -68,6 +68,10 @@ public class RaidDB implements RaidDAO {
                         }
                 } catch (SQLException e) {
                         e.printStackTrace();
+                                } finally {
+                        if (c != null) {
+                                c.close();
+                        }
                 }
 
                 return raidItems;
@@ -157,7 +161,7 @@ public class RaidDB implements RaidDAO {
                 return result;
         }
 
-        private Collection<RaidReward> getRewardsForRaid(int raidId) {
+        private Collection<RaidReward> getRewardsForRaid(int raidId) throws SQLException {
                 System.out.println("getting rewards for raid: " + raidId);
                 Connection c = null;
                 List<RaidReward> raidRewards = new ArrayList<RaidReward>();
@@ -177,13 +181,16 @@ public class RaidDB implements RaidDAO {
                         }
                 } catch (SQLException e) {
                         e.printStackTrace();
+                } finally {
+                        if (c != null) {
+                                c.close();
+                        }
                 }
-
                 return raidRewards;
 
         }
 
-        private Collection<RaidChar> getCharsForReward(int id) {
+        private Collection<RaidChar> getCharsForReward(int id) throws SQLException {
                 Connection c = null;
                 List<RaidChar> raidChars = new ArrayList<RaidChar>();
                 try {
@@ -204,7 +211,46 @@ public class RaidDB implements RaidDAO {
                         }
                 } catch (SQLException e) {
                         e.printStackTrace();
+                
+                                } finally {
+                        if (c != null) {
+                                c.close();
+                        }
                 }
                 return raidChars;
+        }
+
+        @Override
+        public int doRaidUpdate(Raid raid, String raidzoneName, String raidcomment, String raiddate) throws SQLException {
+                int success = 0;
+                Connection c = null;
+                try {
+                        c = new DBConnection().getConnection();
+                        PreparedStatement p = c.prepareStatement("UPDATE raids SET zone_id=? , date=? , comment=? WHERE id=?");
+                        int zoneid = getZoneIdByName(c, raidzoneName);
+                        p.setInt(1, zoneid);
+                        p.setString(2, raiddate);
+                        p.setString(3, raidcomment);
+                        p.setInt(4, raid.getID());
+                        success = p.executeUpdate();
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                } finally {
+                        if (c != null) {
+                                c.close();
+                        }
+                }
+                return success;
+        }
+
+        private int getZoneIdByName(Connection c, String raidzoneName) throws SQLException {
+                PreparedStatement pzone = c.prepareStatement("SELECT * FROM zones WHERE name=?");
+                pzone.setString(1, raidzoneName);
+                ResultSet rs = pzone.executeQuery();
+                int zoneid = 0;
+                while (rs.next()) {
+                        zoneid = rs.getInt("id");
+                }
+                return zoneid;
         }
 }

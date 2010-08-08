@@ -17,6 +17,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -37,7 +38,7 @@ class RaidEditWindow extends Window {
                 center();
                 setWidth("700px");
                 setHeight("350px");
-                setCaption(raid.getName());
+                setCaption("Edit raid: " + raid.getName());
 
         }
 
@@ -54,8 +55,10 @@ class RaidEditWindow extends Window {
                 Button addLoot = new Button("Add loot");
 
                 addComponent(hzl);
-                addComponent(addReward);
-                addComponent(addLoot);
+                HorizontalLayout vert = new HorizontalLayout();
+                vert.addComponent(addReward);
+                vert.addComponent(addLoot);
+                addComponent(vert);
 
         }
 
@@ -159,7 +162,7 @@ class RaidEditWindow extends Window {
                         @Override
                         public void itemClick(ItemClickEvent event) {
                                 RaidReward rreward = (RaidReward) event.getItemId();
-                                RaidCharWindow info = new RaidCharWindow(rreward.getRewardChars());
+                                RaidRewardEditWindow info = new RaidRewardEditWindow(rreward.getRewardChars(), rreward.getComment(),rreward.getShares());
                                 info.printInfo();
                                 getApplication().getMainWindow().addWindow(info);
                         }

@@ -62,7 +62,7 @@ public class RaidCharWindow extends Window {
                 if (Attendants.size() > 0) {
 			return Attendants;
 		} else {
-			return new Label("No members in this raid.");
+			return new Label("No members in this reward.");
 		}
         }
 }

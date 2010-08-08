@@ -30,7 +30,7 @@ public class CharacterEditWindow extends Window {
 
         public CharacterEditWindow(User user) {
                 this.user = user;
-                this.setCaption(user.getUsername());
+                this.setCaption("Edit character: "+user.getUsername());
                 this.setPositionX(200);
                 this.setPositionY(400);
                 this.setWidth("400px");

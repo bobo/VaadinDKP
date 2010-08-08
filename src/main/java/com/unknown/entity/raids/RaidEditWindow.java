@@ -17,10 +17,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -162,7 +160,7 @@ class RaidEditWindow extends Window {
                         @Override
                         public void itemClick(ItemClickEvent event) {
                                 RaidReward rreward = (RaidReward) event.getItemId();
-                                RaidRewardEditWindow info = new RaidRewardEditWindow(rreward.getRewardChars(), rreward.getComment(),rreward.getShares());
+                                RaidRewardEditWindow info = new RaidRewardEditWindow(rreward);
                                 info.printInfo();
                                 getApplication().getMainWindow().addWindow(info);
                         }

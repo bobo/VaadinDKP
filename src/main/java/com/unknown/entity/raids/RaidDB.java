@@ -68,7 +68,7 @@ public class RaidDB implements RaidDAO {
                         }
                 } catch (SQLException e) {
                         e.printStackTrace();
-                                } finally {
+                } finally {
                         if (c != null) {
                                 c.close();
                         }
@@ -211,8 +211,8 @@ public class RaidDB implements RaidDAO {
                         }
                 } catch (SQLException e) {
                         e.printStackTrace();
-                
-                                } finally {
+
+                } finally {
                         if (c != null) {
                                 c.close();
                         }
@@ -252,5 +252,48 @@ public class RaidDB implements RaidDAO {
                         zoneid = rs.getInt("id");
                 }
                 return zoneid;
+        }
+
+        @Override
+        public int doUpdateReward(RaidReward reward, List<String> newAttendants, int newShares) throws SQLException {
+                Connection c = null;
+                int success = 0;
+                try {
+                        c = new DBConnection().getConnection();
+                        doUpdateCharacters(c, reward, newAttendants);
+                        // doUpdateShares(c, reward, newShares);
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                } finally {
+                        if (c != null) {
+                                c.close();
+                        }
+                }
+                return success;
+        }
+
+        private void doUpdateCharacters(Connection c, RaidReward reward, List<String> newAttendants) throws SQLException {
+                PreparedStatement p = c.prepareStatement("SELECT * FROM character_rewards JOIN characters WHERE characters.id=character_rewards.character_id AND character_rewards.reward_id=?");
+                p.setInt(1, reward.getId());
+                System.out.println("Reward id: "+reward.getId());
+                ResultSet rs = p.executeQuery();
+                List<Integer> newcharclassid = new ArrayList<Integer>();
+                while (rs.next()) {
+                        newAttendants.remove(rs.getString("characters.name"));
+                }
+                PreparedStatement ps = c.prepareStatement("SELECT * FROM characters");
+                ResultSet rss = p.executeQuery();
+                while (rss.next()) {
+                        System.out.println(rss.getString("name"));
+                        if (newAttendants.contains(rss.getString("name"))) {
+                                        newcharclassid.add(rss.getInt("id"));
+                                        System.out.println(rss.getString("name") + " : " + rss.getInt("id"));
+                        }
+                }
+
+        }
+
+        private void doUpdateShares(Connection c, RaidReward reward, int newShares) {
+                throw new UnsupportedOperationException("Not yet implemented");
         }
 }

@@ -33,10 +33,10 @@ class RaidRewardEditWindow extends Window {
                 this.reward = reward;
                 this.chars = reward.getRewardChars();
                 this.shares = reward.getShares();
-                setPositionX(600);
-                setPositionY(200);
+                this.setPositionX(600);
+                this.setPositionY(200);
                 this.setCaption("Edit reward: " + reward.getComment());
-                setWidth("300px");
+                setWidth("350px");
                 setHeight("400px");
         }
 
@@ -73,6 +73,16 @@ class RaidRewardEditWindow extends Window {
                                 }
                         }
                 });
+                Button closeButton = new Button("Close");
+                vert.addComponent(closeButton);
+                closeButton.addListener(new Button.ClickListener() {
+
+                        @Override
+                        public void buttonClick(ClickEvent event) {
+                                close();
+                        }
+                });
+
                 hzl.addComponent(vert);
                 addComponent(hzl);
         }

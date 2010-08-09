@@ -188,9 +188,9 @@ public class UnknownEntityDKP extends Application {
                                         LoginWindow loginWindow = new LoginWindow();
                                         getMainWindow().addWindow(loginWindow);
                                         loginWindow.attach();
-                                } else {
-                                        window.addComponent(new Label("User: " + username));
-                                }
+                                } else                  if (username != null && username.toString().equals("admin")) {{
+                                        getMainWindow().getApplication().setUser(null);
+                                }}
                         }
                 });
         }

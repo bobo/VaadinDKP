@@ -25,15 +25,17 @@ class RaidRewardEditWindow extends Window {
         private final List<RaidChar> chars;
         private final int shares;
         private final RaidReward reward;
+        private final String oldcomment;
 
         RaidRewardEditWindow(RaidReward reward) {
                 this.reward = reward;
                 this.chars = reward.getRewardChars();
                 this.shares = reward.getShares();
+                this.oldcomment = reward.getComment();
                 this.setPositionX(600);
                 this.setPositionY(200);
                 this.setCaption("Edit reward: " + reward.getComment());
-                setWidth("350px");
+                setWidth("380px");
                 setHeight("400px");
         }
 
@@ -49,6 +51,11 @@ class RaidRewardEditWindow extends Window {
                 share.setValue(shares);
                 share.setImmediate(true);
                 vert.addComponent(share);
+                
+                final TextField comment = new TextField("Comment");
+                comment.setValue(oldcomment);
+                comment.setImmediate(true);
+                vert.addComponent(comment);
 
                 Button updateButton = new Button("Update");
                 vert.addComponent(updateButton);
@@ -63,8 +70,9 @@ class RaidRewardEditWindow extends Window {
                                         System.out.println(s);
                                 }
                                 int newShares = Integer.parseInt(share.getValue().toString());
+                                String newComment = comment.getValue().toString();
                                 try {
-                                        updateReward(reward, newAttendants, newShares);
+                                        updateReward(reward, newAttendants, newShares, newComment);
                                 } catch (SQLException ex) {
                                         Logger.getLogger(RaidRewardEditWindow.class.getName()).log(Level.SEVERE, null, ex);
                                 }
@@ -84,9 +92,9 @@ class RaidRewardEditWindow extends Window {
                 addComponent(hzl);
         }
 
-        private int updateReward(RaidReward reward, List<String> newAttendants, int newShares) throws SQLException {
+        private int updateReward(RaidReward reward, List<String> newAttendants, int newShares, String newComment) throws SQLException {
                 RaidDAO raidDao = new RaidDB();
-                return raidDao.doUpdateReward(reward, newAttendants, newShares);
+                return raidDao.doUpdateReward(reward, newAttendants, newShares, newComment);
         }
 
         private TextField charList() {

@@ -267,13 +267,13 @@ public class RaidDB implements RaidDAO {
         }
 
         @Override
-        public int doUpdateReward(RaidReward reward, List<String> newAttendants, int newShares) throws SQLException {
+        public int doUpdateReward(RaidReward reward, List<String> newAttendants, int newShares, String newComment) throws SQLException {
                 Connection c = null;
                 int success = 0;
                 try {
                         c = new DBConnection().getConnection();
                         success += doUpdateCharacters(c, reward, newAttendants);
-                        success += doUpdateShares(c, reward, newShares);
+                        success += doUpdateSharesAndComment(c, reward, newShares, newComment);
                 } catch (SQLException e) {
                         e.printStackTrace();
                 } finally {
@@ -306,10 +306,11 @@ public class RaidDB implements RaidDAO {
                 return p.executeUpdate();
         }
 
-        private int doUpdateShares(Connection c, RaidReward reward, int newShares) throws SQLException {
-                PreparedStatement p = c.prepareStatement("UPDATE rewards SET number_of_shares=? WHERE id=?");
+        private int doUpdateSharesAndComment(Connection c, RaidReward reward, int newShares, String newComment) throws SQLException {
+                PreparedStatement p = c.prepareStatement("UPDATE rewards SET number_of_shares=? , comment=? WHERE id=?");
                 p.setInt(1, newShares);
-                p.setInt(2, reward.getId());
+                p.setString(2, newComment);
+                p.setInt(3, reward.getId());
                 return p.executeUpdate();
         }
 

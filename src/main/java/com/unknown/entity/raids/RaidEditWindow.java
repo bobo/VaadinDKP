@@ -50,6 +50,16 @@ class RaidEditWindow extends Window {
                 hzl.addComponent(getTable(lootList(raid)));
 
                 Button addReward = new Button("Add Reward");
+                addReward.addListener(new Button.ClickListener() {
+
+                        @Override
+                        public void buttonClick(ClickEvent event) {
+                                RaidRewardAddWindow rewardadd = new RaidRewardAddWindow(raid);
+                                rewardadd.printInfo();
+                                getApplication().getMainWindow().addWindow(rewardadd);
+
+                        }
+                });
                 Button addLoot = new Button("Add loot");
 
                 addComponent(hzl);

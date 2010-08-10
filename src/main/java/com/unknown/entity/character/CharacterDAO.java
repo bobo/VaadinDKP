@@ -5,6 +5,7 @@
 package com.unknown.entity.character;
 
 import com.unknown.entity.Role;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +21,10 @@ public interface CharacterDAO {
         public Collection<User> getUsersWithRole(Role role);
 
         public int addNewCharacter(String name, String role, Boolean isActive) throws SQLException;
+        
+        public int GetCharacterClassId(Connection c, String charclass) throws SQLException;
+
+        public int GetCharacterId(Connection c, String charclass) throws SQLException;
 
         public int updateCharacter(User user, String name, String charclass, boolean active);
 }

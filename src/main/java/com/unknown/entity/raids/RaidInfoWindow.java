@@ -25,10 +25,11 @@ public class RaidInfoWindow extends Window {
 
         public RaidInfoWindow(Raid raid) {
                 this.raid = raid;
-                center();
-                setWidth("600px");
-                setHeight("320px");
-                setCaption(raid.getName());
+                this.setPositionX(100);
+                this.setPositionY(200);
+                this.setWidth("800px");
+                this.setHeight("350px");
+                this.setCaption(raid.getName());
 
         }
 
@@ -73,7 +74,6 @@ public class RaidInfoWindow extends Window {
                 addComponent(new Label("Zone: " + raid.getName()));
                 addComponent(new Label("Comment: " + raid.getComment()));
                 addComponent(new Label("Date: " + raid.getDate()));
-                addComponent(new Label("id: " + raid.getID()));
         }
 
         private Table lootList(Raid raid) {

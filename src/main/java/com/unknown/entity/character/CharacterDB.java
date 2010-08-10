@@ -36,6 +36,7 @@ public class CharacterDB implements CharacterDAO {
                 Connection c = null;
                 List<User> users = new ArrayList<User>();
                 try {
+
                         c = new DBConnection().getConnection();
                         PreparedStatement p = c.prepareStatement("SELECT * FROM characters JOIN character_classes ON characters.character_class_id=character_classes.id");
 

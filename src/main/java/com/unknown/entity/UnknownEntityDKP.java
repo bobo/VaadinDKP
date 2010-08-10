@@ -18,10 +18,12 @@ package com.unknown.entity;
 import com.unknown.entity.raids.*;
 import com.unknown.entity.character.*;
 import com.unknown.entity.items.*;
+import com.unknown.entity.panel.AdminPanel;
 import com.vaadin.Application;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.terminal.FileResource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -30,6 +32,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import java.io.File;
 
 /**
  * The Application's "main" class
@@ -39,6 +42,7 @@ public class UnknownEntityDKP extends Application {
 
         private Window window;
 
+       private final AdminPanel adminPanel = new AdminPanel();
         public HorizontalLayout HorizontalSegment(final DKPList dKPList, ItemList itemList, RaidList raidList) {
                 final HorizontalLayout hzl = new HorizontalLayout();
 
@@ -114,16 +118,17 @@ public class UnknownEntityDKP extends Application {
                 CharacterDAO characterDAO = new CharacterDB();
                 ItemDAO itemDAO = new ItemDB();
 
-                final Button loginButton = new Button();
-                final Button updateButton = new Button("Update");
+				final Button updateButton = new Button("Update");
                 final CharacterList charList = new CharacterList(characterDAO);
                 final DKPList dKPList = new DKPList(characterDAO);
                 final RaidList raidList = new RaidList(raidDAO);
                 final ItemList itemList = new ItemList(itemDAO);
                 final HorizontalLayout hzl = HorizontalSegment(dKPList, itemList, raidList);
 
-                // Login button as an image
-                AdminPanel(loginButton);
+				window.addComponent(adminPanel);
+        		adminPanel.login();
+		        // Login button as an image
+//                AdminPanel(loginButton);
 
                 // Character List based on Character Class
                 CharacterListOnCharacterClass(charList);
@@ -133,7 +138,10 @@ public class UnknownEntityDKP extends Application {
 
                 // Update Button ---- TO BE REMOVED EVENTUALLY
                 UpdateButton(updateButton);
-        }
+//				FileResource f = new FileResource("db.properties", this);
+
+        	window.addComponent(new Label(getContext().getBaseDirectory().getAbsolutePath()));
+		}
 
         private void AdminPanel(final Button loginButton) {
                 // Paint stuff
@@ -186,6 +194,7 @@ public class UnknownEntityDKP extends Application {
                         public void buttonClick(ClickEvent event) {
                                 if (getMainWindow().getApplication().getUser() == null) {
                                         LoginWindow loginWindow = new LoginWindow();
+										loginWindow.addLoginListener(adminPanel);
                                         getMainWindow().addWindow(loginWindow);
                                         loginWindow.attach();
                                 } else {

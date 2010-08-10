@@ -17,6 +17,7 @@ public final class DBConnection {
     Connection conn = null;
 
     private Connection connect() throws SQLException {
+
         String userName = "root", userPassword = "piccolo", databaseURL = "jdbc:mysql://unknown-entity.com:3306/dkp";
         conn = DriverManager.getConnection(databaseURL, userName, userPassword);
         return conn;

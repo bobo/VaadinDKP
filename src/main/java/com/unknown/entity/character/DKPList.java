@@ -9,7 +9,9 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.terminal.FileResource;
 import com.vaadin.ui.Table;
+import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -26,7 +28,7 @@ public class DKPList extends Table {
         IndexedContainer ic = new IndexedContainer();
 
         public DKPList(CharacterDAO characterDAO) {
-                this.characterDAO = characterDAO;
+			this.characterDAO = characterDAO;
 
                 DkpListSetColumnHeaders();
                 this.setWidth("180px");

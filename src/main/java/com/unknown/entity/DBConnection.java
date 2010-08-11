@@ -15,7 +15,7 @@ import java.sql.SQLException;
  */
 public final class DBConnection {
     Connection conn = null;
-
+	private static String propertisPath;
     private Connection connect() throws SQLException {
 
         String userName = "root", userPassword = "piccolo", databaseURL = "jdbc:mysql://unknown-entity.com:3306/dkp";
@@ -28,4 +28,10 @@ public final class DBConnection {
     public Connection getConnection() {
         return conn;
     }
+
+	public static void setPropertisPath(String propertisPath) {
+		DBConnection.propertisPath = propertisPath;
+	}
+
+
 }

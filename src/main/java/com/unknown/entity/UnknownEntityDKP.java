@@ -23,7 +23,6 @@ import com.vaadin.Application;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.terminal.FileResource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -139,8 +138,8 @@ public class UnknownEntityDKP extends Application {
                 // Update Button ---- TO BE REMOVED EVENTUALLY
                 UpdateButton(updateButton);
 //				FileResource f = new FileResource("db.properties", this);
+				DBConnection.setPropertisPath(getContext().getBaseDirectory().getAbsolutePath()+"/META-INF/db.properties");
 
-        	window.addComponent(new Label(getContext().getBaseDirectory().getAbsolutePath()));
 		}
 
         private void AdminPanel(final Button loginButton) {

@@ -62,6 +62,20 @@ class RaidEditWindow extends Window {
                 });
                 Button addLoot = new Button("Add loot");
 
+                addLoot.addListener(new Button.ClickListener() {
+
+                        @Override
+                        public void buttonClick(ClickEvent event) {
+                                RaidLootAddWindow rlootadd = new RaidLootAddWindow(raid);
+                                try {
+                                        rlootadd.printInfo();
+                                } catch (SQLException ex) {
+                                        Logger.getLogger(RaidEditWindow.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                getApplication().getMainWindow().addWindow(rlootadd);
+                        }
+                });
+
                 addComponent(hzl);
                 HorizontalLayout vert = new HorizontalLayout();
                 vert.addComponent(addReward);

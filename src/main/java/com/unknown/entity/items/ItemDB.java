@@ -166,4 +166,30 @@ public class ItemDB implements ItemDAO {
                 }
                 return result;
         }
+
+        @Override
+        public Object getItemPrice(String itemname, boolean heroic) throws SQLException {
+                Double price = 0.0;
+                Connection c = null;
+                try {
+                        c = new DBConnection().getConnection();
+                        PreparedStatement p = c.prepareStatement("SELECT * FROM items WHERE name=?");
+                        p.setString(1, itemname);
+                        ResultSet rs = p.executeQuery();
+                        if (rs.next()) {
+                                if (heroic) {
+                                        price = rs.getDouble("price_heroic");
+                                } else {
+                                        price = rs.getDouble("price_normal");
+                                }
+                        }
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                } finally {
+                        if (c != null) {
+                                c.close();
+                        }
+                }
+                return price;
+        }
 }

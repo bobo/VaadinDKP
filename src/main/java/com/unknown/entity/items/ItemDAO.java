@@ -24,4 +24,6 @@ public interface ItemDAO {
         public int updateItem(Items item, String newname, Slots newslot, Type newtype, int newwowid, int newwowidhc, double newprice, double newpricehc, boolean legendary);
 
         public int addItem(String name, int wowid, int wowid_hc, double price, double price_hc, String slot, String type, boolean isLegendary) throws SQLException;
+
+        public Object getItemPrice(String itemname, boolean heroic) throws SQLException;
 }

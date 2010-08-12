@@ -23,102 +23,121 @@ import com.vaadin.ui.Window;
  */
 public class AdminPanel extends HorizontalLayout implements MyLoginListener {
 
-	private Button loginBtn = new Button();
+        private Button loginBtn = new Button();
 
-	public AdminPanel() {
-		loginBtn.setIcon(new ThemeResource("../ue/img/key3.png"));
-		this.addComponent(loginBtn);
-		this.setSpacing(true);
-		loginBtn.addListener(new LoginClickListener());
-	}
+        public AdminPanel() {
+                loginBtn.setIcon(new ThemeResource("../ue/img/key3.png"));
+                this.addComponent(loginBtn);
+                this.setSpacing(true);
+                loginBtn.setStyle(Button.STYLE_LINK);
+                loginBtn.addListener(new LoginClickListener());
+        }
 
-	public void login() {
-		this.removeAllComponents();
-		if (validUser()) {
-			final Button addUsrBtn = new Button("Add Character");
-			addUsrBtn.addListener(new AddUserListener());
-			this.addComponent(addUsrBtn);
-			final Button addItmBtn = new Button("Add Item");
-			addItmBtn.addListener(new AddItemListener());
-			this.addComponent(addItmBtn);
-			final Button addRaidBtn = new Button("Add Raid");
-			addRaidBtn.addListener(new AddRaidListener());
-			this.addComponent(addRaidBtn);
-		}else {
-			addComponent(loginBtn);
-		}
+        public void login() {
+                this.removeAllComponents();
+                if (validUser()) {
+                        final Button logOutButton = new Button("");
+                        logOutButton.setStyle(Button.STYLE_LINK);
+                        logOutButton.addListener(new LogOutListener());
+                        this.addComponent(logOutButton);
+                        final Button addUsrBtn = new Button("Add Character");
+                        addUsrBtn.addListener(new AddUserListener());
+                        this.addComponent(addUsrBtn);
+                        final Button addItmBtn = new Button("Add Item");
+                        addItmBtn.addListener(new AddItemListener());
+                        this.addComponent(addItmBtn);
+                        final Button addRaidBtn = new Button("Add Raid");
+                        addRaidBtn.addListener(new AddRaidListener());
+                        this.addComponent(addRaidBtn);
+                } else {
+                        addComponent(loginBtn);
+                }
 
-	}
+        }
 
-	private boolean validUser() {
-		final Object username = getApplication().getUser();
-		return username != null && username.toString().equals("admin");
+        private boolean validUser() {
+                final Object username = getApplication().getUser();
+                return username != null && username.toString().equals("admin");
 
-	}
+        }
 
-	private Window getMainWindow() {
-		return getApplication().getMainWindow();
-	}
+        private Window getMainWindow() {
+                return getApplication().getMainWindow();
+        }
 
-	@Override
-	public void onLogin() {
-		login();
-	}
+        @Override
+        public void onLogin() {
+                login();
+        }
 
-	private class AddItemListener implements ClickListener {
+        private class AddItemListener implements ClickListener {
 
-		public AddItemListener() {
-		}
+                public AddItemListener() {
+                }
 
-		@Override
-		public void buttonClick(ClickEvent event) {
-			ItemAddWindow addItem = new ItemAddWindow();
-			addItem.printInfo();
-			getMainWindow().addWindow(addItem);
-		}
-	}
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        ItemAddWindow addItem = new ItemAddWindow();
+                        addItem.printInfo();
+                        getMainWindow().addWindow(addItem);
+                }
+        }
 
-	private class AddRaidListener implements ClickListener {
+        private class AddRaidListener implements ClickListener {
 
-		public AddRaidListener() {
-		}
+                public AddRaidListener() {
+                }
 
-		@Override
-		public void buttonClick(ClickEvent event) {
-			RaidAddWindow addRaid = new RaidAddWindow();
-			addRaid.printInfo();
-			getMainWindow().addWindow(addRaid);
-		}
-	}
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        RaidAddWindow addRaid = new RaidAddWindow();
+                        addRaid.printInfo();
+                        getMainWindow().addWindow(addRaid);
+                }
+        }
 
-	private class AddUserListener implements ClickListener {
+        private class AddUserListener implements ClickListener {
 
-		public AddUserListener() {
-		}
+                public AddUserListener() {
+                }
 
-		@Override
-		public void buttonClick(ClickEvent event) {
-			CharacterAddWindow addUser = new CharacterAddWindow();
-			addUser.printInfo();
-			getMainWindow().addWindow(addUser);
-		}
-	}
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        CharacterAddWindow addUser = new CharacterAddWindow();
+                        addUser.printInfo();
+                        getMainWindow().addWindow(addUser);
+                }
+        }
 
-	private class LoginClickListener implements ClickListener {
+        private class LoginClickListener implements ClickListener {
 
-		public LoginClickListener() {
-		}
+                public LoginClickListener() {
+                }
 
-		@Override
-		public void buttonClick(ClickEvent event) {
-			if (getMainWindow().getApplication().getUser() == null) {
-				LoginWindow loginWindow = new LoginWindow();
-				loginWindow.addLoginListener(AdminPanel.this);
-				getMainWindow().addWindow(loginWindow);
-				loginWindow.attach();
-			} else {
-				getMainWindow().addComponent(new Label("User: " + (getApplication() != null ? getApplication().getUser() : "")));
-			}
-		}
-	}
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        if (getMainWindow().getApplication().getUser() == null) {
+                                LoginWindow loginWindow = new LoginWindow();
+                                loginWindow.addLoginListener(AdminPanel.this);
+                                getMainWindow().addWindow(loginWindow);
+                                loginWindow.attach();
+                        } else {
+                                getMainWindow().addComponent(new Label("User: " + (getApplication() != null ? getApplication().getUser() : "")));
+                        }
+                }
+        }
+
+        private class LogOutListener implements ClickListener {
+
+                public LogOutListener() {
+                }
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        if (getMainWindow().getApplication().getUser() != null) {
+                                 getMainWindow().getApplication().setUser(null);
+                                 login();
+                        }
+                }
+        }
 }

@@ -294,9 +294,9 @@ public class RaidDB implements RaidDAO {
                         newcharid.add(characterDao.GetCharacterId(c, s));
                 }
                 int removed = removeAllExistingCharactersFromReward(c, reward, newAttendants, newcharid);
-                System.out.println("Removed: "+removed);
+                System.out.println("Removed: " + removed);
                 int success = addCharsToReward(c, newcharid, reward);
-                System.out.println("Sucess: "+success);
+                System.out.println("Sucess: " + success);
                 return success;
         }
 
@@ -319,5 +319,28 @@ public class RaidDB implements RaidDAO {
                 attendants.clear();
                 attendants.addAll(hs);
                 return attendants;
+        }
+
+        @Override
+        public List<String> getBossesForRaid(Raid raid) throws SQLException {
+                Connection c = null;
+                List<String> bosses = new ArrayList<String>();
+                try {
+                        c = new DBConnection().getConnection();
+                        PreparedStatement p = c.prepareStatement("SELECT * FROM mobs JOIN zones WHERE mobs.zone_id=zones.id AND zones.name=?");
+                        p.setString(1, raid.getName());
+                        ResultSet rs = p.executeQuery();
+                        while (rs.next()) {
+                                String foo = rs.getString("mobs.name");
+                                bosses.add(foo);
+                        }
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                } finally {
+                        if (c != null) {
+                                c.close();
+                        }
+                }
+                return bosses;
         }
 }

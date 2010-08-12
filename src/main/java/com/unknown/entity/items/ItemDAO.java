@@ -7,6 +7,7 @@ package com.unknown.entity.items;
 
 import com.unknown.entity.Slots;
 import com.unknown.entity.Type;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface ItemDAO {
         public int addItem(String name, int wowid, int wowid_hc, double price, double price_hc, String slot, String type, boolean isLegendary) throws SQLException;
 
         public Object getItemPrice(String itemname, boolean heroic) throws SQLException;
+
+        public int getItemId(Connection c, String loot) throws SQLException;
 }

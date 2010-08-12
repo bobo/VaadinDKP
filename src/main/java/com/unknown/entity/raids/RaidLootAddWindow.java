@@ -10,6 +10,8 @@ import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
@@ -45,7 +47,7 @@ public class RaidLootAddWindow extends Window {
         }
 
         public void printInfo() throws SQLException {
-                ComboBox boss = bossListComboBox();
+                final ComboBox boss = bossListComboBox();
                 addComponent(boss);
                 HashSet<Items> lootlist = getLootList();
                 final ComboBox loots = lootListComboBox(lootlist);
@@ -54,13 +56,14 @@ public class RaidLootAddWindow extends Window {
                 addComponent(heroic);
                 final TextField price = new TextField("Price");
                 addComponent(price);
-                ComboBox name = nameComboList();
+                final ComboBox name = nameComboList();
                 addComponent(name);
 
                 price.setImmediate(true);
                 heroic.setImmediate(true);
                 loots.setImmediate(true);
                 boss.setImmediate(true);
+                name.setImmediate(true);
 
                 loots.addListener(new ValueChangeListener() {
 
@@ -76,6 +79,23 @@ public class RaidLootAddWindow extends Window {
                                 price.setValue(getItemPrice(loots.getValue().toString(), heroic.booleanValue()));
                         }
                 });
+
+                Button addButton = new Button("Add");
+                addButton.addListener(new Button.ClickListener() {
+
+                        @Override
+                        public void buttonClick(ClickEvent event) {
+                                addRaidLoot(boss.getValue().toString(), name.getValue().toString(), loots.getValue().toString(), Boolean.parseBoolean(heroic.getValue().toString()), Double.parseDouble(price.getValue().toString()));
+                        }
+                });
+        }
+
+        private void addRaidLoot(String boss, String name, String loot, boolean isheroic, double price) {
+                try {
+                        raidDao.addLootToRaid(raid, boss, name, loot, isheroic, price);
+                } catch (SQLException ex) {
+                        Logger.getLogger(RaidLootAddWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
         }
 
         private ComboBox nameComboList() throws UnsupportedOperationException {

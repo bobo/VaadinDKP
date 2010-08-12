@@ -6,6 +6,7 @@ package com.unknown.entity.raids;
 
 import com.unknown.entity.DBConnection;
 import com.unknown.entity.character.*;
+import com.unknown.entity.items.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -343,4 +344,44 @@ public class RaidDB implements RaidDAO {
                 }
                 return bosses;
         }
+
+        @Override
+        public void addLootToRaid(Raid raid, String boss, String name, String loot, boolean heroic, double price) throws SQLException {
+                Connection c = null;
+                try
+                {
+                        c = new DBConnection().getConnection();
+                        CharacterDAO characterDao = new CharacterDB();
+                        ItemDAO itemDao = new ItemDB();
+                        int itemid = itemDao.getItemId(c, loot);
+                        int charid = characterDao.GetCharacterId(c, name);
+                        int mobid = getMobId(c, boss);
+                        PreparedStatement ps = c.prepareStatement("INSERT INTO loots (item_id, raid_id, mob_id, character_id, price, heroic) VALUES(?,?,?,?,?,?)");
+                        ps.setInt(1, itemid);
+                        ps.setInt(2, raid.getID());
+                        ps.setInt(3, mobid);
+                        ps.setInt(4, charid);
+                        ps.setDouble(5, price);
+                        ps.setBoolean(6, heroic);
+                        ps.executeUpdate();
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                } finally {
+                        if (c != null) {
+                                c.close();
+                        }
+                }
+        }
+
+        private int getMobId(Connection c, String boss) throws SQLException {
+                PreparedStatement p = c.prepareStatement("SELECT * FROM mobs WHERE name=?");
+                p.setString(1, boss);
+                ResultSet rs = p.executeQuery();
+                int bossid = 0;
+                while (rs.next()) {
+                        bossid = rs.getInt("id");
+                }
+                return bossid;
+        }
 }
+

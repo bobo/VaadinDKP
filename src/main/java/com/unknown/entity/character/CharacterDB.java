@@ -82,15 +82,15 @@ public class CharacterDB implements CharacterDAO {
         }
 
         @Override
-        public int GetCharacterId(Connection c, String charclass) throws SQLException {
+        public int GetCharacterId(Connection c, String charname) throws SQLException {
                 PreparedStatement pclass = c.prepareStatement("SELECT * FROM characters WHERE name=?");
-                pclass.setString(1, fixRole(charclass));
+                pclass.setString(1, charname);
                 ResultSet rclass = pclass.executeQuery();
-                int classid = 0;
+                int charid = 0;
                 while (rclass.next()) {
-                        classid = rclass.getInt("id");
+                        charid = rclass.getInt("id");
                 }
-                return classid;
+                return charid;
         }
 
         private int GetSharesForCharacterByID(ResultSet rs, ResultSet rss, int shares) throws SQLException {

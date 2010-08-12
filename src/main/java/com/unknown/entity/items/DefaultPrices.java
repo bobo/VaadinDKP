@@ -13,8 +13,13 @@ import java.util.List;
  */
 public class DefaultPrices {
 
+	private final ItemDAO dAO;
+
+	public DefaultPrices(ItemDAO dAO) {
+		this.dAO = dAO;
+	}
+	
     public List<ItemPrices> getPrices() throws SQLException {
-           ItemDAO itemDao = new ItemDB();
-           return itemDao.getDefaultPrices();
+           return dAO.getDefaultPrices();
     }
 }

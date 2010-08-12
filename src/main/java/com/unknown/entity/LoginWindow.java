@@ -5,7 +5,7 @@
 package com.unknown.entity;
 
 import com.unknown.entity.character.SiteUser;
-import com.unknown.entity.character.User;
+import com.unknown.entity.dao.ILoginDao;
 import com.unknown.entity.dao.LoginDao;
 import com.unknown.entity.panel.MyLoginListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -23,7 +23,7 @@ public class LoginWindow extends Window {
 	private TextField password = new TextField("Password");
 	private Button submit = new Button("Login");
 	private List<MyLoginListener> listeners = new ArrayList<MyLoginListener>();
-	private final LoginDao loginDao = new LoginDao();
+	private ILoginDao loginDao = new LoginDao();
 
 	public LoginWindow() {
 		this.center();
@@ -43,6 +43,19 @@ public class LoginWindow extends Window {
 
 	}
 
+	public void setLoginDao(ILoginDao loginDao) {
+		this.loginDao = loginDao;
+	}
+
+	private void verifyUser() {
+		SiteUser user = loginDao.checkLogin(userName.getValue().toString(), password.getValue().toString());
+		if (user != null) {
+			getApplication().setUser(user);
+			notifyListeners();
+			close();
+		}
+	}
+
 	public void addLoginListener(MyLoginListener listener) {
 		listeners.add(listener);
 	}
@@ -51,13 +64,7 @@ public class LoginWindow extends Window {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			SiteUser user = loginDao.checkLogin(userName.getValue().toString(), password.getValue().toString());
-			if (user != null) {
-				getApplication().setUser(user);
-				notifyListeners();
-				close();
-			} else {
-			}
+			verifyUser();
 		}
 	}
 

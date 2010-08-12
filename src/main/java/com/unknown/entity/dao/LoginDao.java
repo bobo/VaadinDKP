@@ -17,10 +17,11 @@ import java.sql.SQLException;
  *
  * @author bobo
  */
-public class LoginDao {
+public class LoginDao implements ILoginDao {
 
 
 
+	@Override
 	public SiteUser checkLogin(String username, String password) {
 
 		Connection conn = null;

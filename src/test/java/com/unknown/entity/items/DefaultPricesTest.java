@@ -5,6 +5,7 @@
 
 package com.unknown.entity.items;
 
+import java.sql.Connection;
 import java.util.Collections;
 import com.unknown.entity.Slots;
 import com.unknown.entity.Type;
@@ -56,6 +57,11 @@ public class DefaultPricesTest {
 
 		@Override
 		public Object getItemPrice(String itemname, boolean heroic) throws SQLException {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
+
+		@Override
+		public int getItemId(Connection c, String loot) throws SQLException {
 			throw new UnsupportedOperationException("Not supported yet.");
 		}
 	}

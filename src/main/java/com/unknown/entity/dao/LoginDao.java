@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,16 +30,22 @@ public class LoginDao implements ILoginDao {
 		DBConnection dBConnection = new DBConnection();
 		try {
 			conn = dBConnection.getConnection();
-			PreparedStatement ps = conn.prepareStatement("SELECT userId from tblUsers where username=? and password = ? limit 1");
+			PreparedStatement ps = conn.prepareStatement("SELECT id from users where name=? and password = ? limit 1");
 			ps.setString(1, username);
 			ps.setString(2, password);
-			ResultSet res = ps.executeQuery();
+			final ResultSet res = ps.executeQuery();
 			if (res.next()) {
+
 				return new SiteUser() {
 
 					@Override
 					public int getLevel() {
-						return 1;
+                                                try {
+                                                        return res.getInt("rank");
+                                                } catch (SQLException ex) {
+                                                        Logger.getLogger(LoginDao.class.getName()).log(Level.SEVERE, null, ex);
+                                                }
+                                                return 0;
 					}
 				};
 				

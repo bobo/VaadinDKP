@@ -192,4 +192,16 @@ public class ItemDB implements ItemDAO {
                 }
                 return price;
         }
+
+        @Override
+        public int getItemId(Connection c, String loot) throws SQLException {
+                PreparedStatement p = c.prepareStatement("SELECT * FROM items WHERE name=?");
+                p.setString(1, loot);
+                ResultSet rs = p.executeQuery();
+                int itemid = 0;
+                while (rs.next()) {
+                        itemid = rs.getInt("id");
+                }
+                return itemid;
+        }
 }

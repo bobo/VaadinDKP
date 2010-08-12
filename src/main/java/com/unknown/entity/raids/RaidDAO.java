@@ -24,4 +24,6 @@ public interface RaidDAO {
         public int doUpdateReward(RaidReward reward, List<String> newAttendants, int newShares, String newComment) throws SQLException;
 
         public List<String> getBossesForRaid(Raid raid) throws SQLException;
+
+        public void addLootToRaid(Raid raid, String boss, String name, String loot, boolean heroic, double price) throws SQLException;
 }

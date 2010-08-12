@@ -5,9 +5,14 @@
 
 package com.unknown.entity;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,13 +20,13 @@ import java.sql.SQLException;
  */
 public final class DBConnection {
     Connection conn = null;
-	private static String propertisPath;
+	private static Properties properties;
+	
     private Connection connect() throws SQLException {
-
-        String userName = "root", userPassword = "piccolo", databaseURL = "jdbc:mysql://unknown-entity.com:3306/dkp";
-        conn = DriverManager.getConnection(databaseURL, userName, userPassword);
+		conn = DriverManager.getConnection(properties.getProperty("db.url"), properties.getProperty("db.username"), properties.getProperty("db.password"));
         return conn;
     }
+
     public DBConnection() throws SQLException {
         this.conn = connect();
     }
@@ -30,8 +35,16 @@ public final class DBConnection {
     }
 
 	public static void setPropertisPath(String propertisPath) {
-		DBConnection.propertisPath = propertisPath;
+		DBConnection.properties = getProperties(propertisPath);
 	}
-
+	private static Properties getProperties(String propertiesPath) {
+		Properties prop = new Properties();
+		try {
+			prop.load(new FileInputStream(propertiesPath));
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		return prop;
+	}
 
 }

@@ -23,46 +23,48 @@ import com.vaadin.ui.Window;
  */
 public class AdminPanel extends HorizontalLayout implements MyLoginListener {
 
-        private Button loginBtn = new Button();
+        private final Button loginBtn = new Button();
+		private final Button addUsrBtn = new Button("Add Character");
+        private final Button addRaidBtn = new Button("Add Raid");
+        private final Button addItmBtn = new Button("Add Item");
+		private final Button logOutButton = new Button("");
 
-        public AdminPanel() {
+		public AdminPanel() {
                 loginBtn.setIcon(new ThemeResource("../ue/img/key3.png"));
                 this.addComponent(loginBtn);
                 this.setSpacing(true);
                 loginBtn.setStyle(Button.STYLE_LINK);
                 loginBtn.addListener(new LoginClickListener());
+				addUsrBtn.addListener(new AddUserListener());
+                addRaidBtn.addListener(new AddRaidListener());
+				addItmBtn.addListener(new AddItemListener());
+                logOutButton.addListener(new LogOutListener());
+				logOutButton.setStyle(Button.STYLE_LINK);
         }
+		
+		public void init() {
+			addComponent(loginBtn);
+		}
 
-        public void login() {
+        private void login() {
                 this.removeAllComponents();
                 if (validUser()) {
-                        final Button logOutButton = new Button("");
-                        logOutButton.setStyle(Button.STYLE_LINK);
-                        logOutButton.addListener(new LogOutListener());
-                        this.addComponent(logOutButton);
-                        final Button addUsrBtn = new Button("Add Character");
-                        addUsrBtn.addListener(new AddUserListener());
+                        this.addComponent(logOutButton);                        
                         this.addComponent(addUsrBtn);
-                        final Button addItmBtn = new Button("Add Item");
-                        addItmBtn.addListener(new AddItemListener());
                         this.addComponent(addItmBtn);
-                        final Button addRaidBtn = new Button("Add Raid");
-                        addRaidBtn.addListener(new AddRaidListener());
                         this.addComponent(addRaidBtn);
                 } else {
                         addComponent(loginBtn);
                 }
-
         }
 
         private boolean validUser() {
                 final Object username = getApplication().getUser();
                 return username != null && username.toString().equals("admin");
-
         }
 
         private Window getMainWindow() {
-                return getApplication().getMainWindow();
+			        return getApplication().getMainWindow();
         }
 
         @Override
@@ -71,9 +73,6 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
         }
 
         private class AddItemListener implements ClickListener {
-
-                public AddItemListener() {
-                }
 
                 @Override
                 public void buttonClick(ClickEvent event) {
@@ -85,9 +84,6 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
 
         private class AddRaidListener implements ClickListener {
 
-                public AddRaidListener() {
-                }
-
                 @Override
                 public void buttonClick(ClickEvent event) {
                         RaidAddWindow addRaid = new RaidAddWindow();
@@ -98,9 +94,6 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
 
         private class AddUserListener implements ClickListener {
 
-                public AddUserListener() {
-                }
-
                 @Override
                 public void buttonClick(ClickEvent event) {
                         CharacterAddWindow addUser = new CharacterAddWindow();
@@ -110,9 +103,6 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
         }
 
         private class LoginClickListener implements ClickListener {
-
-                public LoginClickListener() {
-                }
 
                 @Override
                 public void buttonClick(ClickEvent event) {
@@ -128,9 +118,6 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
         }
 
         private class LogOutListener implements ClickListener {
-
-                public LogOutListener() {
-                }
 
                 @Override
                 public void buttonClick(ClickEvent event) {

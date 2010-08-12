@@ -104,6 +104,7 @@ public class UnknownEntityDKP extends Application {
 
         @Override
         public void init() {
+				DBConnection.setPropertisPath(getContext().getBaseDirectory().getAbsolutePath()+"/META-INF/db.properties");
                 window = new Window("Unknown Entity DKP");
 //        window.setTheme("ue");
                 setMainWindow(window);
@@ -125,9 +126,7 @@ public class UnknownEntityDKP extends Application {
                 final HorizontalLayout hzl = HorizontalSegment(dKPList, itemList, raidList);
 
 				window.addComponent(adminPanel);
-        		adminPanel.login();
-		        // Login button as an image
-//                AdminPanel(loginButton);
+        		adminPanel.init();
 
                 // Character List based on Character Class
                 CharacterListOnCharacterClass(charList);
@@ -138,70 +137,9 @@ public class UnknownEntityDKP extends Application {
                 // Update Button ---- TO BE REMOVED EVENTUALLY
                 UpdateButton(updateButton);
 //				FileResource f = new FileResource("db.properties", this);
-				DBConnection.setPropertisPath(getContext().getBaseDirectory().getAbsolutePath()+"/META-INF/db.properties");
 
 		}
 
-        private void AdminPanel(final Button loginButton) {
-                // Paint stuff
-                HorizontalLayout hadmin = new HorizontalLayout();
-                hadmin.addComponent(loginButton);
-                hadmin.setSpacing(true);
-                loginButton.setStyleName(Button.STYLE_LINK);
-                loginButton.setIcon(new ThemeResource("../ue/img/key3.png"));
-                final Object username = getMainWindow().getApplication().getUser();
-                if (username != null && username.toString().equals("admin")) {
-                        hadmin.addComponent(new Label("Welcome " + username.toString()));
-                        final Button addUsrBtn = new Button("Add Character");
-                        addUsrBtn.addListener(new Button.ClickListener() {
-
-                                @Override
-                                public void buttonClick(ClickEvent event) {
-                                        CharacterAddWindow addUser = new CharacterAddWindow();
-                                        addUser.printInfo();
-                                        getMainWindow().addWindow(addUser);
-                                }
-                        });
-                        hadmin.addComponent(addUsrBtn);
-                        final Button addItmBtn = new Button("Add Item");
-                        addItmBtn.addListener(new Button.ClickListener() {
-
-                                @Override
-                                public void buttonClick(ClickEvent event) {
-                                        ItemAddWindow addItem = new ItemAddWindow();
-                                        addItem.printInfo();
-                                        getMainWindow().addWindow(addItem);
-                                }
-                        });
-                        hadmin.addComponent(addItmBtn);
-                        final Button addRaidBtn = new Button("Add Raid");
-                        addRaidBtn.addListener(new Button.ClickListener() {
-
-                                @Override
-                                public void buttonClick(ClickEvent event) {
-                                        RaidAddWindow addRaid = new RaidAddWindow();
-                                        addRaid.printInfo();
-                                        getMainWindow().addWindow(addRaid);
-                                }
-                        });
-                        hadmin.addComponent(addRaidBtn);
-                }
-                window.addComponent(hadmin);
-                loginButton.addListener(new Button.ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                                if (getMainWindow().getApplication().getUser() == null) {
-                                        LoginWindow loginWindow = new LoginWindow();
-										loginWindow.addLoginListener(adminPanel);
-                                        getMainWindow().addWindow(loginWindow);
-                                        loginWindow.attach();
-                                } else                  if (username != null && username.toString().equals("admin")) {{
-                                        getMainWindow().getApplication().setUser(null);
-                                }}
-                        }
-                });
-        }
 
         private void UpdateButton(final Button updateButton) {
                 updateButton.addListener(new Button.ClickListener() {

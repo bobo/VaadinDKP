@@ -38,7 +38,7 @@ public class LoginWindow extends Window{
         this.setWidth("200px");
         this.setHeight("200px");
 
-        submit.addListener(new LoginClickListener(this));
+        submit.addListener(new LoginClickListener());
 
     }
 
@@ -50,22 +50,22 @@ public class LoginWindow extends Window{
 
     private class LoginClickListener implements ClickListener {
 
-        final private Window window;
-
-        public LoginClickListener(Window comp) {
-            this.window = comp;
-        }
         @Override
         public void buttonClick(ClickEvent event) {
             if (userName.getValue().toString().equals("admin") && password.getValue().toString().equals("admin")) {
                 getApplication().setUser("admin");
-				for (MyLoginListener loginListener : listeners) {
-					loginListener.onLogin();
-				}
+				notifyListeners();
                 close();
             } else {
 
             }
         }
     }
+
+
+	private void notifyListeners() {
+		for (MyLoginListener loginListener : listeners) {
+			loginListener.onLogin();
+		}
+	}
 }

@@ -26,12 +26,8 @@ public final class DBConnection {
 		conn = DriverManager.getConnection(properties.getProperty("db.url"), properties.getProperty("db.username"), properties.getProperty("db.password"));
         return conn;
     }
-
-    public DBConnection() throws SQLException {
-        this.conn = connect();
-    }
-    public Connection getConnection() {
-        return conn;
+    public Connection getConnection() throws SQLException {
+		return connect();
     }
 
 	public static void setPropertisPath(String propertisPath) {
@@ -46,5 +42,19 @@ public final class DBConnection {
 		}
 		return prop;
 	}
+
+	public void closeConnection(Connection conn) {
+
+
+
+		if (conn != null) {
+			try {
+				conn.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
 
 }

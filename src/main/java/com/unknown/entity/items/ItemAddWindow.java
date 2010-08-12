@@ -38,7 +38,7 @@ public class ItemAddWindow extends Window {
 
         public void printInfo() {
 
-                DefaultPrices def = new DefaultPrices();
+                DefaultPrices def = new DefaultPrices(new ItemDB());
                 List<ItemPrices> prices = new ArrayList<ItemPrices>();
                 try {
                         prices = def.getPrices();

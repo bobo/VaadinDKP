@@ -104,7 +104,6 @@ public class UnknownEntityDKP extends Application {
 
         @Override
         public void init() {
-				DBConnection.setPropertisPath(getContext().getBaseDirectory().getAbsolutePath()+"/META-INF/db.properties");
                 window = new Window("Unknown Entity DKP");
 //        window.setTheme("ue");
                 setMainWindow(window);

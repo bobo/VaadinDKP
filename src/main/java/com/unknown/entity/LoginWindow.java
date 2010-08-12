@@ -2,9 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.unknown.entity;
 
+import com.unknown.entity.character.SiteUser;
+import com.unknown.entity.dao.ILoginDao;
+import com.unknown.entity.dao.LoginDao;
 import com.unknown.entity.panel.MyLoginListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.ui.Button;
@@ -15,53 +17,56 @@ import com.vaadin.ui.Window;
 import java.util.ArrayList;
 import java.util.List;
 
+public class LoginWindow extends Window {
 
-public class LoginWindow extends Window{
-
-
-
-    private TextField userName = new TextField("Username:");
-    private TextField password = new TextField("Password");
-    private Button submit = new Button("Login");
+	private TextField userName = new TextField("Username:");
+	private TextField password = new TextField("Password");
+	private Button submit = new Button("Login");
 	private List<MyLoginListener> listeners = new ArrayList<MyLoginListener>();
-    public LoginWindow() {
-        this.center();
-        this.setModal(true);
-        this.setCaption("Login...");
-        password.setSecret(true);
-        addComponent(userName);
-        userName.focus();
-        addComponent(password);
-        addComponent(submit);
-        submit.setClickShortcut(KeyCode.ENTER);
-        submit.addStyleName("primary");
-        this.setWidth("200px");
-        this.setHeight("200px");
+	private ILoginDao loginDao = new LoginDao();
 
-        submit.addListener(new LoginClickListener());
+	public LoginWindow() {
+		this.center();
+		this.setModal(true);
+		this.setCaption("Login...");
+		password.setSecret(true);
+		addComponent(userName);
+		userName.focus();
+		addComponent(password);
+		addComponent(submit);
+		submit.setClickShortcut(KeyCode.ENTER);
+		submit.addStyleName("primary");
+		this.setWidth("200px");
+		this.setHeight("200px");
 
-    }
+		submit.addListener(new LoginClickListener());
 
+	}
+
+	public void setLoginDao(ILoginDao loginDao) {
+		this.loginDao = loginDao;
+	}
+
+	private void verifyUser() {
+		SiteUser user = loginDao.checkLogin(userName.getValue().toString(), password.getValue().toString());
+		if (user != null) {
+			getApplication().setUser(user);
+			notifyListeners();
+			close();
+		}
+	}
 
 	public void addLoginListener(MyLoginListener listener) {
 		listeners.add(listener);
 	}
 
+	private class LoginClickListener implements ClickListener {
 
-    private class LoginClickListener implements ClickListener {
-
-        @Override
-        public void buttonClick(ClickEvent event) {
-            if (userName.getValue().toString().equals("admin") && password.getValue().toString().equals("admin")) {
-                getApplication().setUser("admin");
-				notifyListeners();
-                close();
-            } else {
-
-            }
-        }
-    }
-
+		@Override
+		public void buttonClick(ClickEvent event) {
+			verifyUser();
+		}
+	}
 
 	private void notifyListeners() {
 		for (MyLoginListener loginListener : listeners) {

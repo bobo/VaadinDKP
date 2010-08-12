@@ -6,6 +6,7 @@ package com.unknown.entity.panel;
 
 import com.unknown.entity.LoginWindow;
 import com.unknown.entity.character.CharacterAddWindow;
+import com.unknown.entity.character.SiteUser;
 import com.unknown.entity.items.ItemAddWindow;
 import com.unknown.entity.raids.RaidAddWindow;
 import com.vaadin.terminal.FileResource;
@@ -48,7 +49,7 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
 
         private void login() {
                 this.removeAllComponents();
-                if (validUser()) {
+                if (isAdmin()) {
                         this.addComponent(logOutButton);                        
                         this.addComponent(addUsrBtn);
                         this.addComponent(addItmBtn);
@@ -58,9 +59,9 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
                 }
         }
 
-        private boolean validUser() {
-                final Object username = getApplication().getUser();
-                return username != null && username.toString().equals("admin");
+        private boolean isAdmin() {
+                final SiteUser siteUser = (SiteUser) getApplication().getUser();
+                return siteUser != null && siteUser.getLevel()==1;
         }
 
         private Window getMainWindow() {

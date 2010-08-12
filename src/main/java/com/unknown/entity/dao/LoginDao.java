@@ -6,6 +6,8 @@
 package com.unknown.entity.dao;
 
 import com.unknown.entity.DBConnection;
+import com.unknown.entity.character.SiteUser;
+import com.unknown.entity.character.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,23 +21,32 @@ public class LoginDao {
 
 
 
-	public boolean checkLogin() {
+	public SiteUser checkLogin(String username, String password) {
 
 		Connection conn = null;
 		DBConnection dBConnection = new DBConnection();
 		try {
 			conn = dBConnection.getConnection();
-			PreparedStatement ps = conn.prepareStatement("SELECT * from tblUsers where username=? and password = ? limit 1");
+			PreparedStatement ps = conn.prepareStatement("SELECT userId from tblUsers where username=? and password = ? limit 1");
+			ps.setString(1, username);
+			ps.setString(2, password);
 			ResultSet res = ps.executeQuery();
 			if (res.next()) {
-				return true;
+				return new SiteUser() {
+
+					@Override
+					public int getLevel() {
+						return 1;
+					}
+				};
+				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			dBConnection.closeConnection(conn);
 		}
-		return false;
+		return null;
 
 	}
 

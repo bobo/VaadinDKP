@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author bobo
  */
-public class User {
+public class User implements SiteUser {
 
         private final int id;
         private final String username;
@@ -26,6 +26,7 @@ public class User {
         private double dkp;
         private boolean active = true;
         private Armor armor;
+		private int level = 0;
         private final List<CharacterItem> charItems = new ArrayList<CharacterItem>();
 
 
@@ -101,4 +102,15 @@ public class User {
         public ImmutableList<CharacterItem> getCharItems() {
                 return ImmutableList.copyOf(charItems);
         }
+
+	@Override
+	public int getLevel() {
+		return this.level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+
 }

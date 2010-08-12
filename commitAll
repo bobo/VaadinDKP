@@ -1,0 +1,3 @@
+#/bin/bash
+git add src/*.java
+git commit -m $1 src/*.java

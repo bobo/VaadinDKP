@@ -18,7 +18,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.jws.soap.SOAPBinding.Style;
 
 /**
  *
@@ -63,7 +62,7 @@ public class RaidDB implements RaidDAO {
                         ResultSet rs = p.executeQuery();
                         while (rs.next()) {
                                 RaidItem item = new RaidItem();
-                                item.setId(new Integer(rs.getInt("raids.id")));
+                                item.setId(rs.getInt("loots.id"));
                                 item.setLooter(rs.getString("characters.name"));
                                 item.setName(rs.getString("items.name"));
                                 item.setPrice(rs.getDouble("loots.price"));
@@ -452,6 +451,24 @@ public class RaidDB implements RaidDAO {
                         p.setInt(1, newrewardid);
                         p.setInt(2, eachid);
                         success += p.executeUpdate();
+                }
+                return success;
+        }
+
+        @Override
+        public int removeLootFromRaid(RaidItem item) throws SQLException {
+                Connection c = null;
+                int success = 0;
+                try
+                {
+                        c = new DBConnection().getConnection();
+                        PreparedStatement p = c.prepareStatement("DELETE FROM loots WHERE id=?");
+                        p.setInt(1, item.getId());
+                        success = p.executeUpdate();
+                } catch (SQLException e) { e.printStackTrace(); }
+                finally {
+                        if (c!=null)
+                                c.close();
                 }
                 return success;
         }

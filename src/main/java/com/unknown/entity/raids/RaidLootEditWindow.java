@@ -7,11 +7,16 @@ package com.unknown.entity.raids;
 import com.unknown.entity.character.*;
 import com.unknown.entity.items.*;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -43,12 +48,15 @@ public class RaidLootEditWindow extends Window {
                 final TextField price = new TextField("Price");
                 final Button deleteButton = new Button("Remove");
                 final Button addButton = new Button("Add");
+
+                HorizontalLayout hzl = new HorizontalLayout();
                 addComponent(charname);
                 addComponent(itemname);
                 addComponent(heroic);
                 addComponent(price);
-                addComponent(deleteButton);
-                addComponent(addButton);
+                hzl.addComponent(deleteButton);
+                hzl.addComponent(addButton);
+                addComponent(hzl);
                 for(RaidChar rc : raid.getRaidChars())
                         charname.addItem(rc.getName());
                 charname.setValue(item.getLooter());
@@ -62,9 +70,29 @@ public class RaidLootEditWindow extends Window {
                 itemname.setNullSelectionAllowed(false);
 
                 heroic.setValue(item.isHeroic());
-
                 price.setValue(item.getPrice());
+
+                deleteButton.addListener(new DeleteItemListener());
                 
+        }
+
+                private int deleteItem(RaidItem item) throws SQLException {
+                        return raidDao.removeLootFromRaid(item);
+                }
+
+                private class DeleteItemListener implements ClickListener {
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        try {
+                                System.out.println("Reward Item ID: "+item.getId());
+                                int success = deleteItem(item);
+                                System.out.println(success + "items deleted.");
+                        } catch (SQLException ex) {
+                                Logger.getLogger(RaidLootEditWindow.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                }
         }
 }
 

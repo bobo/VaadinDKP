@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -129,7 +130,6 @@ public class CharacterDB implements CharacterDAO {
         }
 
         private void DoSQLMagicForCharacters(Connection c, ResultSet rs, List<User> users) throws SQLException {
-                PreparedStatement ps = c.prepareStatement("SELECT * FROM rewards JOIN character_rewards JOIN characters WHERE character_rewards.reward_id=rewards.id AND characters.id=?");
                 PreparedStatement ploot = c.prepareStatement("SELECT * FROM loots JOIN characters where loots.character_id=characters.id");
                 int shares = 0;
                 double dkp_earned = 0.0;
@@ -137,26 +137,39 @@ public class CharacterDB implements CharacterDAO {
                 double dkp = 0.0;
                 double loot_value = 0.0;
                 double share_value = 0.0;
-                ps.setInt(1, rs.getInt("characters.id"));
-                ResultSet rss = ps.executeQuery();
+                int totalshares = 0;
                 ResultSet rsloot = ploot.executeQuery();
                 while (rsloot.next()) {
                         dkp_spent = GetDkpSpentForCharacterByID(rsloot, rs, dkp_spent);
                         loot_value = loot_value + rsloot.getDouble("loots.price");
                 }
+                PreparedStatement ps = c.prepareStatement("SELECT * FROM rewards JOIN character_rewards JOIN characters WHERE character_rewards.reward_id=rewards.id AND characters.id=?");
+                ps.setInt(1, rs.getInt("characters.id"));
+
+                ResultSet rss = ps.executeQuery();
                 while (rss.next()) {
                         shares = GetSharesForCharacterByID(rs, rss, shares);
+                        totalshares += rss.getInt("rewards.number_of_shares");
                 }
-                if (shares != 0) {
-                        share_value = loot_value / shares;
+                if (totalshares != 0) {
+                        share_value = loot_value / totalshares;
+                } else {
+                        share_value = 0;
                 }
                 dkp_earned = shares * share_value;
+                dkp_earned = roundTwoDecimals(dkp_earned);
+                dkp_spent = roundTwoDecimals(dkp_spent);
                 dkp = dkp_earned - dkp_spent;
+                dkp = roundTwoDecimals(dkp);
                 User user = CreateCharacter(rs, shares, dkp_earned, dkp_spent, dkp);
                 users.add(user);
 
         }
-
+        
+        double roundTwoDecimals(double d) {
+        	DecimalFormat twoDForm = new DecimalFormat("#.##");
+		return Double.valueOf(twoDForm.format(d));
+        }
         @Override
         public Collection<User> getUsersWithRole(final Role role) {
                 return Collections2.filter(getUsers(), new HasRolePredicate(role));

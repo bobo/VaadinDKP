@@ -11,12 +11,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.jws.soap.SOAPBinding.Style;
 
 /**
  *
@@ -426,7 +428,7 @@ public class RaidDB implements RaidDAO {
 
         private int doAddReward(Connection c, String comment, Integer shares, int raidid) throws SQLException {
                 int rewardid = 0;
-                PreparedStatement p = c.prepareStatement("INSERT INTO rewards (number_of_shares, comment, raid_id) values(?,?,?)");
+                PreparedStatement p = c.prepareStatement("INSERT INTO rewards (number_of_shares, comment, raid_id) values(?,?,?)", Statement.RETURN_GENERATED_KEYS);
                 p.setInt(1, shares);
                 p.setString(2, comment);
                 p.setInt(3, raidid);

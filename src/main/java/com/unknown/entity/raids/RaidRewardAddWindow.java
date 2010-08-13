@@ -65,6 +65,7 @@ class RaidRewardAddWindow extends Window {
         }
 
         private List<String> splitCharsToArray(String attendants) {
+                System.out.println(attendants);
                 List<String> list = new ArrayList<String>();
                 String[] parts = attendants.split("\n");
                 list.addAll(Arrays.asList(parts));

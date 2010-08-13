@@ -4,6 +4,7 @@
  */
 package com.unknown.entity.items;
 
+import com.unknown.entity.character.SiteUser;
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -28,9 +29,8 @@ public class ItemList extends Table {
 
                         @Override
                         public void itemClick(ItemClickEvent event) {
-                                final Object username = getApplication().getUser();
                                 Items item = (Items) event.getItemId();
-                                if (username != null && username.toString().equals("admin")) {
+                                if (isAdmin()) {
                                         ItemEditWindow info = new ItemEditWindow(item);
                                         info.printInfo();
                                         getApplication().getMainWindow().addWindow(info);
@@ -71,5 +71,10 @@ public class ItemList extends Table {
                         Item addItem = addItem(item);
                         ItemListAddRow(addItem, item);
                 }
+        }
+
+        private boolean isAdmin() {
+                final SiteUser siteUser = (SiteUser) getApplication().getUser();
+                return siteUser != null && siteUser.getLevel() == 1;
         }
 }

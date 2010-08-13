@@ -39,8 +39,7 @@ public class DKPList extends Table {
                         @Override
                         public void itemClick(ItemClickEvent event) {
                                 User user = (User) event.getItemId();
-                                final Object username = getApplication().getUser();
-                                if (username != null && username.toString().equals("admin")) {
+                                if (isAdmin()) {
 
                                         CharacterEditWindow info = new CharacterEditWindow(user);
                                         info.printInfo();
@@ -105,5 +104,9 @@ public class DKPList extends Table {
                 } else {
                         return value.toString();
                 }
+        }
+        private boolean isAdmin() {
+                final SiteUser siteUser = (SiteUser) getApplication().getUser();
+                return siteUser != null && siteUser.getLevel() == 1;
         }
 }

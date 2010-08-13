@@ -4,6 +4,7 @@
  */
 package com.unknown.entity.raids;
 
+import com.unknown.entity.character.SiteUser;
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -20,7 +21,7 @@ public class RaidList extends Table {
 
         public RaidList(RaidDAO raidDAO) {
                 this.raidDAO = raidDAO;
-                RaidListSetHeaders();
+                raidListSetHeaders();
 
                 this.setHeight("500px");
                 this.setWidth("300px");
@@ -30,8 +31,7 @@ public class RaidList extends Table {
                         public void itemClick(ItemClickEvent event) {
 
                                 Raid raid = (Raid) event.getItemId();
-                                final Object username = getApplication().getUser();
-                                if (username != null && username.toString().equals("admin")) {
+                                if (isAdmin()) {
                                         RaidEditWindow info = new RaidEditWindow(raid);
                                         info.printInfo();
                                         getApplication().getMainWindow().addWindow(info);
@@ -44,13 +44,18 @@ public class RaidList extends Table {
                 });
         }
 
+        private boolean isAdmin() {
+                final SiteUser siteUser = (SiteUser) getApplication().getUser();
+                return siteUser != null && siteUser.getLevel() == 1;
+        }
+
         private void RaidListAddRow(Item addItem, final Raid raid) throws ReadOnlyException, ConversionException {
                 addItem.getItemProperty("Zone").setValue(raid.getName());
                 addItem.getItemProperty("Comment").setValue(raid.getComment());
                 addItem.getItemProperty("Date").setValue(raid.getDate());
         }
 
-        private void RaidListSetHeaders() throws UnsupportedOperationException {
+        private void raidListSetHeaders() throws UnsupportedOperationException {
                 addContainerProperty("Zone", String.class, "");
                 addContainerProperty("Comment", String.class, "");
                 addContainerProperty("Date", String.class, "");

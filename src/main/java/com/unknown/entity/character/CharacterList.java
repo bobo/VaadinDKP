@@ -45,8 +45,7 @@ public class CharacterList extends HorizontalLayout {
 
                         @Override
                         public void buttonClick(ClickEvent event) {
-                                final Object username = getApplication().getUser();
-                                if (username != null && username.toString().equals("admin")) {
+                                if (isAdmin()) {
                                         CharacterEditWindow info = new CharacterEditWindow(user);
                                         info.printInfo();
                                         getApplication().getMainWindow().addWindow(info);
@@ -88,4 +87,10 @@ public class CharacterList extends HorizontalLayout {
                         return t.toString().compareTo(t1.toString());
                 }
         }
+
+        private boolean isAdmin() {
+                final SiteUser siteUser = (SiteUser) getApplication().getUser();
+                return siteUser != null && siteUser.getLevel() == 1;
+        }
+
 }

@@ -4,9 +4,11 @@
  */
 package com.unknown.entity.raids;
 
+import com.unknown.entity.character.*;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -75,10 +77,31 @@ class RaidRewardAddWindow extends Window {
         private int addReward(String comment, Integer shares, List<String> attendantlist, Raid raid) {
                 RaidDAO raidDao = new RaidDB();
                 try {
-                        return raidDao.addReward(comment, shares, attendantlist, raid);
+                        List<String> invalidchars = findInvalidCharacters(attendantlist);
+                        if (invalidchars.size() == 0) {
+                                return raidDao.addReward(comment, shares, attendantlist, raid);
+                        } else {
+                                addComponent(new Label("Invalid characters"));
+                                for (String s : invalidchars) {
+                                        addComponent(new Label(s));
+                                }
+                        }
                 } catch (SQLException ex) {
                         Logger.getLogger(RaidRewardAddWindow.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 return 0;
+        }
+
+        private List<String> findInvalidCharacters(List<String> attendantlist) {
+                CharacterDAO chardao = new CharacterDB();
+                List<User> userlist = chardao.getUsers();
+                List<String> charname = new ArrayList<String>();
+                for (User u : userlist) {
+                        charname.add(u.getUsername());
+                }
+                for (String s : charname) {
+                        attendantlist.remove(s);
+                }
+                return attendantlist;
         }
 }

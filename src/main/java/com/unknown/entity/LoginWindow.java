@@ -17,6 +17,7 @@ import com.vaadin.ui.Window;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class LoginWindow extends Window {
 
 	private TextField userName = new TextField("Username:");

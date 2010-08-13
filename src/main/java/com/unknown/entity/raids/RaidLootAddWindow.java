@@ -88,6 +88,7 @@ public class RaidLootAddWindow extends Window {
                                 addRaidLoot(boss.getValue().toString(), name.getValue().toString(), loots.getValue().toString(), Boolean.parseBoolean(heroic.getValue().toString()), Double.parseDouble(price.getValue().toString()));
                         }
                 });
+                addComponent(addButton);
         }
 
         private void addRaidLoot(String boss, String name, String loot, boolean isheroic, double price) {
@@ -100,11 +101,11 @@ public class RaidLootAddWindow extends Window {
 
         private ComboBox nameComboList() throws UnsupportedOperationException {
                 final ComboBox name = new ComboBox("Name");
-                HashSet<User> charlist = new HashSet<User>();
+                HashSet<RaidChar> charlist = new HashSet<RaidChar>();
                 TreeSet<String> sortedlist = new TreeSet<String>();
-                charlist.addAll(characterDao.getUsers());
-                for (User eachname : charlist) {
-                        sortedlist.add(eachname.getUsername());
+                charlist.addAll(raid.getRaidChars());
+                for (RaidChar eachname : charlist) {
+                        sortedlist.add(eachname.getName());
                 }
                 for (String s : sortedlist) {
                         name.addItem(s);

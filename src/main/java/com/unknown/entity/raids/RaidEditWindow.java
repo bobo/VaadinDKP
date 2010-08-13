@@ -160,14 +160,25 @@ class RaidEditWindow extends Window {
                         return raidDao.doRaidUpdate(raid, raidzoneName, raidcomment, raiddate);
                         }
 
-        private Table lootList(Raid raid) {
+        private Table lootList(final Raid raid) {
                 Table tbl = new Table();
                 RaidInfoWindowLootListSetHeaders(tbl);
                 tbl.setHeight(150);
                 for (RaidItem item : raid.getRaidItems()) {
-                        Item addItem = tbl.addItem(new Integer(item.getId()));
+//                        Item addItem = tbl.addItem(new Integer(item.getId()));
+                        Item addItem = tbl.addItem(item);
                         RaidInfoWindowLootListAddRow(addItem, item);
                 }
+                tbl.addListener(new ItemClickListener() {
+
+                        @Override
+                        public void itemClick(ItemClickEvent event) {
+                                RaidItem ritem = (RaidItem) event.getItemId();
+                                RaidLootEditWindow info = new RaidLootEditWindow(raid, ritem);
+                                info.printInfo();
+                                getApplication().getMainWindow().addWindow(info);
+                        }
+                });
                 return tbl;
         }
 

@@ -45,7 +45,8 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
         }
 
         public void init() {
-                addComponent(loginBtn);
+                if(!isAdmin())
+                        addComponent(loginBtn);
         }
 
         private void login() {

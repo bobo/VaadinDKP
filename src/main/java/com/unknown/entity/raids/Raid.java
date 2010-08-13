@@ -43,7 +43,7 @@ public class Raid {
 		return date;
 	}
 
-	public int getID() {
+	public int getId() {
 		return id;
 	}
 

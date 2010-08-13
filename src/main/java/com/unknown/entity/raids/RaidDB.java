@@ -39,10 +39,10 @@ public class RaidDB implements RaidDAO {
                         ResultSet rs = p.executeQuery();
                         while (rs.next()) {
                                 final Raid raid = new Raid(rs.getString("zones.name"), rs.getString("raids.comment"), rs.getString("raids.date"), rs.getInt("raids.id"));
-                                System.out.println("getting stuff for raid: " + raid.getID());
-                                raid.addRaidItems(getItemsForRaid(raid.getID()));
-                                raid.addRaidChars(getCharsForRaid(raid.getID()));
-                                raid.addRaidRewards(getRewardsForRaid(raid.getID()));
+                                System.out.println("getting stuff for raid: " + raid.getId());
+                                raid.addRaidItems(getItemsForRaid(raid.getId()));
+                                raid.addRaidChars(getCharsForRaid(raid.getId()));
+                                raid.addRaidRewards(getRewardsForRaid(raid.getId()));
                                 raids.add(raid);
                         }
                 } catch (SQLException e) {
@@ -244,7 +244,7 @@ public class RaidDB implements RaidDAO {
                         p.setInt(1, zoneid);
                         p.setString(2, raiddate);
                         p.setString(3, raidcomment);
-                        p.setInt(4, raid.getID());
+                        p.setInt(4, raid.getId());
                         success = p.executeUpdate();
                 } catch (SQLException e) {
                         e.printStackTrace();
@@ -348,8 +348,7 @@ public class RaidDB implements RaidDAO {
         @Override
         public void addLootToRaid(Raid raid, String boss, String name, String loot, boolean heroic, double price) throws SQLException {
                 Connection c = null;
-                try
-                {
+                try {
                         c = new DBConnection().getConnection();
                         CharacterDAO characterDao = new CharacterDB();
                         ItemDAO itemDao = new ItemDB();
@@ -358,7 +357,7 @@ public class RaidDB implements RaidDAO {
                         int mobid = getMobId(c, boss);
                         PreparedStatement ps = c.prepareStatement("INSERT INTO loots (item_id, raid_id, mob_id, character_id, price, heroic) VALUES(?,?,?,?,?,?)");
                         ps.setInt(1, itemid);
-                        ps.setInt(2, raid.getID());
+                        ps.setInt(2, raid.getId());
                         ps.setInt(3, mobid);
                         ps.setInt(4, charid);
                         ps.setDouble(5, price);
@@ -388,8 +387,7 @@ public class RaidDB implements RaidDAO {
         public int removeReward(RaidReward reward) throws SQLException {
                 Connection c = null;
                 int success = 0;
-                try
-                {
+                try {
                         c = new DBConnection().getConnection();
                         PreparedStatement p = c.prepareStatement("DELETE FROM rewards WHERE id=?");
                         p.setInt(1, reward.getId());
@@ -397,12 +395,62 @@ public class RaidDB implements RaidDAO {
                         p = c.prepareStatement("DELETE FROM character_rewards WHERE reward_id=?");
                         p.setInt(1, reward.getId());
                         success += p.executeUpdate();
-                } catch (SQLException e) { e.printStackTrace(); }
-                finally {
-                        if (c!=null)
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                } finally {
+                        if (c != null) {
                                 c.close();
+                        }
+                }
+                return success;
+        }
+
+        @Override
+        public int addReward(String comment, Integer shares, List<String> attendantlist, Raid raid) throws SQLException {
+                Connection c = null;
+                int success = 0;
+                try {
+                        c = new DBConnection().getConnection();
+                        int newrewardid = doAddReward(c, comment, shares, raid.getId());
+                        success += doAddCharacterReward(c, attendantlist, newrewardid);
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                } finally {
+                        if (c != null) {
+                                c.close();
+                        }
+                }
+
+                return success;
+        }
+
+        private int doAddReward(Connection c, String comment, Integer shares, int raidid) throws SQLException {
+                int rewardid = 0;
+                PreparedStatement p = c.prepareStatement("INSERT INTO rewards (number_of_shares, comment, raid_id) values(?,?,?)");
+                p.setInt(1, shares);
+                p.setString(2, comment);
+                p.setInt(3, raidid);
+                p.executeUpdate();
+                ResultSet rs = p.getGeneratedKeys();
+                while (rs.next()) {
+                        rewardid = rs.getInt(1);
+                }
+                return rewardid;
+        }
+
+        private int doAddCharacterReward(Connection c, List<String> attendantlist, int newrewardid) throws SQLException {
+                CharacterDAO characterDao = new CharacterDB();
+                List<Integer> charids = new ArrayList<Integer>();
+                int success = 0;
+                for (String eachchar : attendantlist) {
+                        charids.add(characterDao.GetCharacterId(c, eachchar));
+                }
+                PreparedStatement p = c.prepareStatement("INSERT INTO character_rewards (reward_id, character_id) values(?,?)");
+                for (int eachid : charids) {
+                        p.setInt(1, newrewardid);
+                        p.setInt(2, eachid);
+                        success += p.executeUpdate();
                 }
                 return success;
         }
 }
-

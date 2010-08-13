@@ -28,4 +28,6 @@ public interface RaidDAO {
         public void addLootToRaid(Raid raid, String boss, String name, String loot, boolean heroic, double price) throws SQLException;
 
         public int removeReward(RaidReward reward) throws SQLException;
+
+        public int addReward(String comment, Integer shares, List<String> attendantlist, Raid raid) throws SQLException;
 }

@@ -10,8 +10,12 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,7 +29,7 @@ class RaidRewardAddWindow extends Window {
                 this.raid = raid;
                 this.setWidth("250px");
                 this.setHeight("550px");
-                this.setCaption("Add reward for raid " + raid.getComment() + " (id " + raid.getID() + ")");
+                this.setCaption("Add reward for raid " + raid.getComment() + " (id " + raid.getId() + ")");
         }
 
         public void printInfo() {
@@ -33,7 +37,7 @@ class RaidRewardAddWindow extends Window {
                 attendants.setRows(20);
                 attendants.setImmediate(true);
 
-                TextField shares = new TextField("Shares");
+                final TextField shares = new TextField("Shares");
                 shares.setImmediate(true);
 
                 final TextField comment = new TextField("Comment");
@@ -55,7 +59,7 @@ class RaidRewardAddWindow extends Window {
                         public void buttonClick(ClickEvent event) {
                                 final List<String> attendantlist = new ArrayList<String>();
                                 attendantlist.addAll(splitCharsToArray(attendants.getValue().toString()));
-                                addReward(comment.getValue().toString(), (Integer) shares.getValue(), attendantlist, raid);
+                                int success = addReward(comment.getValue().toString(), Integer.parseInt(shares.getValue().toString()), attendantlist, raid);
                         }
                 });
         }
@@ -63,9 +67,17 @@ class RaidRewardAddWindow extends Window {
         private List<String> splitCharsToArray(String attendants) {
                 List<String> list = new ArrayList<String>();
                 String[] parts = attendants.split("\n");
-                for (String eachpart : parts)
-                        list.add(eachpart);
+                list.addAll(Arrays.asList(parts));
                 return list;
         }
 
+        private int addReward(String comment, Integer shares, List<String> attendantlist, Raid raid) {
+                RaidDAO raidDao = new RaidDB();
+                try {
+                        return raidDao.addReward(comment, shares, attendantlist, raid);
+                } catch (SQLException ex) {
+                        Logger.getLogger(RaidRewardAddWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                return 0;
+        }
 }

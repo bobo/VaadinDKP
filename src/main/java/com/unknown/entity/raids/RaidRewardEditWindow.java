@@ -51,7 +51,7 @@ class RaidRewardEditWindow extends Window {
                 share.setValue(shares);
                 share.setImmediate(true);
                 vert.addComponent(share);
-                
+
                 final TextField comment = new TextField("Comment");
                 comment.setValue(oldcomment);
                 comment.setImmediate(true);
@@ -78,6 +78,17 @@ class RaidRewardEditWindow extends Window {
                                 }
                         }
                 });
+
+                Button removeButton = new Button("Remove this reward");
+                vert.addComponent(removeButton);
+                removeButton.addListener(new Button.ClickListener() {
+
+                        @Override
+                        public void buttonClick(ClickEvent event) {
+                                int success = removeReward(reward);
+                        }
+                });
+
                 Button closeButton = new Button("Close");
                 vert.addComponent(closeButton);
                 closeButton.addListener(new Button.ClickListener() {
@@ -104,5 +115,15 @@ class RaidRewardEditWindow extends Window {
                         characters.setValue(characters.getValue().toString() + character.getName() + "\n");
                 }
                 return characters;
+        }
+
+        private int removeReward(RaidReward reward) {
+                RaidDAO raidDao = new RaidDB();
+                try {
+                        return raidDao.removeReward(reward);
+                } catch (SQLException ex) {
+                        Logger.getLogger(RaidRewardEditWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                return 0;
         }
 }

@@ -383,5 +383,26 @@ public class RaidDB implements RaidDAO {
                 }
                 return bossid;
         }
+
+        @Override
+        public int removeReward(RaidReward reward) throws SQLException {
+                Connection c = null;
+                int success = 0;
+                try
+                {
+                        c = new DBConnection().getConnection();
+                        PreparedStatement p = c.prepareStatement("DELETE FROM rewards WHERE id=?");
+                        p.setInt(1, reward.getId());
+                        success += p.executeUpdate();
+                        p = c.prepareStatement("DELETE FROM character_rewards WHERE reward_id=?");
+                        p.setInt(1, reward.getId());
+                        success += p.executeUpdate();
+                } catch (SQLException e) { e.printStackTrace(); }
+                finally {
+                        if (c!=null)
+                                c.close();
+                }
+                return success;
+        }
 }
 

@@ -35,9 +35,9 @@ class RaidRewardEditWindow extends Window {
                 this.oldcomment = reward.getComment();
                 this.setPositionX(600);
                 this.setPositionY(200);
+                this.addStyleName("opaque");
                 this.setCaption("Edit reward: " + reward.getComment());
-                setWidth("380px");
-                setHeight("400px");
+                this.getContent().setSizeUndefined();
         }
 
         public void printInfo() {

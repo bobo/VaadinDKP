@@ -27,8 +27,8 @@ public class RaidInfoWindow extends Window {
                 this.raid = raid;
                 this.setPositionX(100);
                 this.setPositionY(200);
-                this.setWidth("800px");
-                this.setHeight("350px");
+                this.getContent().setSizeUndefined();
+                this.addStyleName("opaque");
                 this.setCaption(raid.getName());
 
         }
@@ -78,6 +78,7 @@ public class RaidInfoWindow extends Window {
 
         private Table lootList(Raid raid) {
                 Table tbl = new Table();
+                tbl.addStyleName("small");
                 RaidInfoWindowLootListSetHeaders(tbl);
                 tbl.setHeight(150);
                 for (RaidItem item : raid.getRaidItems()) {
@@ -89,22 +90,14 @@ public class RaidInfoWindow extends Window {
 
         private Table rewardList(final Raid raid) {
                 Table tbl = new Table();
+                tbl.addStyleName("small");
                 RaidInfoWindowRewardListSetHeaders(tbl);
                 tbl.setHeight(150);
                 for (RaidReward reward : raid.getRaidRewards()) {
                         Item addItem = tbl.addItem(reward);
                         RaidInfoWindowRewardListAddRow(addItem, reward);
                 }
-                tbl.addListener(new ItemClickListener() {
-
-                        @Override
-                        public void itemClick(ItemClickEvent event) {
-                                RaidReward rreward = (RaidReward) event.getItemId();
-                                RaidCharWindow info = new RaidCharWindow(rreward.getRewardChars());
-                                info.printInfo();
-                                getApplication().getMainWindow().addWindow(info);
-                        }
-                });
+                tbl.addListener(new RewardListClickListener());
 
                 return tbl;
 
@@ -115,6 +108,20 @@ public class RaidInfoWindow extends Window {
                         return rewards;
                 } else {
                         return new Label("No rewards in this raid.");
+                }
+        }
+
+        private class RewardListClickListener implements ItemClickListener {
+
+                public RewardListClickListener() {
+                }
+
+                @Override
+                public void itemClick(ItemClickEvent event) {
+                        RaidReward rreward = (RaidReward) event.getItemId();
+                        RewardAttendantsWindow info = new RewardAttendantsWindow(rreward.getRewardChars());
+                        info.printInfo();
+                        getApplication().getMainWindow().addWindow(info);
                 }
         }
 }

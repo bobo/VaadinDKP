@@ -31,8 +31,8 @@ class RaidRewardAddWindow extends Window {
 
         public RaidRewardAddWindow(Raid raid) {
                 this.raid = raid;
-                this.setWidth("250px");
-                this.setHeight("550px");
+                this.getContent().setSizeUndefined();
+                this.addStyleName("opaque");
                 this.setCaption("Add reward for raid " + raid.getComment() + " (id " + raid.getId() + ")");
         }
 

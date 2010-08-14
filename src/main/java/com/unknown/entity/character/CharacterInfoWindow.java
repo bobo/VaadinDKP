@@ -9,6 +9,7 @@ import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.ui.GridLayout.OutOfBoundsException;
 import com.vaadin.ui.GridLayout.OverlapsException;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
@@ -24,10 +25,10 @@ public class CharacterInfoWindow extends Window {
 
         public CharacterInfoWindow(User user) {
                 this.user = user;
+                this.addStyleName("opaque");
                 this.setCaption(user.getUsername());
                 this.center();
-                this.setWidth("400px");
-                this.setHeight("400px");
+                this.getContent().setSizeUndefined();
         }
 
         public void printInfo() {
@@ -49,9 +50,22 @@ public class CharacterInfoWindow extends Window {
 
         private void characterInformation() {
                 addComponent(new Label("Character information"));
-                addComponent(new Label("Name: " + user.getUsername()));
-                addComponent(new Label("Class: " + user.getRole().toString()));
-                addComponent(new Label("Status: " + (user.isActive() ? "Active" : "Inactive")));
+                HorizontalLayout hzl = new HorizontalLayout();
+                hzl.addComponent(new Label("Name: "));
+                Label charname = new Label(user.getUsername());
+                charname.addStyleName("color");
+                hzl.addComponent(charname);
+                addComponent(hzl);
+                hzl = new HorizontalLayout();
+                hzl.addComponent(new Label("Class: "));
+                Label charclass = new Label(user.getRole().toString());
+                charclass.addStyleName("color");
+                hzl.addComponent(charclass);
+                addComponent(hzl);
+                hzl=new HorizontalLayout();
+                hzl.addComponent(new Label("Status: "));
+                Label charactive = new Label((user.isActive() ? "Active" : "Inactive"));
+                charactive.addStyleName("color");
         }
 
         private void characterLoots() {
@@ -76,7 +90,7 @@ public class CharacterInfoWindow extends Window {
         private Table lootList(User user) {
                 Table tbl = new Table();
                 characterInfoLootTableSetHeaders(tbl);
-                tbl.setHeight(150);
+                tbl.setHeight("150px");
                 for (CharacterItem charitem : user.getCharItems()) {
                         Item addItem = tbl.addItem(charitem.getId());
                         characterInfoLootTableAddRow(addItem, charitem);

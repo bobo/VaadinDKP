@@ -26,7 +26,6 @@ import com.vaadin.Application;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
@@ -34,7 +33,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import java.io.File;
 
 /**
  * The Application's "main" class
@@ -93,13 +91,9 @@ public class UnknownEntityDKP extends Application {
                 for (Armor armor : Armor.values()) {
                         filterDKP.addItem(armor);
                 }
-                filterDKP.addListener(new ValueChangeListener() {
-
-                        @Override
-                        public void valueChange(ValueChangeEvent event) {
-                                dKPList.filter(filterDKP.getValue());
-                        }
-                });
+                filterDKP.addStyleName("select-button");
+                filterDKP.setWidth("180px");
+                filterDKP.addListener(new filterChangeListener(dKPList, filterDKP));
 
                 dKPList.printList();
                 return vertDKP;
@@ -109,7 +103,7 @@ public class UnknownEntityDKP extends Application {
         public void init() {
                 window = new Window("Unknown Entity DKP");
 //        window.setTheme("ue");
-                window.setTheme("chameleon-dark");
+                window.setTheme("chameleon-ue");
                 setMainWindow(window);
 
                 Drawings();
@@ -124,8 +118,11 @@ public class UnknownEntityDKP extends Application {
                 final Button updateButton = new Button("Update");
                 final CharacterList charList = new CharacterList(characterDAO);
                 final DKPList dKPList = new DKPList(characterDAO);
+                dKPList.addStyleName("small");
                 final RaidList raidList = new RaidList(raidDAO);
+                raidList.addStyleName("small");
                 final ItemList itemList = new ItemList(itemDAO);
+                itemList.addStyleName("small");
                 final HorizontalLayout hzl = HorizontalSegment(dKPList, itemList, raidList);
 
                 window.addComponent(adminPanel);
@@ -160,5 +157,21 @@ public class UnknownEntityDKP extends Application {
                 hzChar.addComponent(charList);
                 charList.printList();
                 window.addComponent(hzChar);
+        }
+
+        private static class filterChangeListener implements ValueChangeListener {
+
+                private final DKPList dKPList;
+                private final ComboBox filterDKP;
+
+                public filterChangeListener(DKPList dKPList, ComboBox filterDKP) {
+                        this.dKPList = dKPList;
+                        this.filterDKP = filterDKP;
+                }
+
+                @Override
+                public void valueChange(ValueChangeEvent event) {
+                        dKPList.filter(filterDKP.getValue());
+                }
         }
 }

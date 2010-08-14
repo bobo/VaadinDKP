@@ -34,10 +34,10 @@ class RaidEditWindow extends Window {
 
         public RaidEditWindow(Raid raid) {
                 this.raid = raid;
-                center();
-                setWidth("700px");
-                setHeight("350px");
-                setCaption("Edit raid: " + raid.getName());
+                this.center();
+                this.getContent().setSizeUndefined();
+                this.addStyleName("opaque");
+                this.setCaption("Edit raid: " + raid.getName());
 
         }
 

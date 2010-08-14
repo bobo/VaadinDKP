@@ -18,16 +18,16 @@ import java.util.List;
  *
  * @author alde
  */
-public class RaidCharWindow extends Window {
+public class RewardAttendantsWindow extends Window {
 
 	private final List<RaidChar> chars;
 
-	public RaidCharWindow(List<RaidChar> chars) {
+	public RewardAttendantsWindow(List<RaidChar> chars) {
 		this.chars = chars;
                 this.setCaption("Attendants");
 		this.center();
-		this.setWidth("200px");
-		this.setHeight("325px");
+                this.addStyleName("opaque");
+                this.getContent().setSizeUndefined();
 	}
 
 	public void printInfo() {
@@ -40,6 +40,7 @@ public class RaidCharWindow extends Window {
 
 	private Table charList() {
 		Table tbl = new Table();
+                tbl.addStyleName("small");
 		RaidCharWindowCharListSetHeaders(tbl);
 		tbl.setHeight("270px");
                 tbl.setWidth("180px");

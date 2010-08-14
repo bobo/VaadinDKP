@@ -30,8 +30,8 @@ public class RaidAddWindow extends Window {
         public RaidAddWindow() {
                 this.setCaption("Add Raid");
                 this.center();
-                this.setWidth("300px");
-                this.setHeight("420px");
+                this.addStyleName("opaque");
+                this.getContent().setSizeUndefined();
         }
 
         public void printInfo() {

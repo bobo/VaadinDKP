@@ -42,8 +42,8 @@ public class RaidLootAddWindow extends Window {
         RaidLootAddWindow(Raid raid) {
                 this.raid = raid;
                 this.setCaption(raid.getComment().toString());
-                this.setWidth("500px");
-                this.setHeight("400px");
+                this.getContent().setSizeUndefined();
+                this.addStyleName("opaque");
                 this.raidDao = new RaidDB();
                 this.itemDao = new ItemDB();
                 this.characterDao = new CharacterDB();

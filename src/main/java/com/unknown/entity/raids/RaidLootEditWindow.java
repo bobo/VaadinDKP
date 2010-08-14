@@ -39,8 +39,8 @@ public class RaidLootEditWindow extends Window {
                 this.raidDao = new RaidDB();
                 this.characterDao = new CharacterDB();
                 this.itemDao = new ItemDB();
-                this.setWidth("300px");
-                this.setHeight("400px");
+                this.addStyleName("opaque");
+                this.getContent().setSizeUndefined();
                 this.setCaption("Edit loot: " + item.getName() + " for raid : "+raid.getComment());
         }
 

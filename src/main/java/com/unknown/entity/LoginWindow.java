@@ -30,6 +30,7 @@ public class LoginWindow extends Window {
 		this.center();
 		this.setModal(true);
 		this.setCaption("Login...");
+                this.addStyleName("opaque");
 		password.setSecret(true);
 		addComponent(userName);
 		userName.focus();
@@ -37,8 +38,7 @@ public class LoginWindow extends Window {
 		addComponent(submit);
 		submit.setClickShortcut(KeyCode.ENTER);
 		submit.addStyleName("primary");
-		this.setWidth("200px");
-		this.setHeight("200px");
+this.getContent().setSizeUndefined();
 
 		submit.addListener(new LoginClickListener());
 

@@ -30,10 +30,9 @@ public class ItemInfoWindow extends Window {
         public ItemInfoWindow(Items item) {
                 this.item = item;
                 this.setCaption(item.getName());
+                this.addStyleName("opaque");
                 this.center();
-                this.setWidth("400px");
-                this.setHeight("400px");
-
+                this.getContent().setSizeUndefined();
         }
 
         public void printInfo() {

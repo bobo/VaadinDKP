@@ -35,6 +35,7 @@ public class ItemAddWindow extends Window {
                 this.setCaption("Add Item");
                 this.center();
                 this.setWidth("300px");
+                this.addStyleName("opaque");
                 this.setHeight("420px");
 
         }

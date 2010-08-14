@@ -30,10 +30,10 @@ import java.util.logging.Logger;
 public class CharacterAddWindow extends Window {
 
         public CharacterAddWindow() {
-                setCaption("Add Character");
-                center();
-                setWidth("300px");
-                setHeight("250px");
+                this.setCaption("Add Character");
+                this.addStyleName("opaque");
+                this.center();
+this.getContent().setSizeUndefined();
         }
 
         public void printInfo() {

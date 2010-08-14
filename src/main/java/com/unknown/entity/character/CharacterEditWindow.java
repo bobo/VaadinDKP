@@ -32,11 +32,11 @@ public class CharacterEditWindow extends Window {
 
         public CharacterEditWindow(User user) {
                 this.user = user;
-                this.setCaption("Edit character: "+user.getUsername());
+                this.setCaption("Edit character: " + user.getUsername());
+                this.addStyleName("opaque");
                 this.setPositionX(200);
                 this.setPositionY(400);
-                this.setWidth("400px");
-                this.setHeight("500px");
+this.getContent().setSizeUndefined();
         }
 
         public void printInfo() {
@@ -105,10 +105,10 @@ public class CharacterEditWindow extends Window {
                 addComponent(new Label("DKP"));
 
                 VerticalLayout vert = new VerticalLayout();
-                vert.addComponent(new Label("Shares: "+ user.getShares()));
-                vert.addComponent(new Label("DKP Earned: "+ user.getDKPEarned()));
-                vert.addComponent(new Label("DKP Spent: "+ user.getDKPSpent()));
-                vert.addComponent(new Label("DKP: "+user.getDKP()));
+                vert.addComponent(new Label("Shares: " + user.getShares()));
+                vert.addComponent(new Label("DKP Earned: " + user.getDKPEarned()));
+                vert.addComponent(new Label("DKP Spent: " + user.getDKPSpent()));
+                vert.addComponent(new Label("DKP: " + user.getDKP()));
                 addComponent(vert);
         }
 

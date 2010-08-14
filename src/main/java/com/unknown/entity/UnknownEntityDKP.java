@@ -112,7 +112,7 @@ public class UnknownEntityDKP extends Application {
         @Override
         public void init() {
                 window = new Window("Unknown Entity DKP");
-                window.setTheme("ue");
+    //            window.setTheme("ue");
                 //        window.setTheme("chameleon-ue");
                 setMainWindow(window);
 

@@ -2,9 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity.raids;
+package com.unknown.entity.raids.windows;
 
+import com.unknown.entity.dao.RaidDAO;
 import com.unknown.entity.database.RaidDB;
+import com.unknown.entity.raids.Raid;
+import com.unknown.entity.raids.RaidItem;
+import com.unknown.entity.raids.RaidReward;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
@@ -28,7 +32,7 @@ import java.util.logging.Logger;
  *
  * @author alde
  */
-class RaidEditWindow extends Window {
+public class RaidEditWindow extends Window {
 
         private final Raid raid;
 

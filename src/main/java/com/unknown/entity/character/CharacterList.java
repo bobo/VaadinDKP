@@ -4,6 +4,9 @@
  */
 package com.unknown.entity.character;
 
+import com.unknown.entity.character.windows.CharacterInfoWindow;
+import com.unknown.entity.character.windows.CharacterEditWindow;
+import com.unknown.entity.dao.CharacterDAO;
 import com.unknown.entity.Role;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;

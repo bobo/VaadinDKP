@@ -2,8 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity.character;
+package com.unknown.entity.character.windows;
 
+import com.unknown.entity.character.CharacterItem;
+import com.unknown.entity.character.User;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;

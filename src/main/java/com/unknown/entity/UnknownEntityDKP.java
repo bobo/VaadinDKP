@@ -15,6 +15,9 @@
  */
 package com.unknown.entity;
 
+import com.unknown.entity.dao.CharacterDAO;
+import com.unknown.entity.dao.ItemDAO;
+import com.unknown.entity.dao.RaidDAO;
 import com.unknown.entity.database.CharacterDB;
 import com.unknown.entity.database.ItemDB;
 import com.unknown.entity.database.RaidDB;

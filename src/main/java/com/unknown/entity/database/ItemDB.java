@@ -7,7 +7,7 @@ package com.unknown.entity.database;
 import com.unknown.entity.DBConnection;
 import com.unknown.entity.Slots;
 import com.unknown.entity.Type;
-import com.unknown.entity.items.ItemDAO;
+import com.unknown.entity.dao.ItemDAO;
 import com.unknown.entity.items.ItemLooter;
 import com.unknown.entity.items.ItemPrices;
 import com.unknown.entity.items.Items;
@@ -53,7 +53,7 @@ public class ItemDB implements ItemDAO {
                                         tempType = Type.valueOf(temp);
                                 }
                                 Items tempitem = new Items(rs.getInt("id"), rs.getString("name"), rs.getInt("wowid_normal"), rs.getDouble("price_normal"), rs.getInt("wowid_heroic"), rs.getDouble("price_heroic"), rs.getString("slot"), tempType, rs.getBoolean("isLegendary"));
-                                tempitem.addItemList(getLootersFormItems(rs.getInt("id")));
+                                tempitem.addLooterList(getLootersFormItems(rs.getInt("id")));
                                 items.add(tempitem);
                         }
                 } catch (SQLException e) {
@@ -206,5 +206,43 @@ public class ItemDB implements ItemDAO {
                         itemid = rs.getInt("id");
                 }
                 return itemid;
+        }
+
+        @Override
+        public Items getSingleItem(String name) {
+                Connection c = null;
+                Items item = null;
+                try {
+                        c = new DBConnection().getConnection();
+                        PreparedStatement p = c.prepareStatement("SELECT * FROM items WHERE name=?");
+                        p.setString(1, name);
+                        ResultSet rs = p.executeQuery();
+                        while (rs.next()) {
+                                                           String temp = rs.getString("type");
+                                Type tempType;
+                                if (temp.toString().equals("Hunter, Shaman, Warrior")) {
+                                        tempType = Type.protector;
+                                } else if (temp.toString().equals("Death Knight, Druid, Mage, Rogue")) {
+                                        tempType = Type.vanquisher;
+                                } else if (temp.toString().equals("Paladin, Priest, Warlock")) {
+                                        tempType = Type.conqueror;
+                                } else {
+                                        tempType = Type.valueOf(temp);
+                                }
+                                item = new Items(rs.getInt("id"), rs.getString("name"), rs.getInt("wowid_normal"), rs.getDouble("price_normal"), rs.getInt("wowid_heroic"), rs.getDouble("price_heroic"), rs.getString("slot"), tempType, rs.getBoolean("isLegendary"));
+                                item.addLooterList(getLootersFormItems(rs.getInt("id")));
+                        }
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                } finally {
+                        if (c!=null) {
+                                try {
+                                        c.close();
+                                } catch (SQLException ex) {
+                                        Logger.getLogger(ItemDB.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                        }
+                }
+                return item;
         }
 }

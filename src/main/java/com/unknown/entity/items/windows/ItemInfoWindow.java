@@ -2,8 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity.items;
+package com.unknown.entity.items.windows;
 
+import com.unknown.entity.items.ItemLooter;
+import com.unknown.entity.items.Items;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
@@ -41,6 +43,20 @@ public class ItemInfoWindow extends Window {
                 itemLootedByTable();
         }
 
+        private GridLayout itemGridLayout(final Button wowIdBtn, final Button wowIdBtnhc) throws OverlapsException, OutOfBoundsException {
+                GridLayout gl = new GridLayout(3, 3);
+                gl.setWidth("300px");
+                gl.addComponent(new Label("Normal "), 1, 0);
+                gl.addComponent(new Label("Heroic "), 2, 0);
+                gl.addComponent(new Label("WowID: "), 0, 1);
+                gl.addComponent(wowIdBtn, 1, 1);
+                gl.addComponent(wowIdBtnhc, 2, 1);
+                gl.addComponent(new Label("Price: "), 0, 2);
+                gl.addComponent(new Label("" + item.getPrice()), 1, 2);
+                gl.addComponent(new Label("" + item.getPrice_hc()), 2, 2);
+                return gl;
+        }
+
         private void itemLootedByTable() {
                 addComponent(new Label("Looted by"));
                 HorizontalLayout hzl = new HorizontalLayout();
@@ -55,22 +71,15 @@ public class ItemInfoWindow extends Window {
         }
 
         private void itemGrid() throws OverlapsException, OutOfBoundsException {
-                GridLayout gl = new GridLayout(3, 3);
-                gl.setWidth("300px");
-                gl.addComponent(new Label("Normal "), 1, 0);
-                gl.addComponent(new Label("Heroic "), 2, 0);
-                gl.addComponent(new Label("WowID: "), 0, 1);
+                
                 final Button wowIdBtn = new Button("" + item.getWowId());
                 wowIdBtn.setStyleName(Button.STYLE_LINK);
                 wowIdBtn.addListener(new WowIdButtonClickListener());
-                gl.addComponent(wowIdBtn, 1, 1);
                 final Button wowIdBtnhc = new Button("" + item.getWowId_hc());
                 wowIdBtnhc.setStyleName(Button.STYLE_LINK);
                 wowIdBtnhc.addListener(new WowIdHcButtonClickListener());
-                gl.addComponent(wowIdBtnhc, 2, 1);
-                gl.addComponent(new Label("Price: "), 0, 2);
-                gl.addComponent(new Label("" + item.getPrice()), 1, 2);
-                gl.addComponent(new Label("" + item.getPrice_hc()), 2, 2);
+                
+                GridLayout gl = itemGridLayout(wowIdBtn, wowIdBtnhc);
                 addComponent(gl);
         }
 
@@ -85,7 +94,7 @@ public class ItemInfoWindow extends Window {
                 Table tbl = new Table();
                 itemTableHeaders(tbl);
                 tbl.setHeight(150);
-                for (ItemLooter looters : item.getItemList()) {
+                for (ItemLooter looters : item.getLooterList()) {
                         Item addItem = tbl.addItem(looters.getId());
                         itemTableRowAdd(addItem, looters);
 

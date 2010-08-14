@@ -4,6 +4,7 @@
  */
 package com.unknown.entity.items;
 
+import com.unknown.entity.dao.ItemDAO;
 import java.sql.SQLException;
 import java.util.List;
 

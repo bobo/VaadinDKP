@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity.character;
+package com.unknown.entity.dao;
 
 import com.unknown.entity.Role;
+import com.unknown.entity.character.User;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;

@@ -4,6 +4,9 @@
  */
 package com.unknown.entity.items;
 
+import com.unknown.entity.items.windows.ItemEditWindow;
+import com.unknown.entity.items.windows.ItemInfoWindow;
+import com.unknown.entity.dao.ItemDAO;
 import com.unknown.entity.character.SiteUser;
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;

@@ -2,8 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity.raids;
+package com.unknown.entity.raids.windows;
 
+import com.unknown.entity.items.windows.ItemInfoWindow;
+import com.unknown.entity.dao.ItemDAO;
+import com.unknown.entity.database.ItemDB;
+import com.unknown.entity.items.*;
+import com.unknown.entity.raids.Raid;
+import com.unknown.entity.raids.RaidItem;
+import com.unknown.entity.raids.RaidReward;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
@@ -45,26 +52,26 @@ public class RaidInfoWindow extends Window {
                 addComponent(hzl);
         }
 
-        private void RaidInfoWindowLootListAddRow(Item addItem, RaidItem item) throws ReadOnlyException, ConversionException {
+        private void raidInfoWindowLootListAddRow(Item addItem, RaidItem item) throws ReadOnlyException, ConversionException {
                 addItem.getItemProperty("Name").setValue(item.getLooter());
                 addItem.getItemProperty("Item").setValue(item.getName());
                 addItem.getItemProperty("Price").setValue(item.getPrice());
                 addItem.getItemProperty("Heroic").setValue(item.isHeroic());
         }
 
-        private void RaidInfoWindowLootListSetHeaders(Table tbl) throws UnsupportedOperationException {
+        private void raidInfoWindowLootListSetHeaders(Table tbl) throws UnsupportedOperationException {
                 tbl.addContainerProperty("Name", String.class, "");
                 tbl.addContainerProperty("Item", String.class, "");
                 tbl.addContainerProperty("Price", Double.class, 0);
                 tbl.addContainerProperty("Heroic", String.class, "");
         }
 
-        private void RaidInfoWindowRewardListAddRow(Item addItem, RaidReward reward) throws ReadOnlyException, ConversionException {
+        private void raidInfoWindowRewardListAddRow(Item addItem, RaidReward reward) throws ReadOnlyException, ConversionException {
                 addItem.getItemProperty("Comment").setValue(reward.getComment());
                 addItem.getItemProperty("Shares").setValue(reward.getShares());
         }
 
-        private void RaidInfoWindowRewardListSetHeaders(Table tbl) throws UnsupportedOperationException {
+        private void raidInfoWindowRewardListSetHeaders(Table tbl) throws UnsupportedOperationException {
                 tbl.addContainerProperty("Comment", String.class, "");
                 tbl.addContainerProperty("Shares", Integer.class, "");
         }
@@ -79,26 +86,26 @@ public class RaidInfoWindow extends Window {
         private Table lootList(Raid raid) {
                 Table tbl = new Table();
                 tbl.addStyleName("small");
-                RaidInfoWindowLootListSetHeaders(tbl);
+                raidInfoWindowLootListSetHeaders(tbl);
                 tbl.setHeight(150);
                 for (RaidItem item : raid.getRaidItems()) {
-                        Item addItem = tbl.addItem(new Integer(item.getId()));
-                        RaidInfoWindowLootListAddRow(addItem, item);
+                        Item addItem = tbl.addItem(item);
+                        raidInfoWindowLootListAddRow(addItem, item);
                 }
+                tbl.addListener(new LootListClickListener());
                 return tbl;
         }
 
         private Table rewardList(final Raid raid) {
                 Table tbl = new Table();
                 tbl.addStyleName("small");
-                RaidInfoWindowRewardListSetHeaders(tbl);
-                tbl.setHeight(150);
+                raidInfoWindowRewardListSetHeaders(tbl);
+                tbl.setHeight("150px");
                 for (RaidReward reward : raid.getRaidRewards()) {
                         Item addItem = tbl.addItem(reward);
-                        RaidInfoWindowRewardListAddRow(addItem, reward);
+                        raidInfoWindowRewardListAddRow(addItem, reward);
                 }
                 tbl.addListener(new RewardListClickListener());
-
                 return tbl;
 
         }
@@ -120,6 +127,22 @@ public class RaidInfoWindow extends Window {
                 public void itemClick(ItemClickEvent event) {
                         RaidReward rreward = (RaidReward) event.getItemId();
                         RewardAttendantsWindow info = new RewardAttendantsWindow(rreward.getRewardChars());
+                        info.printInfo();
+                        getApplication().getMainWindow().addWindow(info);
+                }
+        }
+
+        private class LootListClickListener implements ItemClickListener {
+
+                public LootListClickListener() {
+                }
+
+                @Override
+                public void itemClick(ItemClickEvent event) {
+                        ItemDAO itemDao = new ItemDB();
+                        RaidItem raiditem = (RaidItem) event.getItemId();
+                        Items item = itemDao.getSingleItem(raiditem.getName());
+                        ItemInfoWindow info = new ItemInfoWindow(item);
                         info.printInfo();
                         getApplication().getMainWindow().addWindow(info);
                 }

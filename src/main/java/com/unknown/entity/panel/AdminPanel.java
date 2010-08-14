@@ -5,10 +5,10 @@
 package com.unknown.entity.panel;
 
 import com.unknown.entity.LoginWindow;
-import com.unknown.entity.character.CharacterAddWindow;
+import com.unknown.entity.character.windows.CharacterAddWindow;
 import com.unknown.entity.character.SiteUser;
-import com.unknown.entity.items.ItemAddWindow;
-import com.unknown.entity.raids.RaidAddWindow;
+import com.unknown.entity.items.windows.ItemAddWindow;
+import com.unknown.entity.raids.windows.RaidAddWindow;
 import com.vaadin.terminal.FileResource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;

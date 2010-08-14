@@ -4,6 +4,8 @@
  */
 package com.unknown.entity.raids;
 
+import com.unknown.entity.raids.windows.*;
+import com.unknown.entity.dao.RaidDAO;
 import com.unknown.entity.character.SiteUser;
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;

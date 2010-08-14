@@ -2,11 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity.items;
+package com.unknown.entity.items.windows;
 
+import com.unknown.entity.dao.ItemDAO;
 import com.unknown.entity.database.ItemDB;
 import com.unknown.entity.Slots;
 import com.unknown.entity.Type;
+import com.unknown.entity.items.DefaultPrices;
+import com.unknown.entity.items.ItemPrices;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Button;
@@ -34,10 +37,8 @@ public class ItemAddWindow extends Window {
         public ItemAddWindow() {
                 this.setCaption("Add Item");
                 this.center();
-                this.setWidth("300px");
                 this.addStyleName("opaque");
-                this.setHeight("420px");
-
+                this.getContent().setSizeUndefined();
         }
 
         public void printInfo() {

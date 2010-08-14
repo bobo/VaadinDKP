@@ -3,10 +3,12 @@
  * and open the template in the editor.
  */
 
-package com.unknown.entity.items;
+package com.unknown.entity.dao;
 
 import com.unknown.entity.Slots;
 import com.unknown.entity.Type;
+import com.unknown.entity.items.ItemPrices;
+import com.unknown.entity.items.Items;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -29,4 +31,6 @@ public interface ItemDAO {
         public Object getItemPrice(String itemname, boolean heroic) throws SQLException;
 
         public int getItemId(Connection c, String loot) throws SQLException;
+
+        public Items getSingleItem(String name);
 }

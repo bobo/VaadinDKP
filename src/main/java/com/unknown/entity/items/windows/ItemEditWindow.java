@@ -2,11 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity.items;
+package com.unknown.entity.items.windows;
 
+import com.unknown.entity.dao.ItemDAO;
 import com.unknown.entity.database.ItemDB;
 import com.unknown.entity.Slots;
 import com.unknown.entity.Type;
+import com.unknown.entity.items.ItemLooter;
+import com.unknown.entity.items.Items;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
@@ -177,7 +180,7 @@ public class ItemEditWindow extends Window {
                 Table tbl = new Table();
                 itemTableHeaders(tbl);
                 tbl.setHeight(150);
-                for (ItemLooter looters : item.getItemList()) {
+                for (ItemLooter looters : item.getLooterList()) {
                         Item addItem = tbl.addItem(looters.getId());
                         itemTableRowAdd(addItem, looters);
 

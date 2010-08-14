@@ -70,11 +70,11 @@ public class Items {
         return isLegendary;
     }
 
-    public void addItemList(Collection<ItemLooter> looters) {
+    public void addLooterList(Collection<ItemLooter> looters) {
                 looterList.addAll(looters);
         }
 
-        public ImmutableList<ItemLooter> getItemList() {
+        public ImmutableList<ItemLooter> getLooterList() {
                 return ImmutableList.copyOf(looterList);
         }
 }

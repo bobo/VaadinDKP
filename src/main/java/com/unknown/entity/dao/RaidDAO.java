@@ -2,8 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity.raids;
+package com.unknown.entity.dao;
 
+import com.unknown.entity.raids.Raid;
+import com.unknown.entity.raids.RaidItem;
+import com.unknown.entity.raids.RaidReward;
 import java.sql.SQLException;
 import java.util.List;
 

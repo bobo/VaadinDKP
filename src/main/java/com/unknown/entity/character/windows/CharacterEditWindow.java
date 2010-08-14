@@ -2,10 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity.character;
+package com.unknown.entity.character.windows;
 
+import com.unknown.entity.dao.CharacterDAO;
 import com.unknown.entity.database.CharacterDB;
 import com.unknown.entity.Role;
+import com.unknown.entity.character.CharacterItem;
+import com.unknown.entity.character.User;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
@@ -36,7 +39,7 @@ public class CharacterEditWindow extends Window {
                 this.addStyleName("opaque");
                 this.setPositionX(200);
                 this.setPositionY(400);
-this.getContent().setSizeUndefined();
+                this.getContent().setSizeUndefined();
         }
 
         public void printInfo() {

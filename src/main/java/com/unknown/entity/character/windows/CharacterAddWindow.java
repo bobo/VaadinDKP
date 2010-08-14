@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity.character;
+package com.unknown.entity.character.windows;
 
+import com.unknown.entity.dao.CharacterDAO;
 import com.unknown.entity.database.CharacterDB;
 import com.unknown.entity.Role;
 import com.vaadin.data.Property.ConversionException;
@@ -33,7 +34,7 @@ public class CharacterAddWindow extends Window {
                 this.setCaption("Add Character");
                 this.addStyleName("opaque");
                 this.center();
-this.getContent().setSizeUndefined();
+                this.getContent().setSizeUndefined();
         }
 
         public void printInfo() {
@@ -45,7 +46,7 @@ this.getContent().setSizeUndefined();
                 ComboBox classCombo = characterAddCharClassComboBox();
                 adduser.addComponent(classCombo);
                 CheckBox activeCheck = characterAddIsActive();
-                
+
                 adduser.addComponent(activeCheck);
                 Button btn = characterAddButtonAdd(nameField, classCombo, activeCheck);
                 Button cbtn = characterAddButtonClose();

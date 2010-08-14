@@ -2,11 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity.raids;
+package com.unknown.entity.raids.windows;
 
+import com.unknown.entity.dao.CharacterDAO;
+import com.unknown.entity.dao.RaidDAO;
 import com.unknown.entity.database.CharacterDB;
 import com.unknown.entity.database.RaidDB;
 import com.unknown.entity.character.*;
+import com.unknown.entity.raids.Raid;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;

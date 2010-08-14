@@ -9,7 +9,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.unknown.entity.DBConnection;
 import com.unknown.entity.Role;
-import com.unknown.entity.character.CharacterDAO;
+import com.unknown.entity.dao.CharacterDAO;
 import com.unknown.entity.character.CharacterItem;
 import com.unknown.entity.character.User;
 import java.math.*;

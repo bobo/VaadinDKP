@@ -91,7 +91,7 @@ public class DkpList extends Table {
                 }
         }
 
-        private static class dkpListClickListener implements ItemClickListener {
+        private  class dkpListClickListener implements ItemClickListener {
 
                 public dkpListClickListener() {
                 }
@@ -100,8 +100,8 @@ public class DkpList extends Table {
                 public void itemClick(ItemClickEvent event) {
                         if (event.isCtrlKey()) {
                 User user = (User) event.getItemId();
-                                PopUpControl pop = new PopUpControl();
-                                pop.showProperCharWindow(user);
+                                PopUpControl pop = new PopUpControl(DkpList.this.getApplication());
+								pop.showProperCharWindow(user);
                         }
                 }
         }

@@ -4,6 +4,9 @@
  */
 package com.unknown.entity.raids;
 
+import database.CharacterDB;
+import database.ItemDB;
+import database.RaidDB;
 import com.unknown.entity.character.*;
 import com.unknown.entity.items.*;
 import com.vaadin.ui.Button;

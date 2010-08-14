@@ -2,12 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity.items;
+package database;
 
-import com.unknown.entity.character.CharacterDB;
 import com.unknown.entity.DBConnection;
 import com.unknown.entity.Slots;
 import com.unknown.entity.Type;
+import com.unknown.entity.items.ItemDAO;
+import com.unknown.entity.items.ItemLooter;
+import com.unknown.entity.items.ItemPrices;
+import com.unknown.entity.items.Items;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

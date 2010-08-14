@@ -3,12 +3,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity.character;
+package database;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.unknown.entity.DBConnection;
 import com.unknown.entity.Role;
+import com.unknown.entity.character.CharacterDAO;
+import com.unknown.entity.character.CharacterItem;
+import com.unknown.entity.character.User;
+import java.math.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -157,11 +161,11 @@ public class CharacterDB implements CharacterDAO {
                         share_value = 0;
                 }
                 dkp_earned = shares * share_value;
-                dkp_earned = roundTwoDecimals(dkp_earned);
-                dkp_spent = roundTwoDecimals(dkp_spent);
                 dkp = dkp_earned - dkp_spent;
-                dkp = roundTwoDecimals(dkp);
-                User user = CreateCharacter(rs, shares, dkp_earned, dkp_spent, dkp);
+                BigDecimal formatted_dkp_spent = new BigDecimal(dkp_spent).setScale(2, BigDecimal.ROUND_HALF_DOWN);
+                BigDecimal formatted_dkp_earned = new BigDecimal(dkp_earned).setScale(2, BigDecimal.ROUND_HALF_DOWN);
+                BigDecimal formatted_dkp = new BigDecimal(dkp).setScale(2, BigDecimal.ROUND_HALF_DOWN);
+                User user = CreateCharacter(rs, shares, formatted_dkp_earned.doubleValue(), formatted_dkp_spent.doubleValue(), formatted_dkp.doubleValue());
                 users.add(user);
 
         }

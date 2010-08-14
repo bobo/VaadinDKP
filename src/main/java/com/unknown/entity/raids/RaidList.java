@@ -25,23 +25,7 @@ public class RaidList extends Table {
 
                 this.setHeight("500px");
                 this.setWidth("300px");
-                this.addListener(new ItemClickListener() {
-
-                        @Override
-                        public void itemClick(ItemClickEvent event) {
-
-                                Raid raid = (Raid) event.getItemId();
-                                if (isAdmin()) {
-                                        RaidEditWindow info = new RaidEditWindow(raid);
-                                        info.printInfo();
-                                        getApplication().getMainWindow().addWindow(info);
-                                } else {
-                                        RaidInfoWindow info = new RaidInfoWindow(raid);
-                                        info.printInfo();
-                                        getApplication().getMainWindow().addWindow(info);
-                                }
-                        }
-                });
+                this.addListener(new RaidListClickListener());
         }
 
         private boolean isAdmin() {
@@ -73,6 +57,23 @@ public class RaidList extends Table {
                         Item addItem = addItem(raid);
                         RaidListAddRow(addItem, raid);
 
+                }
+        }
+
+        private class RaidListClickListener implements ItemClickListener {
+
+                @Override
+                public void itemClick(ItemClickEvent event) {
+                        Raid raid = (Raid) event.getItemId();
+                        if (isAdmin()) {
+                                RaidEditWindow info = new RaidEditWindow(raid);
+                                info.printInfo();
+                                getApplication().getMainWindow().addWindow(info);
+                        } else {
+                                RaidInfoWindow info = new RaidInfoWindow(raid);
+                                info.printInfo();
+                                getApplication().getMainWindow().addWindow(info);
+                        }
                 }
         }
 }

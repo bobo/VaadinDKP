@@ -4,6 +4,7 @@
  */
 package com.unknown.entity.raids;
 
+import database.RaidDB;
 import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.ui.Button;

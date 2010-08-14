@@ -2,11 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.unknown.entity.raids;
+package database;
 
 import com.unknown.entity.DBConnection;
 import com.unknown.entity.character.*;
 import com.unknown.entity.items.*;
+import com.unknown.entity.raids.Raid;
+import com.unknown.entity.raids.RaidChar;
+import com.unknown.entity.raids.RaidDAO;
+import com.unknown.entity.raids.RaidItem;
+import com.unknown.entity.raids.RaidReward;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

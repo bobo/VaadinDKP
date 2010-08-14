@@ -4,6 +4,7 @@
  */
 package com.unknown.entity.raids;
 
+import database.RaidDB;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;

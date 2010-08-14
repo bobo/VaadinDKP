@@ -4,6 +4,8 @@
  */
 package com.unknown.entity.raids;
 
+import database.CharacterDB;
+import database.RaidDB;
 import com.unknown.entity.character.*;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

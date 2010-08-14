@@ -30,12 +30,7 @@ public class LoginDao implements ILoginDao {
 			final ResultSet res = ps.executeQuery();
 			if (res.next()) {
 				final int rank = res.getInt("rank");
-				return new SiteUser() {
-					@Override
-					public int getLevel() {
-							return rank;
-					}
-				};
+				return new SUser(rank);
 
 			}
 			res.close();
@@ -47,4 +42,18 @@ public class LoginDao implements ILoginDao {
 		return null;
 
 	}
+
+        private static class SUser implements SiteUser {
+
+                private final int rank;
+
+                public SUser(int rank) {
+                        this.rank = rank;
+                }
+
+                @Override
+                public int getLevel() {
+                        return rank;
+                }
+        }
 }

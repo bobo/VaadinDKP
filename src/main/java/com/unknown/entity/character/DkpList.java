@@ -8,6 +8,7 @@ import com.unknown.entity.character.windows.CharacterInfoWindow;
 import com.unknown.entity.character.windows.CharacterEditWindow;
 import com.unknown.entity.dao.CharacterDAO;
 import com.unknown.entity.Armor;
+import com.unknown.entity.PopUpControl;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
@@ -90,27 +91,16 @@ public class DkpList extends Table {
                 }
         }
 
-        private boolean isAdmin() {
-                final SiteUser siteUser = (SiteUser) getApplication().getUser();
-                return siteUser != null && siteUser.getLevel() == 1;
-        }
-
-        private class dkpListClickListener implements ItemClickListener {
+        private static class dkpListClickListener implements ItemClickListener {
 
                 public dkpListClickListener() {
                 }
 
                 @Override
                 public void itemClick(ItemClickEvent event) {
-                        User user = (User) event.getItemId();
-                        if (isAdmin()) {
-                                CharacterEditWindow info = new CharacterEditWindow(user);
-                                info.printInfo();
-                                getApplication().getMainWindow().addWindow(info);
-                        } else {
-                                CharacterInfoWindow info = new CharacterInfoWindow(user);
-                                info.printInfo();
-                                getApplication().getMainWindow().addWindow(info);
+                        if (event.isCtrlKey()) {
+                                PopUpControl pop = new PopUpControl();
+                                pop.showProperCharWindow(event);
                         }
                 }
         }

@@ -72,15 +72,17 @@ public class ItemList extends Table {
 
                 @Override
                 public void itemClick(ItemClickEvent event) {
-                        Items item = (Items) event.getItemId();
-                        if (isAdmin()) {
-                                ItemEditWindow info = new ItemEditWindow(item);
-                                info.printInfo();
-                                getApplication().getMainWindow().addWindow(info);
-                        } else {
-                                ItemInfoWindow info = new ItemInfoWindow(item);
-                                info.printInfo();
-                                getApplication().getMainWindow().addWindow(info);
+                        if (event.isCtrlKey()) {
+                                Items item = (Items) event.getItemId();
+                                if (isAdmin()) {
+                                        ItemEditWindow info = new ItemEditWindow(item);
+                                        info.printInfo();
+                                        getApplication().getMainWindow().addWindow(info);
+                                } else {
+                                        ItemInfoWindow info = new ItemInfoWindow(item);
+                                        info.printInfo();
+                                        getApplication().getMainWindow().addWindow(info);
+                                }
                         }
                 }
         }

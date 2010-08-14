@@ -66,15 +66,17 @@ public class RaidList extends Table {
 
                 @Override
                 public void itemClick(ItemClickEvent event) {
-                        Raid raid = (Raid) event.getItemId();
-                        if (isAdmin()) {
-                                RaidEditWindow info = new RaidEditWindow(raid);
-                                info.printInfo();
-                                getApplication().getMainWindow().addWindow(info);
-                        } else {
-                                RaidInfoWindow info = new RaidInfoWindow(raid);
-                                info.printInfo();
-                                getApplication().getMainWindow().addWindow(info);
+                        if (event.isCtrlKey()) {
+                                Raid raid = (Raid) event.getItemId();
+                                if (isAdmin()) {
+                                        RaidEditWindow info = new RaidEditWindow(raid);
+                                        info.printInfo();
+                                        getApplication().getMainWindow().addWindow(info);
+                                } else {
+                                        RaidInfoWindow info = new RaidInfoWindow(raid);
+                                        info.printInfo();
+                                        getApplication().getMainWindow().addWindow(info);
+                                }
                         }
                 }
         }

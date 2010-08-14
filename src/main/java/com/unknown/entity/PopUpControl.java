@@ -25,14 +25,23 @@ public class PopUpControl extends Window {
 
 	public void showProperCharWindow(User user) throws IllegalArgumentException, NullPointerException {
 		if (isAdmin()) {
-			CharacterEditWindow info = new CharacterEditWindow(user);
-			info.printInfo();
-			app.getMainWindow().addWindow(info);
+			showEditWindow(user);
 		} else {
-			CharacterInfoWindow info = new CharacterInfoWindow(user);
-			info.printInfo();
-			app.getMainWindow().addWindow(info);
+			showInfoWindow(user);
 		}
+	}
+
+	private void showEditWindow(User user) throws IllegalArgumentException, NullPointerException {
+		CharacterEditWindow info = new CharacterEditWindow(user);
+		info.printInfo();
+		app.getMainWindow().addWindow(info);
+	}
+
+
+	private void showInfoWindow(User user) throws NullPointerException, IllegalArgumentException {
+		CharacterInfoWindow info = new CharacterInfoWindow(user);
+		info.printInfo();
+		app.getMainWindow().addWindow(info);
 	}
 
 	private boolean isAdmin() {

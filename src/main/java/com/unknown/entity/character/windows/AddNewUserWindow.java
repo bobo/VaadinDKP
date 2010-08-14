@@ -13,6 +13,9 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  *
@@ -47,7 +50,7 @@ public class AddNewUserWindow extends Window {
                 Button cancelButton = new Button("Cancel");
                 addButton.addListener(new AddButtonListener());
                 cancelButton.addListener(new CancelButtonListener());
-                
+
                 addComponent(username);
                 addComponent(password);
                 addComponent(passwordCheck);
@@ -71,13 +74,29 @@ public class AddNewUserWindow extends Window {
                 @Override
                 public void buttonClick(ClickEvent event) {
                         if (checkPassword()) {
-                                int success = characterDao.addNewSiteUser(username.getValue().toString(), password.getValue().toString(), 1);
-                                System.out.println(success+" user added");
+                                String hashedpassword = hashPassword(password.getValue().toString());
+                                int success = characterDao.addNewSiteUser(username.getValue().toString(), hashedpassword, 1);
+                                System.out.println(success + " user added");
                         } else {
                                 Label err = new Label("Passwords must match!");
                                 err.addStyleName("error");
                                 getWindow().addComponent(err);
                         }
+                }
+
+                public String hashPassword(String password) {
+                        String hashword = null;
+                        try {
+                                MessageDigest md5 = MessageDigest.getInstance("MD5");
+                                md5.update(password.getBytes());
+                                BigInteger hash = new BigInteger(1, md5.digest());
+                                hashword = hash.toString(16);
+                                if (hashword.length() == 31) {
+                                        hashword = "0" + hashword;
+                                }
+                        } catch (NoSuchAlgorithmException nsae) { nsae.printStackTrace();
+                        }
+                        return hashword;
                 }
 
                 private boolean checkPassword() {

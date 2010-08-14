@@ -26,6 +26,8 @@ import com.unknown.entity.character.*;
 import com.unknown.entity.items.*;
 import com.unknown.entity.panel.AdminPanel;
 import com.vaadin.Application;
+import com.vaadin.data.Property.ConversionException;
+import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
@@ -36,6 +38,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import java.util.Collection;
 
 /**
  * The Application's "main" class
@@ -46,28 +49,25 @@ public class UnknownEntityDKP extends Application {
         private Window window;
         private final AdminPanel adminPanel = new AdminPanel();
 
-        public HorizontalLayout HorizontalSegment(final DKPList dKPList, ItemList itemList, RaidList raidList) {
+        public HorizontalLayout HorizontalSegment(final DkpList dKPList, ItemList itemList, RaidList raidList) {
                 final HorizontalLayout hzl = new HorizontalLayout();
-
-                final Object username = getMainWindow().getApplication().getUser();
-
                 hzl.setSpacing(true);
 
                 // Vertical DKP List
-                VerticalLayout vertDKP = VerticalDKPListLayout(dKPList, username);
+                VerticalLayout vertDKP = VerticalDKPListLayout(dKPList);
                 hzl.addComponent(vertDKP);
                 // Vertical Item List
-                VerticalLayout vertItem = VerticalItemListLayout(itemList, username);
+                VerticalLayout vertItem = VerticalItemListLayout(itemList);
                 hzl.addComponent(vertItem);
 
                 // Vertical Raid List
-                VerticalLayout vertRaid = VerticalRaidListLayout(raidList, username);
+                VerticalLayout vertRaid = VerticalRaidListLayout(raidList);
                 hzl.addComponent(vertRaid);
 
                 return hzl;
         }
 
-        private VerticalLayout VerticalRaidListLayout(RaidList raidList, final Object username) {
+        private VerticalLayout VerticalRaidListLayout(RaidList raidList) {
                 VerticalLayout vertRaid = new VerticalLayout();
                 vertRaid.addComponent(new Label("Raids"));
                 vertRaid.addComponent(raidList);
@@ -75,7 +75,7 @@ public class UnknownEntityDKP extends Application {
                 return vertRaid;
         }
 
-        private VerticalLayout VerticalItemListLayout(ItemList itemList, final Object username) {
+        private VerticalLayout VerticalItemListLayout(ItemList itemList) {
                 VerticalLayout vertItem = new VerticalLayout();
                 vertItem.addComponent(new Label("Items"));
                 vertItem.addComponent(itemList);
@@ -83,30 +83,37 @@ public class UnknownEntityDKP extends Application {
                 return vertItem;
         }
 
-        private VerticalLayout VerticalDKPListLayout(final DKPList dKPList, final Object username) throws UnsupportedOperationException {
-                final IndexedContainer ic = new IndexedContainer();
+        private VerticalLayout VerticalDKPListLayout(final DkpList dkpList) throws UnsupportedOperationException {
                 VerticalLayout vertDKP = new VerticalLayout();
                 vertDKP.addComponent(new Label("DKP"));
-                vertDKP.addComponent(dKPList);
-                final ComboBox filterDKP = new ComboBox("Filter");
-                filterDKP.setImmediate(true);
-                vertDKP.addComponent(filterDKP);
-                for (Armor armor : Armor.values()) {
-                        filterDKP.addItem(armor);
-                }
-                filterDKP.addStyleName("select-button");
-                filterDKP.setWidth("180px");
-                filterDKP.addListener(new filterChangeListener(dKPList, filterDKP));
+                vertDKP.addComponent(dkpList);
+                dkpFilterBox(vertDKP, dkpList);
 
-                dKPList.printList();
+                dkpList.printList();
                 return vertDKP;
+        }
+
+        private void dkpFilterBox(VerticalLayout vertDKP, final DkpList dkpList) throws UnsupportedOperationException, ReadOnlyException, ConversionException {
+                final ComboBox filterDkp = new ComboBox("Filter");
+                filterDkp.addStyleName("select-button");
+                filterDkp.setWidth("180px");
+                filterDkp.setImmediate(true);
+                vertDKP.addComponent(filterDkp);
+                filterDkp.addItem("<none>");
+                for (Armor armor : Armor.values()) {
+                        filterDkp.addItem(armor);
+                }
+                filterDkp.setNullSelectionAllowed(false);
+                Collection<?> itemIds = filterDkp.getItemIds();
+                filterDkp.setValue(itemIds.iterator().next());
+                filterDkp.addListener(new filterChangeListener(dkpList, filterDkp));
         }
 
         @Override
         public void init() {
                 window = new Window("Unknown Entity DKP");
-//        window.setTheme("ue");
-                window.setTheme("chameleon-ue");
+                window.setTheme("ue");
+                //        window.setTheme("chameleon-ue");
                 setMainWindow(window);
 
                 Drawings();
@@ -120,7 +127,7 @@ public class UnknownEntityDKP extends Application {
 
                 final Button updateButton = new Button("Update");
                 final CharacterList charList = new CharacterList(characterDAO);
-                final DKPList dKPList = new DKPList(characterDAO);
+                final DkpList dKPList = new DkpList(characterDAO);
                 dKPList.addStyleName("small");
                 final RaidList raidList = new RaidList(raidDAO);
                 raidList.addStyleName("small");
@@ -164,17 +171,21 @@ public class UnknownEntityDKP extends Application {
 
         private static class filterChangeListener implements ValueChangeListener {
 
-                private final DKPList dKPList;
-                private final ComboBox filterDKP;
+                private final DkpList dkpList;
+                private final ComboBox filterDkp;
 
-                public filterChangeListener(DKPList dKPList, ComboBox filterDKP) {
-                        this.dKPList = dKPList;
-                        this.filterDKP = filterDKP;
+                public filterChangeListener(DkpList dkpList, ComboBox filterDkp) {
+                        this.dkpList = dkpList;
+                        this.filterDkp = filterDkp;
                 }
 
                 @Override
                 public void valueChange(ValueChangeEvent event) {
-                        dKPList.filter(filterDKP.getValue());
+                        if (filterDkp.getValue().equals("<none>")) {
+                                dkpList.filter(null);
+                        } else {
+                                dkpList.filter(filterDkp.getValue());
+                        }
                 }
         }
 }

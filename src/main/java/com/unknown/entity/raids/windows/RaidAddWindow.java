@@ -10,6 +10,7 @@ import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -42,16 +43,16 @@ public class RaidAddWindow extends Window {
 
                 VerticalLayout addItem = new VerticalLayout();
 
-                ComboBox zone = RaidAddWindowZoneComboBox(zoneList);
+                ComboBox zone = raidAddWindowZoneComboBox(zoneList);
                 addItem.addComponent(zone);
 
-                TextField comment = RaidAddWindowCommentField();
+                TextField comment = raidAddWindowCommentField();
                 addItem.addComponent(comment);
 
-                TextField datum = RaidAddWindowDateField();
+                TextField datum = raidAddWindowDateField();
                 addItem.addComponent(datum);
 
-                Button addButton = RaidAddWindowAddButton(zone, comment, datum);
+                Button addButton = raidAddWindowAddButton(zone, comment, datum);
                 Button closeButton = RaidAddWindowCloseButton();
 
                 HorizontalLayout hzl = new HorizontalLayout();
@@ -74,23 +75,13 @@ public class RaidAddWindow extends Window {
                 return cbtn;
         }
 
-        private Button RaidAddWindowAddButton(final ComboBox zone, final TextField comment, final TextField datum) {
+        private Button raidAddWindowAddButton(final ComboBox zone, final TextField comment, final TextField datum) {
                 final Button btn = new Button("Add");
-                btn.addListener(new Button.ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                                String rzone = zone.getValue().toString();
-                                String rcomment = comment.getValue().toString();
-                                String rdate = datum.getValue().toString();
-                                int success = addRaid(rzone, rcomment, rdate);
-                                addComponent(new Label("Update :" + success));
-                        }
-                });
+                btn.addListener(new AddButtonClickListener(zone, comment, datum));
                 return btn;
         }
 
-        private TextField RaidAddWindowDateField() throws ConversionException, ReadOnlyException {
+        private TextField raidAddWindowDateField() throws ConversionException, ReadOnlyException {
                 final TextField datum = new TextField("Date");
                 datum.setImmediate(true);
                 Date date = new Date();
@@ -99,14 +90,14 @@ public class RaidAddWindow extends Window {
                 return datum;
         }
 
-        private TextField RaidAddWindowCommentField() {
+        private TextField raidAddWindowCommentField() {
                 final TextField comment = new TextField("Comment");
                 comment.focus();
                 comment.setImmediate(true);
                 return comment;
         }
 
-        private ComboBox RaidAddWindowZoneComboBox(List<String> zoneList) throws ReadOnlyException, ConversionException, UnsupportedOperationException {
+        private ComboBox raidAddWindowZoneComboBox(List<String> zoneList) throws ReadOnlyException, ConversionException, UnsupportedOperationException {
                 final ComboBox zone = new ComboBox("Zone");
                 for (String zones : zoneList) {
                         zone.addItem(zones);
@@ -121,5 +112,27 @@ public class RaidAddWindow extends Window {
         private int addRaid(String zone, String comment, String date) {
                 RaidDAO raidDao = new RaidDB();
                 return raidDao.addNewRaid(zone, comment, date);
+        }
+
+        private class AddButtonClickListener implements ClickListener {
+
+                private final ComboBox zone;
+                private final TextField comment;
+                private final TextField datum;
+
+                public AddButtonClickListener(ComboBox zone, TextField comment, TextField datum) {
+                        this.zone = zone;
+                        this.comment = comment;
+                        this.datum = datum;
+                }
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        String rzone = zone.getValue().toString();
+                        String rcomment = comment.getValue().toString();
+                        String rdate = datum.getValue().toString();
+                        int success = addRaid(rzone, rcomment, rdate);
+                        addComponent(new Label("Update :" + success));
+                }
         }
 }

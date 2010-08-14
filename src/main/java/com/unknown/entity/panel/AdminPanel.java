@@ -4,6 +4,7 @@
  */
 package com.unknown.entity.panel;
 
+import com.unknown.entity.items.windows.EditDefaultPricesWindow;
 import com.unknown.entity.LoginWindow;
 import com.unknown.entity.character.windows.CharacterAddWindow;
 import com.unknown.entity.character.SiteUser;
@@ -17,6 +18,9 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,9 +29,11 @@ import com.vaadin.ui.Window;
 public class AdminPanel extends HorizontalLayout implements MyLoginListener {
 
         private final Button loginBtn = new Button();
-        private final Button addUsrBtn = new Button("Add Character");
+        private final Button addCharacterBtn = new Button("Add Character");
         private final Button addRaidBtn = new Button("Add Raid");
         private final Button addItmBtn = new Button("Add Item");
+        private final Button editDefaultBtn = new Button("Edit Default prices");
+        private final Button addUserBtn = new Button("Add User");
         private final Button logOutButton = new Button("");
 
         public AdminPanel() {
@@ -36,26 +42,31 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
                 this.setSpacing(true);
                 loginBtn.setStyle(Button.STYLE_LINK);
                 loginBtn.addListener(new LoginClickListener());
-                addUsrBtn.addListener(new AddUserListener());
+                addCharacterBtn.addListener(new AddCharacterListener());
                 addRaidBtn.addListener(new AddRaidListener());
                 addItmBtn.addListener(new AddItemListener());
+                editDefaultBtn.addListener(new EditDefaultsListener());
+                addUserBtn.addListener(new AddUserListener());
                 logOutButton.addListener(new LogOutListener());
                 logOutButton.setStyle(Button.STYLE_LINK);
                 logOutButton.setIcon(new ThemeResource("../ue/img/key3.png"));
         }
 
         public void init() {
-                if(!isAdmin())
+                if (!isAdmin()) {
                         addComponent(loginBtn);
+                }
         }
 
         private void login() {
                 this.removeAllComponents();
                 if (isAdmin()) {
                         this.addComponent(logOutButton);
-                        this.addComponent(addUsrBtn);
+                        this.addComponent(addCharacterBtn);
                         this.addComponent(addItmBtn);
                         this.addComponent(addRaidBtn);
+                        this.addComponent(editDefaultBtn);
+                        this.addComponent(addUserBtn);
                 } else {
                         addComponent(loginBtn);
                 }
@@ -95,7 +106,7 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
                 }
         }
 
-        private class AddUserListener implements ClickListener {
+        private class AddCharacterListener implements ClickListener {
 
                 @Override
                 public void buttonClick(ClickEvent event) {
@@ -128,6 +139,29 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
                                 getMainWindow().getApplication().setUser(null);
                                 login();
                         }
+                }
+        }
+
+        private class EditDefaultsListener implements ClickListener {
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        EditDefaultPricesWindow editDefaults;
+                        try {
+                                editDefaults = new EditDefaultPricesWindow();
+                                editDefaults.printInfo();
+                                getMainWindow().addWindow(editDefaults);
+                        } catch (SQLException ex) {
+                                Logger.getLogger(AdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                }
+        }
+
+        private class AddUserListener implements ClickListener {
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        throw new UnsupportedOperationException("Not supported yet.");
                 }
         }
 }

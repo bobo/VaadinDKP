@@ -4,16 +4,10 @@
  */
 package com.unknown.entity.database;
 
-import com.unknown.entity.dao.CharacterDAO;
-import com.unknown.entity.dao.ItemDAO;
+
+import com.unknown.entity.dao.*;
 import com.unknown.entity.DBConnection;
-import com.unknown.entity.character.*;
-import com.unknown.entity.items.*;
-import com.unknown.entity.raids.Raid;
-import com.unknown.entity.raids.RaidChar;
-import com.unknown.entity.dao.RaidDAO;
-import com.unknown.entity.raids.RaidItem;
-import com.unknown.entity.raids.RaidReward;
+import com.unknown.entity.raids.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

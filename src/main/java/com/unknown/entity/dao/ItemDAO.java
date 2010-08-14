@@ -33,4 +33,5 @@ public interface ItemDAO {
         public int getItemId(Connection c, String loot) throws SQLException;
 
         public Items getSingleItem(String name);
+
 }

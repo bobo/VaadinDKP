@@ -23,12 +23,12 @@ import java.util.logging.Logger;
  *
  * @author bobo
  */
-public class DKPList extends Table {
+public class DkpList extends Table {
 
         private CharacterDAO characterDAO;
         IndexedContainer ic = new IndexedContainer();
 
-        public DKPList(CharacterDAO characterDAO) {
+        public DkpList(CharacterDAO characterDAO) {
                 this.characterDAO = characterDAO;
 
                 dkpListSetColumnHeaders();
@@ -46,7 +46,7 @@ public class DKPList extends Table {
                 try {
                         this.setColumnCollapsed("Armor", true);
                 } catch (IllegalAccessException ex) {
-                        Logger.getLogger(DKPList.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(DkpList.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 addContainerProperty("DKP", Double.class, 0);
         }

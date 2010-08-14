@@ -124,7 +124,7 @@ public class ItemDB implements ItemDAO {
                         p.setString(6, newslot.toString());
                         p.setString(7, newtype.toString());
                         p.setBoolean(8, legendary);
-                        p.setInt(9, item.getID());
+                        p.setInt(9, item.getId());
 
                         success = p.executeUpdate();
 

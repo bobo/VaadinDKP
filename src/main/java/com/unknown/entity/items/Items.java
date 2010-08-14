@@ -41,17 +41,17 @@ public class Items {
             this.isLegendary = isLegendary;
     }
 
-    public int getID() {
+    public int getId() {
         return id;
     }
 
     public String getName() {
         return itemname;
     }
-    public int getWowID() {
+    public int getWowId() {
         return wowid;
     }
-    public int getWowID_hc() {
+    public int getWowId_hc() {
         return wowid_hc;
     }
     public double getPrice_hc() {

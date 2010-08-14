@@ -43,8 +43,8 @@ import java.io.File;
 public class UnknownEntityDKP extends Application {
 
         private Window window;
+        private final AdminPanel adminPanel = new AdminPanel();
 
-       private final AdminPanel adminPanel = new AdminPanel();
         public HorizontalLayout HorizontalSegment(final DKPList dKPList, ItemList itemList, RaidList raidList) {
                 final HorizontalLayout hzl = new HorizontalLayout();
 
@@ -109,6 +109,7 @@ public class UnknownEntityDKP extends Application {
         public void init() {
                 window = new Window("Unknown Entity DKP");
 //        window.setTheme("ue");
+                window.setTheme("chameleon-dark");
                 setMainWindow(window);
 
                 Drawings();
@@ -120,18 +121,18 @@ public class UnknownEntityDKP extends Application {
                 CharacterDAO characterDAO = new CharacterDB();
                 ItemDAO itemDAO = new ItemDB();
 
-				final Button updateButton = new Button("Update");
+                final Button updateButton = new Button("Update");
                 final CharacterList charList = new CharacterList(characterDAO);
                 final DKPList dKPList = new DKPList(characterDAO);
                 final RaidList raidList = new RaidList(raidDAO);
                 final ItemList itemList = new ItemList(itemDAO);
                 final HorizontalLayout hzl = HorizontalSegment(dKPList, itemList, raidList);
 
-				window.addComponent(adminPanel);
-        		adminPanel.init();
+                window.addComponent(adminPanel);
+                adminPanel.init();
 
                 // Character List based on Character Class
-                CharacterListOnCharacterClass(charList);
+                characterListOnCharacterClass(charList);
 
                 // DKP Table, Item Table, Raid Table
                 window.addComponent(hzl);
@@ -140,8 +141,7 @@ public class UnknownEntityDKP extends Application {
                 UpdateButton(updateButton);
 //				FileResource f = new FileResource("db.properties", this);
 
-		}
-
+        }
 
         private void UpdateButton(final Button updateButton) {
                 updateButton.addListener(new Button.ClickListener() {
@@ -155,7 +155,7 @@ public class UnknownEntityDKP extends Application {
                 window.addComponent(updateButton);
         }
 
-        private void CharacterListOnCharacterClass(final CharacterList charList) {
+        private void characterListOnCharacterClass(final CharacterList charList) {
                 HorizontalLayout hzChar = new HorizontalLayout();
                 hzChar.addComponent(charList);
                 charList.printList();

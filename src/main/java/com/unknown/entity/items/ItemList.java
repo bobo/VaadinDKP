@@ -21,29 +21,12 @@ public class ItemList extends Table {
 
         public ItemList(ItemDAO itemDAO) {
                 this.itemDAO = itemDAO;
-                ItemListColumnHeaders();
-
                 this.setHeight("500px");
 
-                this.addListener(new ItemClickListener() {
-
-                        @Override
-                        public void itemClick(ItemClickEvent event) {
-                                Items item = (Items) event.getItemId();
-                                if (isAdmin()) {
-                                        ItemEditWindow info = new ItemEditWindow(item);
-                                        info.printInfo();
-                                        getApplication().getMainWindow().addWindow(info);
-                                } else {
-                                        ItemInfoWindow info = new ItemInfoWindow(item);
-                                        info.printInfo();
-                                        getApplication().getMainWindow().addWindow(info);                                        
-                                }
-                        }
-                });
+                this.addListener(new ItemListClickListener());
         }
 
-        private void ItemListAddRow(Item addItem, final Items item) throws ConversionException, ReadOnlyException {
+        private void itemListAddRow(Item addItem, final Items item) throws ConversionException, ReadOnlyException {
                 addItem.getItemProperty("Name").setValue(item.getName());
                 addItem.getItemProperty("Price Normal").setValue(item.getPrice());
                 addItem.getItemProperty("Price Heroic").setValue(item.getPrice_hc());
@@ -51,7 +34,7 @@ public class ItemList extends Table {
                 addItem.getItemProperty("Type").setValue(item.getType().toString());
         }
 
-        private void ItemListColumnHeaders() throws UnsupportedOperationException {
+        private void itemListColumnHeaders() throws UnsupportedOperationException {
                 addContainerProperty("Name", String.class, "");
                 addContainerProperty("Price Normal", Double.class, 0);
                 addContainerProperty("Price Heroic", Double.class, 0);
@@ -65,16 +48,37 @@ public class ItemList extends Table {
 
         public void printList() {
                 clear();
+                itemListColumnHeaders();
                 List<Items> itemses = itemDAO.getItems();
 
                 for (final Items item : itemses) {
                         Item addItem = addItem(item);
-                        ItemListAddRow(addItem, item);
+                        itemListAddRow(addItem, item);
                 }
         }
 
         private boolean isAdmin() {
                 final SiteUser siteUser = (SiteUser) getApplication().getUser();
                 return siteUser != null && siteUser.getLevel() == 1;
+        }
+
+        private class ItemListClickListener implements ItemClickListener {
+
+                public ItemListClickListener() {
+                }
+
+                @Override
+                public void itemClick(ItemClickEvent event) {
+                        Items item = (Items) event.getItemId();
+                        if (isAdmin()) {
+                                ItemEditWindow info = new ItemEditWindow(item);
+                                info.printInfo();
+                                getApplication().getMainWindow().addWindow(info);
+                        } else {
+                                ItemInfoWindow info = new ItemInfoWindow(item);
+                                info.printInfo();
+                                getApplication().getMainWindow().addWindow(info);
+                        }
+                }
         }
 }

@@ -24,9 +24,10 @@ public class RaidCharWindow extends Window {
 
 	public RaidCharWindow(List<RaidChar> chars) {
 		this.chars = chars;
-		center();
-		setWidth("600px");
-		setHeight("320px");
+                this.setCaption("Attendants");
+		this.center();
+		this.setWidth("200px");
+		this.setHeight("325px");
 	}
 
 	public void printInfo() {
@@ -40,7 +41,8 @@ public class RaidCharWindow extends Window {
 	private Table charList() {
 		Table tbl = new Table();
 		RaidCharWindowCharListSetHeaders(tbl);
-		tbl.setHeight(150);
+		tbl.setHeight("270px");
+                tbl.setWidth("180px");
 		for (RaidChar rchar : chars) {
 			Item addItem = tbl.addItem(rchar);
 			RaidCharWindowCharListAddRow(addItem, rchar);

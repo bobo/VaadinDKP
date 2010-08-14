@@ -17,7 +17,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -169,10 +168,35 @@ public class CharacterDB implements CharacterDAO {
                 users.add(user);
 
         }
-        
+
         @Override
         public Collection<User> getUsersWithRole(final Role role) {
                 return Collections2.filter(getUsers(), new HasRolePredicate(role));
+        }
+
+        @Override
+        public int addNewSiteUser(String username, String password, int rank) {
+                Connection c = null;
+                int success=0;
+                try {
+                        c = new DBConnection().getConnection();
+                        PreparedStatement p = c.prepareStatement("INSERT INTO users (name, password, rank) VALUES(?,?,?)");
+                        p.setString(1, username);
+                        p.setString(2, password);
+                        p.setInt(3, rank);
+                        success = p.executeUpdate();
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                } finally {
+                        if (c != null) {
+                                try {
+                                        c.close();
+                                } catch (SQLException ex) {
+                                        Logger.getLogger(CharacterDB.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                        }
+                }
+                return success;
         }
 
         private static class HasRolePredicate implements Predicate<User> {

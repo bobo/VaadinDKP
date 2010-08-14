@@ -6,13 +6,10 @@ package com.unknown.entity.dao;
 
 import com.unknown.entity.DBConnection;
 import com.unknown.entity.character.SiteUser;
-import com.unknown.entity.character.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

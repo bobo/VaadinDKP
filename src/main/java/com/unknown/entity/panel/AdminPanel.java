@@ -4,6 +4,7 @@
  */
 package com.unknown.entity.panel;
 
+import com.unknown.entity.character.windows.AddNewUserWindow;
 import com.unknown.entity.items.windows.EditDefaultPricesWindow;
 import com.unknown.entity.LoginWindow;
 import com.unknown.entity.character.windows.CharacterAddWindow;
@@ -146,9 +147,8 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
 
                 @Override
                 public void buttonClick(ClickEvent event) {
-                        EditDefaultPricesWindow editDefaults;
                         try {
-                                editDefaults = new EditDefaultPricesWindow();
+                                EditDefaultPricesWindow editDefaults = new EditDefaultPricesWindow();
                                 editDefaults.printInfo();
                                 getMainWindow().addWindow(editDefaults);
                         } catch (SQLException ex) {
@@ -161,7 +161,9 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
 
                 @Override
                 public void buttonClick(ClickEvent event) {
-                        throw new UnsupportedOperationException("Not supported yet.");
+                        AddNewUserWindow newUser = new AddNewUserWindow();
+                        newUser.printInfo();
+                        getMainWindow().addWindow(newUser);
                 }
         }
 }

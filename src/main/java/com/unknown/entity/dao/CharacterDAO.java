@@ -28,4 +28,6 @@ public interface CharacterDAO {
         public int getCharacterId(Connection c, String charclass) throws SQLException;
 
         public int updateCharacter(User user, String name, String charclass, boolean active);
+
+        public int addNewSiteUser(String username, String password, int rank);
 }

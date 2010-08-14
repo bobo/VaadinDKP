@@ -26,9 +26,8 @@ public class User implements SiteUser {
         private double dkp;
         private boolean active = true;
         private Armor armor;
-		private int level = 0;
+        private int level = 0;
         private final List<CharacterItem> charItems = new ArrayList<CharacterItem>();
-
 
         public User(int id, String username, Role role, boolean active, int shares, double dkp_earned, double dkp_spent, double dkp) {
                 this.id = id;
@@ -42,7 +41,7 @@ public class User implements SiteUser {
                 this.armor = role.getArmor();
         }
 
-        public int getID() {
+        public int getId() {
                 return id;
         }
 
@@ -103,14 +102,12 @@ public class User implements SiteUser {
                 return ImmutableList.copyOf(charItems);
         }
 
-	@Override
-	public int getLevel() {
-		return this.level;
-	}
+        @Override
+        public int getLevel() {
+                return this.level;
+        }
 
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-
+        public void setLevel(int level) {
+                this.level = level;
+        }
 }

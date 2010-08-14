@@ -298,7 +298,7 @@ public class RaidDB implements RaidDAO {
                 newAttendants = removeDuplicates(newAttendants);
 
                 for (String s : newAttendants) {
-                        newcharid.add(characterDao.GetCharacterId(c, s));
+                        newcharid.add(characterDao.getCharacterId(c, s));
                 }
                 int removed = removeAllExistingCharactersFromReward(c, reward, newAttendants, newcharid);
                 System.out.println("Removed: " + removed);
@@ -359,7 +359,7 @@ public class RaidDB implements RaidDAO {
                         CharacterDAO characterDao = new CharacterDB();
                         ItemDAO itemDao = new ItemDB();
                         int itemid = itemDao.getItemId(c, loot);
-                        int charid = characterDao.GetCharacterId(c, name);
+                        int charid = characterDao.getCharacterId(c, name);
                         int mobid = getMobId(c, boss);
                         PreparedStatement ps = c.prepareStatement("INSERT INTO loots (item_id, raid_id, mob_id, character_id, price, heroic) VALUES(?,?,?,?,?,?)");
                         ps.setInt(1, itemid);
@@ -449,7 +449,7 @@ public class RaidDB implements RaidDAO {
                 List<Integer> charids = new ArrayList<Integer>();
                 int success = 0;
                 for (String eachchar : attendantlist) {
-                        charids.add(characterDao.GetCharacterId(c, eachchar));
+                        charids.add(characterDao.getCharacterId(c, eachchar));
                 }
                 PreparedStatement p = c.prepareStatement("INSERT INTO character_rewards (reward_id, character_id) values(?,?)");
                 for (int eachid : charids) {

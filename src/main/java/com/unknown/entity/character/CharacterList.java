@@ -8,6 +8,7 @@ import com.unknown.entity.Role;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
@@ -28,7 +29,7 @@ public class CharacterList extends HorizontalLayout {
                 this.characterDAO = characherDAO;
         }
 
-        private void CharacterClassImages(List<Role> roles) {
+        private void characterClassImages(List<Role> roles) {
                 for (Role r : roles) {
                         VerticalLayout roleList = new VerticalLayout();
                         addComponent(roleList);
@@ -38,24 +39,10 @@ public class CharacterList extends HorizontalLayout {
                 }
         }
 
-        private Button CharacterListByRole(final User user) {
+        private Button characterListByRole(final User user) {
                 final Button userBtn = new Button(user.toString());
                 userBtn.setStyleName(Button.STYLE_LINK);
-                userBtn.addListener(new Button.ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                                if (isAdmin()) {
-                                        CharacterEditWindow info = new CharacterEditWindow(user);
-                                        info.printInfo();
-                                        getApplication().getMainWindow().addWindow(info);
-                                } else {
-                                        CharacterInfoWindow info = new CharacterInfoWindow(user);
-                                        info.printInfo();
-                                        getApplication().getMainWindow().addWindow(info);
-                                }
-                        }
-                });
+                userBtn.addListener(new charListClickListener(user));
                 return userBtn;
         }
 
@@ -67,14 +54,19 @@ public class CharacterList extends HorizontalLayout {
                 clear();
                 List<Role> roles = Arrays.asList(Role.values());
                 Collections.sort(roles, new ToStringComparator());
-                CharacterClassImages(roles);
+                characterClassImages(roles);
         }
 
         private void addUsersForRole(Role r, VerticalLayout roleList) {
                 for (final User user : characterDAO.getUsersWithRole(r)) {
-                        Button userBtn = CharacterListByRole(user);
+                        Button userBtn = characterListByRole(user);
                         roleList.addComponent(userBtn);
                 }
+        }
+
+        private boolean isAdmin() {
+                final SiteUser siteUser = (SiteUser) getApplication().getUser();
+                return siteUser != null && siteUser.getLevel() == 1;
         }
 
         private static class ToStringComparator implements Comparator<Role> {
@@ -88,9 +80,25 @@ public class CharacterList extends HorizontalLayout {
                 }
         }
 
-        private boolean isAdmin() {
-                final SiteUser siteUser = (SiteUser) getApplication().getUser();
-                return siteUser != null && siteUser.getLevel() == 1;
-        }
+        private class charListClickListener implements ClickListener {
 
+                private final User user;
+
+                public charListClickListener(User user) {
+                        this.user = user;
+                }
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        if (isAdmin()) {
+                                CharacterEditWindow info = new CharacterEditWindow(user);
+                                info.printInfo();
+                                getApplication().getMainWindow().addWindow(info);
+                        } else {
+                                CharacterInfoWindow info = new CharacterInfoWindow(user);
+                                info.printInfo();
+                                getApplication().getMainWindow().addWindow(info);
+                        }
+                }
+        }
 }

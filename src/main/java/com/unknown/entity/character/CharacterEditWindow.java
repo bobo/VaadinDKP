@@ -11,14 +11,15 @@ import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.GridLayout.OutOfBoundsException;
 import com.vaadin.ui.GridLayout.OverlapsException;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 /**
@@ -39,19 +40,19 @@ public class CharacterEditWindow extends Window {
         }
 
         public void printInfo() {
-                CharacterInformation();
-                CharacterDKP();
-                CharacterLoots();
+                characterInformation();
+                characterDKP();
+                characterLoots();
 
         }
 
-        private void CharacterInformation() {
+        private void characterInformation() {
                 addComponent(new Label("Character information"));
 
                 final TextField name = new TextField("Name: ", user.getUsername());
-                final ComboBox characterClass = CharacterEditClassComboBox();
+                final ComboBox characterClass = characterEditClassComboBox();
                 final CheckBox active = new CheckBox("Status: ", user.isActive());
-                Button updateButton = CharacterEditUpdateButton(name, characterClass, active);
+                Button updateButton = characterEditUpdateButton(name, characterClass, active);
 
                 addComponent(name);
                 addComponent(characterClass);
@@ -60,20 +61,13 @@ public class CharacterEditWindow extends Window {
                 addComponent(updateButton);
         }
 
-        private Button CharacterEditUpdateButton(final TextField name, final ComboBox characterClass, final CheckBox active) {
+        private Button characterEditUpdateButton(final TextField name, final ComboBox characterClass, final CheckBox active) {
                 Button updateButton = new Button("Update");
-                updateButton.addListener(new Button.ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                                int success = updateCharacter(name.getValue().toString(), characterClass.getValue().toString(), (Boolean) active.getValue());
-                                addComponent(new Label("Success: " + success));
-                        }
-                });
+                updateButton.addListener(new updateBtnClickListener(name, characterClass, active));
                 return updateButton;
         }
 
-        private ComboBox CharacterEditClassComboBox() throws ConversionException, UnsupportedOperationException, ReadOnlyException {
+        private ComboBox characterEditClassComboBox() throws ConversionException, UnsupportedOperationException, ReadOnlyException {
                 final ComboBox characterClass = new ComboBox("Class: ");
                 for (Role role : Role.values()) {
                         characterClass.addItem(role);
@@ -83,12 +77,12 @@ public class CharacterEditWindow extends Window {
                 return characterClass;
         }
 
-        private void CharacterLootTableSetColumnHeaders(Table tbl) throws UnsupportedOperationException {
+        private void characterLootTableSetColumnHeaders(Table tbl) throws UnsupportedOperationException {
                 tbl.addContainerProperty("Name", String.class, "");
                 tbl.addContainerProperty("Price", Double.class, 0);
         }
 
-        private void CharacterLootTableSetRow(Item addItem, CharacterItem charitem) throws ReadOnlyException, ConversionException {
+        private void characterLootTableSetRow(Item addItem, CharacterItem charitem) throws ReadOnlyException, ConversionException {
                 addItem.getItemProperty("Name").setValue(charitem.getName());
                 addItem.getItemProperty("Price").setValue(charitem.getPrice());
         }
@@ -98,7 +92,7 @@ public class CharacterEditWindow extends Window {
                 return charDao.updateCharacter(user, name, charclass, active);
         }
 
-        private void CharacterLoots() {
+        private void characterLoots() {
                 Table loots = lootList(user);
                 if (loots.size() > 0) {
                         addComponent(lootList(user));
@@ -107,29 +101,45 @@ public class CharacterEditWindow extends Window {
                 }
         }
 
-        private void CharacterDKP() throws OutOfBoundsException, OverlapsException {
+        private void characterDKP() throws OutOfBoundsException, OverlapsException {
                 addComponent(new Label("DKP"));
-                GridLayout dkpGrid = new GridLayout(2, 4);
-                dkpGrid.addComponent(new Label("Shares: "), 0, 0);
-                dkpGrid.addComponent(new Label("DKP Earned: "), 0, 1);
-                dkpGrid.addComponent(new Label("DKP Spent: "), 0, 2);
-                dkpGrid.addComponent(new Label("DKP: "), 0, 3);
-                dkpGrid.addComponent(new Label("" + user.getShares()), 1, 0);
-                dkpGrid.addComponent(new Label("" + user.getDKPEarned()), 1, 1);
-                dkpGrid.addComponent(new Label("" + user.getDKPSpent()), 1, 2);
-                dkpGrid.addComponent(new Label("" + user.getDKP()), 1, 3);
-                addComponent(dkpGrid);
+
+                VerticalLayout vert = new VerticalLayout();
+                vert.addComponent(new Label("Shares: "+ user.getShares()));
+                vert.addComponent(new Label("DKP Earned: "+ user.getDKPEarned()));
+                vert.addComponent(new Label("DKP Spent: "+ user.getDKPSpent()));
+                vert.addComponent(new Label("DKP: "+user.getDKP()));
+                addComponent(vert);
         }
 
         private Table lootList(User user) {
                 Table tbl = new Table();
-                CharacterLootTableSetColumnHeaders(tbl);
+                characterLootTableSetColumnHeaders(tbl);
                 tbl.setHeight(150);
                 for (CharacterItem charitem : user.getCharItems()) {
                         Item addItem = tbl.addItem(charitem.getId());
-                        CharacterLootTableSetRow(addItem, charitem);
+                        characterLootTableSetRow(addItem, charitem);
                 }
                 return tbl;
 
+        }
+
+        private class updateBtnClickListener implements ClickListener {
+
+                private final TextField name;
+                private final ComboBox characterClass;
+                private final CheckBox active;
+
+                public updateBtnClickListener(TextField name, ComboBox characterClass, CheckBox active) {
+                        this.name = name;
+                        this.characterClass = characterClass;
+                        this.active = active;
+                }
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        int success = updateCharacter(name.getValue().toString(), characterClass.getValue().toString(), (Boolean) active.getValue());
+                        addComponent(new Label("Success: " + success));
+                }
         }
 }

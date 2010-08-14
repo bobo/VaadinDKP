@@ -49,7 +49,7 @@ public class CharacterDB implements CharacterDAO {
                         ResultSet rs = p.executeQuery();
 
                         while (rs.next()) {
-                                DoSQLMagicForCharacters(c, rs, users);
+                                doSQLMagicForCharacters(c, rs, users);
                         }
 
                 } catch (SQLException e) {
@@ -67,7 +67,7 @@ public class CharacterDB implements CharacterDAO {
                 return users;
         }
 
-        private User CreateCharacter(ResultSet rs, int shares, double dkp_earned, double dkp_spent, double dkp) throws SQLException {
+        private User createCharacter(ResultSet rs, int shares, double dkp_earned, double dkp_spent, double dkp) throws SQLException {
                 Role role = Role.valueOf(rs.getString("character_classes.name").replace(" ", ""));
                 User user = new User(rs.getInt("id"), rs.getString("characters.name"), role, rs.getBoolean("characters.active"), shares, dkp_earned, dkp_spent, dkp);
                 user.addCharItems(getItemsForCharacter(rs.getInt("id")));
@@ -75,7 +75,7 @@ public class CharacterDB implements CharacterDAO {
         }
 
         @Override
-        public int GetCharacterClassId(Connection c, String charclass) throws SQLException {
+        public int getCharacterClassId(Connection c, String charclass) throws SQLException {
                 PreparedStatement pclass = c.prepareStatement("SELECT * FROM character_classes WHERE name=?");
                 pclass.setString(1, fixRole(charclass));
                 ResultSet rclass = pclass.executeQuery();
@@ -87,7 +87,7 @@ public class CharacterDB implements CharacterDAO {
         }
 
         @Override
-        public int GetCharacterId(Connection c, String charname) throws SQLException {
+        public int getCharacterId(Connection c, String charname) throws SQLException {
                 PreparedStatement pclass = c.prepareStatement("SELECT * FROM characters WHERE name=?");
                 pclass.setString(1, charname);
                 ResultSet rclass = pclass.executeQuery();
@@ -98,14 +98,14 @@ public class CharacterDB implements CharacterDAO {
                 return charid;
         }
 
-        private int GetSharesForCharacterByID(ResultSet rs, ResultSet rss, int shares) throws SQLException {
+        private int getSharesForCharacterById(ResultSet rs, ResultSet rss, int shares) throws SQLException {
                 if (rs.getInt("characters.id") == rss.getInt("character_rewards.character_id")) {
                         shares = shares + rss.getInt("rewards.number_of_shares");
                 }
                 return shares;
         }
 
-        private double GetDkpSpentForCharacterByID(ResultSet rsloot, ResultSet rs, double dkp_spent) throws SQLException {
+        private double getDkpSpentForCharacterById(ResultSet rsloot, ResultSet rs, double dkp_spent) throws SQLException {
                 if (rsloot.getInt("loots.character_id") == rs.getInt("characters.id")) {
                         dkp_spent = dkp_spent + rsloot.getDouble("loots.price");
                 }
@@ -133,7 +133,7 @@ public class CharacterDB implements CharacterDAO {
                 return itemlist;
         }
 
-        private void DoSQLMagicForCharacters(Connection c, ResultSet rs, List<User> users) throws SQLException {
+        private void doSQLMagicForCharacters(Connection c, ResultSet rs, List<User> users) throws SQLException {
                 PreparedStatement ploot = c.prepareStatement("SELECT * FROM loots JOIN characters where loots.character_id=characters.id");
                 int shares = 0;
                 double dkp_earned = 0.0;
@@ -144,7 +144,7 @@ public class CharacterDB implements CharacterDAO {
                 int totalshares = 0;
                 ResultSet rsloot = ploot.executeQuery();
                 while (rsloot.next()) {
-                        dkp_spent = GetDkpSpentForCharacterByID(rsloot, rs, dkp_spent);
+                        dkp_spent = getDkpSpentForCharacterById(rsloot, rs, dkp_spent);
                         loot_value = loot_value + rsloot.getDouble("loots.price");
                 }
                 PreparedStatement ps = c.prepareStatement("SELECT * FROM rewards JOIN character_rewards JOIN characters WHERE character_rewards.reward_id=rewards.id AND characters.id=?");
@@ -152,7 +152,7 @@ public class CharacterDB implements CharacterDAO {
 
                 ResultSet rss = ps.executeQuery();
                 while (rss.next()) {
-                        shares = GetSharesForCharacterByID(rs, rss, shares);
+                        shares = getSharesForCharacterById(rs, rss, shares);
                         totalshares += rss.getInt("rewards.number_of_shares");
                 }
                 if (totalshares != 0) {
@@ -165,15 +165,11 @@ public class CharacterDB implements CharacterDAO {
                 BigDecimal formatted_dkp_spent = new BigDecimal(dkp_spent).setScale(2, BigDecimal.ROUND_HALF_DOWN);
                 BigDecimal formatted_dkp_earned = new BigDecimal(dkp_earned).setScale(2, BigDecimal.ROUND_HALF_DOWN);
                 BigDecimal formatted_dkp = new BigDecimal(dkp).setScale(2, BigDecimal.ROUND_HALF_DOWN);
-                User user = CreateCharacter(rs, shares, formatted_dkp_earned.doubleValue(), formatted_dkp_spent.doubleValue(), formatted_dkp.doubleValue());
+                User user = createCharacter(rs, shares, formatted_dkp_earned.doubleValue(), formatted_dkp_spent.doubleValue(), formatted_dkp.doubleValue());
                 users.add(user);
 
         }
         
-        double roundTwoDecimals(double d) {
-        	DecimalFormat twoDForm = new DecimalFormat("#.##");
-		return Double.valueOf(twoDForm.format(d));
-        }
         @Override
         public Collection<User> getUsersWithRole(final Role role) {
                 return Collections2.filter(getUsers(), new HasRolePredicate(role));
@@ -238,13 +234,13 @@ public class CharacterDB implements CharacterDAO {
 
                 try {
                         c = new DBConnection().getConnection();
-                        int classid = GetCharacterClassId(c, charclass);
+                        int classid = getCharacterClassId(c, charclass);
 
                         PreparedStatement p = c.prepareStatement("UPDATE characters SET name=? , character_class_id=? , active=? , user_id=NULL WHERE id=?");
                         p.setString(1, name);
                         p.setInt(2, classid);
                         p.setBoolean(3, active);
-                        p.setInt(4, user.getID());
+                        p.setInt(4, user.getId());
 
                         success = p.executeUpdate();
 

@@ -10,6 +10,7 @@ import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
@@ -39,15 +40,15 @@ public class CharacterAddWindow extends Window {
 
                 VerticalLayout adduser = new VerticalLayout();
                 addComponent(adduser);
-                TextField nameField = CharacterAddNameField();
+                TextField nameField = characterAddNameField();
                 adduser.addComponent(nameField);
-                ComboBox classCombo = CharacterAddCharClassComboBox();
+                ComboBox classCombo = characterAddCharClassComboBox();
                 adduser.addComponent(classCombo);
-                CheckBox activeCheck = CharacterAddIsActive();
+                CheckBox activeCheck = characterAddIsActive();
                 
                 adduser.addComponent(activeCheck);
-                Button btn = CharacterAddButtonAdd(nameField, classCombo, activeCheck);
-                Button cbtn = CharacterAddButtonClose();
+                Button btn = characterAddButtonAdd(nameField, classCombo, activeCheck);
+                Button cbtn = characterAddButtonClose();
                 HorizontalLayout hzl = new HorizontalLayout();
                 hzl.setSpacing(true);
                 hzl.addComponent(btn);
@@ -55,48 +56,26 @@ public class CharacterAddWindow extends Window {
                 adduser.addComponent(hzl);
         }
 
-        private Button CharacterAddButtonClose() {
+        private Button characterAddButtonClose() {
                 final Button cbtn = new Button("Close");
-                cbtn.addListener(new Button.ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                                close();
-                        }
-                });
+                cbtn.addListener(new closeBtnClickListener());
                 return cbtn;
         }
 
-        private Button CharacterAddButtonAdd(final TextField nameField, final ComboBox classCombo, final CheckBox activeCheck) {
+        private Button characterAddButtonAdd(final TextField nameField, final ComboBox classCombo, final CheckBox activeCheck) {
                 final Button btn = new Button("Add");
-                btn.addListener(new Button.ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                                final String charactername = (String) nameField.getValue();
-                                final String characterclass = classCombo.getValue().toString();
-                                final boolean characteractive = (Boolean) activeCheck.getValue();
-                                int success = 0;
-                                try {
-                                        success = addChar(charactername, characterclass, characteractive);
-                                } catch (SQLException ex) {
-                                        Logger.getLogger(CharacterAddWindow.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                                addComponent(new Label("Update :" + success));
-                                close();
-                        }
-                });
+                btn.addListener(new addBtnClickListener(nameField, classCombo, activeCheck));
                 return btn;
         }
 
-        private CheckBox CharacterAddIsActive() {
+        private CheckBox characterAddIsActive() {
                 final CheckBox activeCheck = new CheckBox("active", true);
                 activeCheck.setImmediate(true);
                 activeCheck.setDescription("active");
                 return activeCheck;
         }
 
-        private ComboBox CharacterAddCharClassComboBox() throws UnsupportedOperationException, ReadOnlyException, ConversionException {
+        private ComboBox characterAddCharClassComboBox() throws UnsupportedOperationException, ReadOnlyException, ConversionException {
                 final ComboBox classCombo = new ComboBox("Class");
                 classCombo.setImmediate(true);
                 for (Role roles : Role.values()) {
@@ -108,7 +87,7 @@ public class CharacterAddWindow extends Window {
                 return classCombo;
         }
 
-        private TextField CharacterAddNameField() {
+        private TextField characterAddNameField() {
                 final TextField nameField = new TextField("Name");
                 nameField.setImmediate(true);
                 nameField.focus();
@@ -119,5 +98,41 @@ public class CharacterAddWindow extends Window {
                 CharacterDAO characterDao = new CharacterDB();
                 return characterDao.addNewCharacter(name, role, isActive);
 
+        }
+
+        private class closeBtnClickListener implements ClickListener {
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        close();
+                }
+        }
+
+        private class addBtnClickListener implements ClickListener {
+
+                private final TextField nameField;
+                private final ComboBox classCombo;
+                private final CheckBox activeCheck;
+
+                public addBtnClickListener(TextField nameField, ComboBox classCombo, CheckBox activeCheck) {
+                        this.nameField = nameField;
+                        this.classCombo = classCombo;
+                        this.activeCheck = activeCheck;
+                }
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        final String charactername = (String) nameField.getValue();
+                        final String characterclass = classCombo.getValue().toString();
+                        final boolean characteractive = (Boolean) activeCheck.getValue();
+                        int success = 0;
+                        try {
+                                success = addChar(charactername, characterclass, characteractive);
+                        } catch (SQLException ex) {
+                                Logger.getLogger(CharacterAddWindow.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        addComponent(new Label("Update :" + success));
+                        close();
+                }
         }
 }

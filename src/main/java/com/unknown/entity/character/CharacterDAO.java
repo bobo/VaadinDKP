@@ -22,9 +22,9 @@ public interface CharacterDAO {
 
         public int addNewCharacter(String name, String role, Boolean isActive) throws SQLException;
         
-        public int GetCharacterClassId(Connection c, String charclass) throws SQLException;
+        public int getCharacterClassId(Connection c, String charclass) throws SQLException;
 
-        public int GetCharacterId(Connection c, String charclass) throws SQLException;
+        public int getCharacterId(Connection c, String charclass) throws SQLException;
 
         public int updateCharacter(User user, String name, String charclass, boolean active);
 }

@@ -9,9 +9,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.terminal.FileResource;
 import com.vaadin.ui.Table;
-import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -28,33 +26,16 @@ public class DKPList extends Table {
         IndexedContainer ic = new IndexedContainer();
 
         public DKPList(CharacterDAO characterDAO) {
-			this.characterDAO = characterDAO;
+                this.characterDAO = characterDAO;
 
-                DkpListSetColumnHeaders();
+                dkpListSetColumnHeaders();
                 this.setWidth("180px");
                 this.setHeight("500px");
 
-                this.addListener(new ItemClickListener() {
-
-                        @Override
-                        public void itemClick(ItemClickEvent event) {
-                                User user = (User) event.getItemId();
-                                if (isAdmin()) {
-
-                                        CharacterEditWindow info = new CharacterEditWindow(user);
-                                        info.printInfo();
-                                        getApplication().getMainWindow().addWindow(info);
-                                } else {
-                                        CharacterInfoWindow info = new CharacterInfoWindow(user);
-                                        info.printInfo();
-                                        getApplication().getMainWindow().addWindow(info);
-                                }
-
-                        }
-                });
+                this.addListener(new dkpListClickListener());
         }
 
-        private void DkpListSetColumnHeaders() throws UnsupportedOperationException {
+        private void dkpListSetColumnHeaders() throws UnsupportedOperationException {
                 ic.addContainerProperty("Name", String.class, "");
                 ic.addContainerProperty("Armor", Armor.class, "");
                 this.setContainerDataSource(ic);
@@ -83,11 +64,11 @@ public class DKPList extends Table {
                 });
                 for (final User user : users) {
                         Item addItem = addItem(user);
-                        DkpListAddRow(addItem, user);
+                        dkpListAddRow(addItem, user);
                 }
         }
 
-        private void DkpListAddRow(Item addItem, final User user) throws ConversionException, ReadOnlyException {
+        private void dkpListAddRow(Item addItem, final User user) throws ConversionException, ReadOnlyException {
                 addItem.getItemProperty("Name").setValue(user.getUsername());
                 addItem.getItemProperty("Armor").setValue(user.getArmor());
                 addItem.getItemProperty("DKP").setValue(user.getDKP());
@@ -105,8 +86,29 @@ public class DKPList extends Table {
                         return value.toString();
                 }
         }
+
         private boolean isAdmin() {
                 final SiteUser siteUser = (SiteUser) getApplication().getUser();
                 return siteUser != null && siteUser.getLevel() == 1;
+        }
+
+        private class dkpListClickListener implements ItemClickListener {
+
+                public dkpListClickListener() {
+                }
+
+                @Override
+                public void itemClick(ItemClickEvent event) {
+                        User user = (User) event.getItemId();
+                        if (isAdmin()) {
+                                CharacterEditWindow info = new CharacterEditWindow(user);
+                                info.printInfo();
+                                getApplication().getMainWindow().addWindow(info);
+                        } else {
+                                CharacterInfoWindow info = new CharacterInfoWindow(user);
+                                info.printInfo();
+                                getApplication().getMainWindow().addWindow(info);
+                        }
+                }
         }
 }

@@ -99,8 +99,9 @@ public class DkpList extends Table {
                 @Override
                 public void itemClick(ItemClickEvent event) {
                         if (event.isCtrlKey()) {
+                User user = (User) event.getItemId();
                                 PopUpControl pop = new PopUpControl();
-                                pop.showProperCharWindow(event);
+                                pop.showProperCharWindow(user);
                         }
                 }
         }

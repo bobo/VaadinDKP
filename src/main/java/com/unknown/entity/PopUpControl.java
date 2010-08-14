@@ -20,8 +20,7 @@ public class PopUpControl extends Window {
         public PopUpControl() {
         }
 
-        public void showProperCharWindow(ItemClickEvent event) throws IllegalArgumentException, NullPointerException {
-                User user = (User) event.getItemId();
+        public void showProperCharWindow(User user) throws IllegalArgumentException, NullPointerException {
                 if (isAdmin()) {
                         CharacterEditWindow info = new CharacterEditWindow(user);
                         info.printInfo();

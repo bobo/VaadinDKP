@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package database;
+package com.unknown.entity.database;
 
 import com.unknown.entity.DBConnection;
 import com.unknown.entity.Slots;

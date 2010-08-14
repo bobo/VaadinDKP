@@ -4,7 +4,7 @@
  */
 package com.unknown.entity.character;
 
-import database.CharacterDB;
+import com.unknown.entity.database.CharacterDB;
 import com.unknown.entity.Role;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ConversionException;

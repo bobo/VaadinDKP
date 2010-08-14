@@ -4,7 +4,7 @@
  */
 package com.unknown.entity.items;
 
-import database.ItemDB;
+import com.unknown.entity.database.ItemDB;
 import com.unknown.entity.Slots;
 import com.unknown.entity.Type;
 import com.vaadin.data.Item;

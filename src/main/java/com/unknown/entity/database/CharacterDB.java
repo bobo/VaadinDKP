@@ -3,7 +3,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package database;
+package com.unknown.entity.database;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;

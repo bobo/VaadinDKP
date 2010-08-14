@@ -4,7 +4,7 @@
  */
 package com.unknown.entity.raids;
 
-import database.RaidDB;
+import com.unknown.entity.database.RaidDB;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;

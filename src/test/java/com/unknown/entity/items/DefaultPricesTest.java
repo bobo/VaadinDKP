@@ -70,6 +70,11 @@ public class DefaultPricesTest {
                 public Items getSingleItem(String name) {
                         throw new UnsupportedOperationException("Not supported yet.");
                 }
+
+                @Override
+                public void updateDefaultPrice(String slot, double normalprice, double heroicprice) {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                }
 	}
 
 }

@@ -245,4 +245,28 @@ public class ItemDB implements ItemDAO {
                 }
                 return item;
         }
+
+        @Override
+        public void updateDefaultPrice(String slot, double normalprice, double heroicprice) {
+                Connection c = null;
+                int success =0;
+                try
+                {
+                        c = new DBConnection().getConnection();
+                        PreparedStatement p = c.prepareStatement("UPDATE default_prices SET price_normal=? , price_heroic=? WHERE slot=? ");
+                        p.setDouble(1, normalprice);
+                        p.setDouble(2, heroicprice);
+                        p.setString(3, slot);
+                        success = p.executeUpdate();
+                        System.out.println("Default prices changed for "+success+" slots");
+                } catch (SQLException e) {e.printStackTrace();
+                } finally {
+                        if (c!=null)
+                                try {
+                                c.close();
+                        } catch (SQLException ex) {
+                                Logger.getLogger(ItemDB.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                }
+        }
 }

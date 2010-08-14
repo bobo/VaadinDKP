@@ -20,6 +20,8 @@ import com.vaadin.ui.Window;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -41,50 +43,48 @@ public class EditDefaultPricesWindow extends Window {
                 this.normal = new TextField("Normal");
                 this.heroic = new TextField("Heroic");
                 this.slot = new ComboBox("Slot");
+                slot.setImmediate(true);
+                normal.setImmediate(true);
+                heroic.setImmediate(true);
                 this.itemDao = new ItemDB();
                 this.prices.addAll(itemDao.getDefaultPrices());
         }
 
         public void printInfo() {
-//                ComboBox slot = new ComboBox("Slot");
-                for (Slots s : Slots.values()) {
-                        slot.addItem(s);
+                for (Slots slots : Slots.values()) {
+                        slot.addItem(slots);
                 }
                 slot.addListener(new SlotValueChangeListener());
-//                TextField normal = new TextField("Normal");
-//                TextField heroic = new TextField("Heroic");
-                slot.setImmediate(true);
-                normal.setImmediate(true);
-                heroic.setImmediate(true);
                 Button updateButton = new Button("Update");
+                updateButton.addListener(new UpdateButtonListener());
                 Button closeButton = new Button("Close");
-
+                closeButton.addListener(new CloseButtonListener());
                 HorizontalLayout hzl = new HorizontalLayout();
                 hzl.addComponent(slot);
                 hzl.addComponent(normal);
                 hzl.addComponent(heroic);
-                closeButton.addListener(new CloseButtonListener());
 
                 addComponent(hzl);
                 hzl = new HorizontalLayout();
                 hzl.addComponent(updateButton);
                 hzl.addComponent(closeButton);
                 hzl.setMargin(true);
+                hzl.setSpacing(true);
                 addComponent(hzl);
         }
 
         private void slotChangesMeansPriceChanges() {
-                        String slotvalue = slot.getValue().toString();
-                        double defprice = 0.0;
-                        double defpricehc = 0.0;
-                        for (ItemPrices ip : prices) {
-                                if (ip.getSlotString().equals(slotvalue)) {
-                                        defprice = ip.getPrice();
-                                        defpricehc = ip.getPriceHeroic();
-                                }
+                String slotvalue = slot.getValue().toString();
+                double defprice = 0.0;
+                double defpricehc = 0.0;
+                for (ItemPrices ip : prices) {
+                        if (ip.getSlotString().equals(slotvalue)) {
+                                defprice = ip.getPrice();
+                                defpricehc = ip.getPriceHeroic();
                         }
-                        normal.setValue(""+defprice);
-                        heroic.setValue(""+defpricehc);
+                }
+                normal.setValue("" + defprice);
+                heroic.setValue("" + defpricehc);
         }
 
         private class CloseButtonListener implements ClickListener {
@@ -100,6 +100,24 @@ public class EditDefaultPricesWindow extends Window {
                 @Override
                 public void valueChange(ValueChangeEvent event) {
                         slotChangesMeansPriceChanges();
+                }
+        }
+
+        private class UpdateButtonListener implements ClickListener {
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        itemDao.updateDefaultPrice(slot.getValue().toString(), Double.parseDouble(normal.getValue().toString()), Double.parseDouble(heroic.getValue().toString()));
+                        refreshDefaultPrices();
+                }
+
+                private void refreshDefaultPrices() {
+                        prices.clear();
+                        try {
+                                prices.addAll(itemDao.getDefaultPrices());
+                        } catch (SQLException ex) {
+                                Logger.getLogger(EditDefaultPricesWindow.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                 }
         }
 }

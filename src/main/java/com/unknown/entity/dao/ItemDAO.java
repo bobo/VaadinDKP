@@ -34,4 +34,6 @@ public interface ItemDAO {
 
         public Items getSingleItem(String name);
 
+        public void updateDefaultPrice(String slot, double normalprice, double heroicprice);
+
 }

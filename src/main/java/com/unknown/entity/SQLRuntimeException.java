@@ -11,7 +11,7 @@ import java.sql.SQLException;
  *
  * @author bobo
  */
-class SQLRuntimeException extends RuntimeException {
+public class SQLRuntimeException extends RuntimeException {
 	private final SQLException ex;
 
 	public SQLRuntimeException(SQLException ex) {

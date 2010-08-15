@@ -32,7 +32,7 @@ public interface RaidDAO {
 
         public int removeReward(RaidReward reward) throws SQLException;
 
-        public int addReward(String comment, Integer shares, List<String> attendantlist, Raid raid) throws SQLException;
+        public int addReward(RaidReward reward);
 
         public int removeLootFromRaid(RaidItem item) throws SQLException;
 }

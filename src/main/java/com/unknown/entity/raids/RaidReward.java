@@ -17,7 +17,6 @@ public class RaidReward {
 
         private int id;
         private String comment;
-        private String name;
         private int shares;
         private final List<RaidChar> raidChars = new ArrayList<RaidChar>();
         private int raidId;
@@ -25,8 +24,7 @@ public class RaidReward {
         public RaidReward() {
                 
         }
-        public RaidReward(String comment, String name, int id, int raidId, int shares) {
-		this.name = name;
+        public RaidReward(String comment,int id, int raidId, int shares) {
 		this.comment = comment;
 		this.shares = shares;
 		this.id = id;
@@ -48,15 +46,6 @@ public class RaidReward {
         public void setComment(String comment) {
                 this.comment = comment;
         }
-
-        public String getName() {
-                return name;
-        }
-
-        public void setName(String name) {
-                this.name = name;
-        }
-
         public int getShares() {
                 return shares;
         }

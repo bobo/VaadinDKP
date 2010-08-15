@@ -149,4 +149,16 @@ public final class DBConnection {
 			}
 		}
 	}
+
+	public PreparedStatement prepareStatement(String string, int options) {
+		connect();
+		try {
+
+			ps = conn.prepareStatement(string, options);
+		} catch (SQLException ex) {
+			throw new SQLRuntimeException(ex);
+		}
+		return ps;
+
+	}
 }

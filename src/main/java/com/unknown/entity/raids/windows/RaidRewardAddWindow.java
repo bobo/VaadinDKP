@@ -12,6 +12,7 @@ import com.unknown.entity.database.CharacterDB;
 import com.unknown.entity.database.RaidDB;
 import com.unknown.entity.character.*;
 import com.unknown.entity.raids.Raid;
+import com.unknown.entity.raids.RaidReward;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -28,7 +29,7 @@ import java.util.List;
  *
  * @author alde
  */
-class RaidRewardAddWindow extends Window {
+public class RaidRewardAddWindow extends Window {
 
 	private Raid raid;
 	private final TextField attendants = new TextField("Attendants");
@@ -62,16 +63,14 @@ class RaidRewardAddWindow extends Window {
 
 
 	private void addReward(String comment, Integer shares, List<String> attendantlist, Raid raid) {
-		try {
 			List<String> invalidchars = findInvalidCharacters(attendantlist);
 			if (invalidchars.isEmpty()) {
-				raidDao.addReward(comment, shares, attendantlist, raid);
+				RaidReward raidReward = new RaidReward(comment, -1, raid.getId(), shares);
+				raidDao.addReward(raidReward);
 			} else {
 				showInvalidUsers(invalidchars);
 			}
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
+		
 
 	}
 	private void showInvalidUsers(List<String> invalidchars) {

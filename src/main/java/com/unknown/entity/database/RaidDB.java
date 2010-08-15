@@ -7,6 +7,7 @@ package com.unknown.entity.database;
 
 import com.unknown.entity.dao.*;
 import com.unknown.entity.DBConnection;
+import com.unknown.entity.SQLRuntimeException;
 import com.unknown.entity.raids.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -417,52 +418,53 @@ public class RaidDB implements RaidDAO {
         }
 
         @Override
-        public int addReward(String comment, Integer shares, List<String> attendantlist, Raid raid) throws SQLException {
-                Connection c = null;
+        public int addReward(RaidReward reward) {
+                DBConnection c = new DBConnection();
                 int success = 0;
                 try {
-                        c = new DBConnection().getConnection();
-                        int newrewardid = doAddReward(c, comment, shares, raid.getId());
-                        success += doAddCharacterReward(c, attendantlist, newrewardid);
-                } catch (SQLException e) {
-                        e.printStackTrace();
-                } finally {
-                        if (c != null) {
-                                c.close();
-                        }
+                        reward = doAddReward(reward);
+                        doAddCharacterReward(reward);
+                } catch(SQLException ex) {
+					throw new SQLRuntimeException(ex);
+				} finally {
+                     c.close();
                 }
 
                 return success;
         }
 
-        private int doAddReward(Connection c, String comment, Integer shares, int raidid) throws SQLException {
+        private RaidReward doAddReward(RaidReward reward) throws SQLException {
                 int rewardid = 0;
-                PreparedStatement p = c.prepareStatement("INSERT INTO rewards (number_of_shares, comment, raid_id) values(?,?,?)", Statement.RETURN_GENERATED_KEYS);
-                p.setInt(1, shares);
-                p.setString(2, comment);
-                p.setInt(3, raidid);
+                DBConnection c = new DBConnection();
+				try{
+				PreparedStatement p = c.prepareStatement("INSERT INTO rewards (number_of_shares, comment, raid_id) values(?,?,?)", Statement.RETURN_GENERATED_KEYS);
+                p.setInt(1, reward.getShares());
+                p.setString(2, reward.getComment());
+                p.setInt(3, reward.getRaidId());
                 p.executeUpdate();
                 ResultSet rs = p.getGeneratedKeys();
                 while (rs.next()) {
-                        rewardid = rs.getInt(1);
+                        reward.setId(rs.getInt(1));
                 }
-                return rewardid;
+			}finally {
+				c.close();
+			}
+                return reward;
         }
 
-        private int doAddCharacterReward(Connection c, List<String> attendantlist, int newrewardid) throws SQLException {
-                CharacterDAO characterDao = new CharacterDB();
-                List<Integer> charids = new ArrayList<Integer>();
-                int success = 0;
-                for (String eachchar : attendantlist) {
-                        charids.add(characterDao.getCharacterId(eachchar));
-                }
+        private void doAddCharacterReward(RaidReward reward) throws SQLException {
+               DBConnection c = new DBConnection();
+			   try{
+				int success = 0;
                 PreparedStatement p = c.prepareStatement("INSERT INTO character_rewards (reward_id, character_id) values(?,?)");
-                for (int eachid : charids) {
-                        p.setInt(1, newrewardid);
-                        p.setInt(2, eachid);
-                        success += p.executeUpdate();
+                for (RaidChar eachid : reward.getRewardChars()) {
+                        p.setInt(1, reward.getId());
+                        p.setInt(2, eachid.getId());
+						p.executeUpdate();
                 }
-                return success;
+			}finally {
+				c.close();
+			}
         }
 
         @Override

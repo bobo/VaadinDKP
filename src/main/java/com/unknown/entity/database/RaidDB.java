@@ -48,6 +48,7 @@ public class RaidDB implements RaidDAO {
                                 raids.add(raid);
                         }
                 } catch (SQLException e) {
+					e.printStackTrace();
                 }
                 return raids;
         }
@@ -165,15 +166,19 @@ public class RaidDB implements RaidDAO {
                 return result;
         }
 
-        private int addCharsToReward(Connection c, List<Integer> newcharid, RaidReward reward) throws SQLException {
-                PreparedStatement p = c.prepareStatement("INSERT INTO character_rewards (reward_id, character_id) VALUES (?,?)");
-                int success = 0;
+        private void addCharsToReward(List<Integer> newcharid, RaidReward reward) throws SQLException {
+			DBConnection connection = new DBConnection();
+			try{
+                PreparedStatement p = connection.prepareStatement("INSERT INTO character_rewards (reward_id, character_id) VALUES (?,?)");
                 for (Integer i : newcharid) {
                         p.setInt(1, reward.getId());
                         p.setInt(2, i);
-                        success += p.executeUpdate();
+                        p.addBatch();
                 }
-                return success;
+				p.executeBatch();
+			}finally {
+				connection.close();
+			}
         }
 
         private Collection<RaidReward> getRewardsForRaid(int raidId) throws SQLException {
@@ -275,7 +280,7 @@ public class RaidDB implements RaidDAO {
                 int success = 0;
                 try {
                         c = new DBConnection().getConnection();
-                        success += doUpdateCharacters(c, reward, newAttendants);
+                        doUpdateCharacters(c, reward, newAttendants);
                         success += doUpdateSharesAndComment(c, reward, newShares, newComment);
                 } catch (SQLException e) {
                         e.printStackTrace();
@@ -287,27 +292,31 @@ public class RaidDB implements RaidDAO {
                 return success;
         }
 
-        private int doUpdateCharacters(Connection c, RaidReward reward, List<String> newAttendants) throws SQLException {
+        private void doUpdateCharacters(Connection c, RaidReward reward, List<String> newAttendants) throws SQLException {
                 List<Integer> newcharid = new ArrayList<Integer>();
                 CharacterDAO characterDao = new CharacterDB();
 
                 newAttendants = removeDuplicates(newAttendants);
 
                 for (String s : newAttendants) {
-                        newcharid.add(characterDao.getCharacterId(c, s));
+                        newcharid.add(characterDao.getCharacterId(s));
                 }
-                int removed = removeAllExistingCharactersFromReward(c, reward, newAttendants, newcharid);
-                System.out.println("Removed: " + removed);
-                int success = addCharsToReward(c, newcharid, reward);
-                System.out.println("Sucess: " + success);
-                return success;
+              removeAllExistingCharactersFromReward(reward, newAttendants, newcharid);
+                addCharsToReward(newcharid, reward);
+                
         }
 
-        private int removeAllExistingCharactersFromReward(Connection c, RaidReward reward, List<String> newAttendants, List<Integer> newcharclassid) throws SQLException {
-                PreparedStatement p = c.prepareStatement("DELETE FROM character_rewards WHERE reward_id=?");
-                p.setInt(1, reward.getId());
-                return p.executeUpdate();
-        }
+	private void removeAllExistingCharactersFromReward(RaidReward reward, List<String> newAttendants, List<Integer> newcharclassid) throws SQLException {
+		DBConnection c = new DBConnection();
+		try {
+
+			PreparedStatement p = c.prepareStatement("DELETE FROM character_rewards WHERE reward_id=?");
+			p.setInt(1, reward.getId());
+			p.executeUpdate();
+		} finally {
+			c.close();
+		}
+	}
 
         private int doUpdateSharesAndComment(Connection c, RaidReward reward, int newShares, String newComment) throws SQLException {
                 PreparedStatement p = c.prepareStatement("UPDATE rewards SET number_of_shares=? , comment=? WHERE id=?");
@@ -355,7 +364,7 @@ public class RaidDB implements RaidDAO {
                         CharacterDAO characterDao = new CharacterDB();
                         ItemDAO itemDao = new ItemDB();
                         int itemid = itemDao.getItemId(c, loot);
-                        int charid = characterDao.getCharacterId(c, name);
+                        int charid = characterDao.getCharacterId(name);
                         int mobid = getMobId(c, boss);
                         PreparedStatement ps = c.prepareStatement("INSERT INTO loots (item_id, raid_id, mob_id, character_id, price, heroic) VALUES(?,?,?,?,?,?)");
                         ps.setInt(1, itemid);
@@ -445,7 +454,7 @@ public class RaidDB implements RaidDAO {
                 List<Integer> charids = new ArrayList<Integer>();
                 int success = 0;
                 for (String eachchar : attendantlist) {
-                        charids.add(characterDao.getCharacterId(c, eachchar));
+                        charids.add(characterDao.getCharacterId(eachchar));
                 }
                 PreparedStatement p = c.prepareStatement("INSERT INTO character_rewards (reward_id, character_id) values(?,?)");
                 for (int eachid : charids) {

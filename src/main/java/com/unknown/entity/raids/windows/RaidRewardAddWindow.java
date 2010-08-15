@@ -12,6 +12,8 @@ import com.unknown.entity.character.*;
 import com.unknown.entity.raids.Raid;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
@@ -30,83 +32,86 @@ import java.util.logging.Logger;
  */
 class RaidRewardAddWindow extends Window {
 
-        private Raid raid;
+	private Raid raid;
+	private final TextField attendants = new TextField("Attendants");
+	private final TextField shares = new TextField("Shares");
+	private final TextField comment = new TextField("Comment");
+	Button addButton = new Button("Add");
+	RaidDAO raidDao = new RaidDB();
+	CharacterDAO chardao = new CharacterDB();
 
-        public RaidRewardAddWindow(Raid raid) {
-                this.raid = raid;
-                this.getContent().setSizeUndefined();
-                this.addStyleName("opaque");
-                this.setCaption("Add reward for raid " + raid.getComment() + " (id " + raid.getId() + ")");
-        }
+	public RaidRewardAddWindow(Raid raid) {
+		this.raid = raid;
+		this.getContent().setSizeUndefined();
+		this.addStyleName("opaque");
+		this.setCaption("Add reward for raid " + raid.getComment() + " (id " + raid.getId() + ")");
+		attendants.setRows(20);
+		attendants.setImmediate(true);
+		shares.setImmediate(true);
+		comment.setImmediate(true);
 
-        public void printInfo() {
-                final TextField attendants = new TextField("Attendants");
-                attendants.setRows(20);
-                attendants.setImmediate(true);
+	}
 
-                final TextField shares = new TextField("Shares");
-                shares.setImmediate(true);
+	public void printInfo() {
 
-                final TextField comment = new TextField("Comment");
-                comment.setImmediate(true);
 
-                Button addButton = new Button("Add");
 
-                VerticalLayout vert = new VerticalLayout();
-                vert.addComponent(comment);
-                vert.addComponent(shares);
-                vert.addComponent(attendants);
-                vert.addComponent(addButton);
+		VerticalLayout vert = new VerticalLayout();
+		vert.addComponent(comment);
+		vert.addComponent(shares);
+		vert.addComponent(attendants);
+		vert.addComponent(addButton);
+		addComponent(vert);
+		addButton.addListener(new AddRewardListener());
+	}
 
-                addComponent(vert);
+	private void showInvalidUsers(List<String> invalidchars) {
+		addComponent(new Label("Invalid characters"));
+		for (String s : invalidchars) {
+			addComponent(new Label(s));
+		}
+	}
 
-                addButton.addListener(new Button.ClickListener() {
+	private List<String> splitCharsToArray(String attendants) {
+		System.out.println(attendants);
+		List<String> list = new ArrayList<String>();
+		String[] parts = attendants.split("\n");
+		list.addAll(Arrays.asList(parts));
+		return list;
+	}
 
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                                final List<String> attendantlist = new ArrayList<String>();
-                                attendantlist.addAll(splitCharsToArray(attendants.getValue().toString()));
-                                int success = addReward(comment.getValue().toString(), Integer.parseInt(shares.getValue().toString()), attendantlist, raid);
-                        }
-                });
-        }
+	private void addReward(String comment, Integer shares, List<String> attendantlist, Raid raid) {
+		try {
+			List<String> invalidchars = findInvalidCharacters(attendantlist);
+			if (invalidchars.isEmpty()) {
+				raidDao.addReward(comment, shares, attendantlist, raid);
+			} else {
+				showInvalidUsers(invalidchars);
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		
+	}
 
-        private List<String> splitCharsToArray(String attendants) {
-                System.out.println(attendants);
-                List<String> list = new ArrayList<String>();
-                String[] parts = attendants.split("\n");
-                list.addAll(Arrays.asList(parts));
-                return list;
-        }
+	private List<String> findInvalidCharacters(List<String> attendantlist) {
+		List<String> charname = new ArrayList<String>();
+		for (User u : chardao.getUsers()) {
+			charname.add(u.getUsername());
+		}
+		for (String s : charname) {
+			attendantlist.remove(s);
+		}
+		return attendantlist;
+	}
 
-        private int addReward(String comment, Integer shares, List<String> attendantlist, Raid raid) {
-                RaidDAO raidDao = new RaidDB();
-                try {
-                        List<String> invalidchars = findInvalidCharacters(attendantlist);
-                        if (invalidchars.size() == 0) {
-                                return raidDao.addReward(comment, shares, attendantlist, raid);
-                        } else {
-                                addComponent(new Label("Invalid characters"));
-                                for (String s : invalidchars) {
-                                        addComponent(new Label(s));
-                                }
-                        }
-                } catch (SQLException ex) {
-                        Logger.getLogger(RaidRewardAddWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                return 0;
-        }
+	private class AddRewardListener implements ClickListener {
 
-        private List<String> findInvalidCharacters(List<String> attendantlist) {
-                CharacterDAO chardao = new CharacterDB();
-                List<User> userlist = chardao.getUsers();
-                List<String> charname = new ArrayList<String>();
-                for (User u : userlist) {
-                        charname.add(u.getUsername());
-                }
-                for (String s : charname) {
-                        attendantlist.remove(s);
-                }
-                return attendantlist;
-        }
+		@Override
+		public void buttonClick(ClickEvent event) {
+			final List<String> attendantlist = new ArrayList<String>();
+			attendantlist.addAll(splitCharsToArray(attendants.getValue().toString()));
+			addReward(comment.getValue().toString(), Integer.parseInt(shares.getValue().toString()), attendantlist, raid);
+		}
+	}
 }

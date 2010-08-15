@@ -6,9 +6,9 @@ package com.unknown.entity;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -20,7 +20,8 @@ import java.util.logging.Logger;
  */
 public final class DBConnection {
 
-	Connection conn = null;
+	private Connection conn = null;
+	private PreparedStatement ps = null;
 	private Properties properties;
 
 	public DBConnection() {
@@ -34,7 +35,7 @@ public final class DBConnection {
 	}
 
 	private Connection connect() throws SQLException {
-
+		close();
 		conn = DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("db.url") + ":" + properties.getProperty("db.port") + "/" + properties.getProperty("db.db"), properties.getProperty("db.username"), properties.getProperty("db.password"));
 		return conn;
 
@@ -42,6 +43,44 @@ public final class DBConnection {
 
 	public Connection getConnection() throws SQLException {
 		return connect();
+	}
+
+	public PreparedStatement prepareStatement(String string) {
+		closeStatement();
+		try {
+			ps = conn.prepareStatement(string);
+		} catch (SQLException ex) {
+			throw new SQLRuntimeException(ex);
+		}
+		return ps;
+	}
+
+	public void close() {
+		closeStatement();
+		try {
+			if(conn!=null) {
+			conn.close();
+			}
+		} catch (SQLException ex) {
+			//Ignore
+		}
+	}
+
+	public void closeStatement() {
+		if (ps != null) {
+			try {
+				if (ps.getResultSet() != null) {
+					ps.getResultSet().close();
+				}
+			} catch (SQLException ex) {
+				//Ignore
+			}
+			try {
+				ps.close();
+			} catch (SQLException ex) {
+				//Ignore
+			}
+		}
 	}
 
 	private Properties getProperties() {
@@ -63,7 +102,7 @@ public final class DBConnection {
 
 			} catch (Exception ex) {
 				notFound = true;
-				
+
 			}
 			if (notFound) {
 				printError(f);

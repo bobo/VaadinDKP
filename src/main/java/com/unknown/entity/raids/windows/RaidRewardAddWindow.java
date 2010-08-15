@@ -4,6 +4,7 @@
  */
 package com.unknown.entity.raids.windows;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.unknown.entity.dao.CharacterDAO;
 import com.unknown.entity.dao.RaidDAO;
@@ -50,9 +51,6 @@ class RaidRewardAddWindow extends Window {
 	}
 
 	public void printInfo() {
-
-
-
 		VerticalLayout vert = new VerticalLayout();
 		vert.addComponent(comment);
 		vert.addComponent(shares);
@@ -62,12 +60,6 @@ class RaidRewardAddWindow extends Window {
 		addButton.addListener(new AddRewardListener());
 	}
 
-	private void showInvalidUsers(List<String> invalidchars) {
-		addComponent(new Label("Invalid characters"));
-		for (String s : invalidchars) {
-			addComponent(new Label(s));
-		}
-	}
 
 	private void addReward(String comment, Integer shares, List<String> attendantlist, Raid raid) {
 		try {
@@ -82,24 +74,30 @@ class RaidRewardAddWindow extends Window {
 		}
 
 	}
+	private void showInvalidUsers(List<String> invalidchars) {
+		addComponent(new Label("Invalid characters"));
+		for (String s : invalidchars) {
+			addComponent(new Label(s));
+		}
+	}
 
-	private List<String> findInvalidCharacters(List<String> attendantlist) {
-		attendantlist.retainAll(chardao.getUserNames());
-		return attendantlist;
+	private ImmutableList<String> findInvalidCharacters(List<String> attendantlist) {
+		List<String> invalidUsers = new ArrayList<String>(attendantlist);
+		invalidUsers.removeAll(chardao.getUserNames());
+		return ImmutableList.copyOf(invalidUsers);
 	}
 
 	private class AddRewardListener implements ClickListener {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			final List<String> attendantlist = new ArrayList<String>();
-			attendantlist.addAll(splitCharsToArray(attendants.getValue().toString()));
+			final ImmutableList<String> attendantlist = splitCharsToArray(attendants.getValue().toString());
 			addReward(comment.getValue().toString(), Integer.parseInt(shares.getValue().toString()), attendantlist, raid);
 		}
 
-		private List<String> splitCharsToArray(String attendants) {
+		private ImmutableList<String> splitCharsToArray(String attendants) {
 			String[] parts = attendants.split("\n");
-			return Lists.newArrayList(parts);
+			return ImmutableList.of(parts);
 		}
 	}
 }

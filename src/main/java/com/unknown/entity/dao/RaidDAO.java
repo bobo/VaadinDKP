@@ -35,4 +35,6 @@ public interface RaidDAO {
         public int addReward(RaidReward reward);
 
         public int removeLootFromRaid(RaidItem item) throws SQLException;
+
+        public List<String> findInvalidCharacters(List<String> attendantlist, CharacterDAO charDao);
 }

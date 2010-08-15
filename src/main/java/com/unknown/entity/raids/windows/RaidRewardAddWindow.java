@@ -5,12 +5,10 @@
 package com.unknown.entity.raids.windows;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.unknown.entity.dao.CharacterDAO;
 import com.unknown.entity.dao.RaidDAO;
 import com.unknown.entity.database.CharacterDB;
 import com.unknown.entity.database.RaidDB;
-import com.unknown.entity.character.*;
 import com.unknown.entity.raids.Raid;
 import com.unknown.entity.raids.RaidReward;
 import com.vaadin.ui.Button;
@@ -21,8 +19,6 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -92,7 +88,7 @@ public class RaidRewardAddWindow extends Window {
 		@Override
 		public void buttonClick(ClickEvent event) {
 			final ImmutableList<String> attendantlist = splitCharsToArray(attendants.getValue().toString());
-			addReward(comment.getValue().toString(), Integer.parseInt(shares.getValue().toString()), attendantlist, raid);
+			addReward(comment.getValue().toString(), Integer.parseInt(shares.getValue().toString()), attendantlist);
 		}
 
 		private ImmutableList<String> splitCharsToArray(String attendants) {

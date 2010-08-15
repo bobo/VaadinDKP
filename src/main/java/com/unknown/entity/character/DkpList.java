@@ -4,8 +4,6 @@
  */
 package com.unknown.entity.character;
 
-import com.unknown.entity.character.windows.CharacterInfoWindow;
-import com.unknown.entity.character.windows.CharacterEditWindow;
 import com.unknown.entity.dao.CharacterDAO;
 import com.unknown.entity.Armor;
 import com.unknown.entity.PopUpControl;
@@ -27,11 +25,11 @@ import java.util.logging.Logger;
 public class DkpList extends Table {
 
         private CharacterDAO characterDAO;
-        IndexedContainer ic = new IndexedContainer();
+        IndexedContainer ic;
 
         public DkpList(CharacterDAO characterDAO) {
                 this.characterDAO = characterDAO;
-
+                this.ic = new IndexedContainer();
                 dkpListSetColumnHeaders();
                 this.setWidth("180px");
                 this.setHeight("500px");

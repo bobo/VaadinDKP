@@ -4,6 +4,7 @@
  */
 package com.unknown.entity.dao;
 
+import com.google.common.collect.ImmutableList;
 import com.unknown.entity.Role;
 import com.unknown.entity.character.User;
 import java.sql.Connection;
@@ -19,7 +20,9 @@ public interface CharacterDAO {
 
         public List<User> getUsers();
 
-        public Collection<User> getUsersWithRole(Role role);
+        public ImmutableList<String> getUserNames();
+		
+		public Collection<User> getUsersWithRole(Role role);
 
         public int addNewCharacter(String name, String role, Boolean isActive) throws SQLException;
         

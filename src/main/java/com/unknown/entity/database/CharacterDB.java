@@ -7,6 +7,8 @@ package com.unknown.entity.database;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.unknown.entity.DBConnection;
 import com.unknown.entity.Role;
 import com.unknown.entity.dao.CharacterDAO;
@@ -203,6 +205,16 @@ public class CharacterDB implements CharacterDAO {
                 }
                 return success;
         }
+
+	@Override
+	public ImmutableList<String> getUserNames() {
+		Builder<String> userNameBuilder = ImmutableList.builder();
+		for (User user : getUsers()) {
+			userNameBuilder.add(user.getUsername());
+		}
+		return userNameBuilder.build();
+
+	}
 
         private static class HasRolePredicate implements Predicate<User> {
 

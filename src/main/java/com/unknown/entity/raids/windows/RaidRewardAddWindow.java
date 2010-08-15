@@ -4,6 +4,7 @@
  */
 package com.unknown.entity.raids.windows;
 
+import com.google.common.collect.Lists;
 import com.unknown.entity.dao.CharacterDAO;
 import com.unknown.entity.dao.RaidDAO;
 import com.unknown.entity.database.CharacterDB;
@@ -13,8 +14,6 @@ import com.unknown.entity.raids.Raid;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -23,8 +22,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -72,14 +69,6 @@ class RaidRewardAddWindow extends Window {
 		}
 	}
 
-	private List<String> splitCharsToArray(String attendants) {
-		System.out.println(attendants);
-		List<String> list = new ArrayList<String>();
-		String[] parts = attendants.split("\n");
-		list.addAll(Arrays.asList(parts));
-		return list;
-	}
-
 	private void addReward(String comment, Integer shares, List<String> attendantlist, Raid raid) {
 		try {
 			List<String> invalidchars = findInvalidCharacters(attendantlist);
@@ -91,17 +80,11 @@ class RaidRewardAddWindow extends Window {
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
-		
+
 	}
 
 	private List<String> findInvalidCharacters(List<String> attendantlist) {
-		List<String> charname = new ArrayList<String>();
-		for (User u : chardao.getUsers()) {
-			charname.add(u.getUsername());
-		}
-		for (String s : charname) {
-			attendantlist.remove(s);
-		}
+		attendantlist.retainAll(chardao.getUserNames());
 		return attendantlist;
 	}
 
@@ -112,6 +95,11 @@ class RaidRewardAddWindow extends Window {
 			final List<String> attendantlist = new ArrayList<String>();
 			attendantlist.addAll(splitCharsToArray(attendants.getValue().toString()));
 			addReward(comment.getValue().toString(), Integer.parseInt(shares.getValue().toString()), attendantlist, raid);
+		}
+
+		private List<String> splitCharsToArray(String attendants) {
+			String[] parts = attendants.split("\n");
+			return Lists.newArrayList(parts);
 		}
 	}
 }

@@ -10,6 +10,7 @@ import com.unknown.entity.items.windows.ItemInfoWindow;
 import com.unknown.entity.dao.ItemDAO;
 import com.unknown.entity.character.SiteUser;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Table;
@@ -23,8 +24,11 @@ public class ItemList extends Table {
 
         private ItemDAO itemDAO;
 
+        IndexedContainer ic;
+
         public ItemList(ItemDAO itemDAO) {
                 this.itemDAO = itemDAO;
+                this.ic = new IndexedContainer();
                 this.setHeight("500px");
 
                 this.addListener(new ItemListClickListener());
@@ -39,11 +43,12 @@ public class ItemList extends Table {
         }
 
         private void itemListColumnHeaders() throws UnsupportedOperationException {
-                addContainerProperty("Name", String.class, "");
-                addContainerProperty("Price Normal", Double.class, 0);
-                addContainerProperty("Price Heroic", Double.class, 0);
-                addContainerProperty("Slot", String.class, "");
-                addContainerProperty("Type", String.class, "");
+                ic.addContainerProperty("Name", String.class, "");
+                ic.addContainerProperty("Price Normal", Double.class, 0);
+                ic.addContainerProperty("Price Heroic", Double.class, 0);
+                ic.addContainerProperty("Slot", String.class, "");
+                ic.addContainerProperty("Type", String.class, "");
+                this.setContainerDataSource(ic);
         }
 
         public void clear() {
@@ -58,6 +63,18 @@ public class ItemList extends Table {
                 for (final Items item : itemses) {
                         Item addItem = addItem(item);
                         itemListAddRow(addItem, item);
+                }
+        }
+        public void filter(Object value, String column) {
+                ic.removeAllContainerFilters();
+                ic.addContainerFilter("Armor", filterString(value), true, false);
+        }
+
+        private String filterString(Object value) {
+                if (value == null) {
+                        return "";
+                } else {
+                        return value.toString();
                 }
         }
 

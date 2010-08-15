@@ -11,6 +11,9 @@ import com.unknown.entity.character.windows.CharacterInfoWindow;
 import com.unknown.entity.items.Items;
 import com.unknown.entity.items.windows.ItemEditWindow;
 import com.unknown.entity.items.windows.ItemInfoWindow;
+import com.unknown.entity.raids.Raid;
+import com.unknown.entity.raids.windows.RaidEditWindow;
+import com.unknown.entity.raids.windows.RaidInfoWindow;
 import com.vaadin.Application;
 import com.vaadin.ui.Window;
 
@@ -62,12 +65,32 @@ public class PopUpControl extends Window {
         private void showItemInfoWindow(Items item) throws NullPointerException, IllegalArgumentException {
                 ItemInfoWindow info = new ItemInfoWindow(item);
                 info.printInfo();
-                getApplication().getMainWindow().addWindow(info);
+                app.getMainWindow().addWindow(info);
         }
 
         private void showItemEditWindow(Items item) throws NullPointerException, IllegalArgumentException {
                 ItemEditWindow info = new ItemEditWindow(item);
                 info.printInfo();
-                getApplication().getMainWindow().addWindow(info);
+                app.getMainWindow().addWindow(info);
+        }
+
+        public void showProperRaidWindow(Raid raid) {
+                if (isAdmin()) {
+                        showRaidEditWindow(raid);
+                } else {
+                        showRaidInfoWindow(raid);
+                }
+        }
+
+        private void showRaidInfoWindow(Raid raid) throws IllegalArgumentException, NullPointerException {
+                RaidInfoWindow info = new RaidInfoWindow(raid);
+                info.printInfo();
+                app.getMainWindow().addWindow(info);
+        }
+
+        private void showRaidEditWindow(Raid raid) throws NullPointerException, IllegalArgumentException {
+                RaidEditWindow info = new RaidEditWindow(raid);
+                info.printInfo();
+                app.getMainWindow().addWindow(info);
         }
 }

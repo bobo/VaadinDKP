@@ -83,6 +83,11 @@ public class ItemList extends Table {
                 ic.addContainerFilter("Type", filterString(value), true, false);
         }
 
+        public void filterName(Object value) {
+                ic.removeContainerFilters("Name");
+                ic.addContainerFilter("Name", filterString(value), true, false);
+        }
+
         private class ItemListClickListener implements ItemClickListener {
 
                 public ItemListClickListener() {

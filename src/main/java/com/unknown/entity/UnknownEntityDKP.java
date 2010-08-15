@@ -81,15 +81,22 @@ public class UnknownEntityDKP extends Application {
                 vertItem.addComponent(new Label("Items"));
                 vertItem.addComponent(itemList);
                 HorizontalLayout hzl = new HorizontalLayout();
-                TextField itemname = new TextField("Filter itemname");
-                hzl.addComponent(itemname);
+                TextField itemname = itemNameFilterField(itemList);
                 ComboBox itemslot = itemSlotFilterBox(itemList);
                 ComboBox itemtype = itemTypeFilterBox(itemList);
+                hzl.addComponent(itemname);
                 hzl.addComponent(itemslot);
                 hzl.addComponent(itemtype);
                 vertItem.addComponent(hzl);
                 itemList.printList();
                 return vertItem;
+        }
+
+        private TextField itemNameFilterField(ItemList itemList) {
+                TextField itemname = new TextField("Filter itemname");
+                itemname.setImmediate(true);
+                itemname.addListener(new ItemNameFieldValueChangeListener(itemList, itemname));
+                return itemname;
         }
 
         private ComboBox itemSlotFilterBox(final ItemList itemList) throws ReadOnlyException, ConversionException, UnsupportedOperationException {
@@ -265,6 +272,24 @@ public class UnknownEntityDKP extends Application {
                         } else {
                                 itemList.filterSlot(itemSlotFilterBox.getValue());
                         }
+                }
+        }
+
+        private static class ItemNameFieldValueChangeListener implements ValueChangeListener {
+
+                private final ItemList itemList;
+                private final TextField itemNameField;
+
+                private ItemNameFieldValueChangeListener(ItemList itemList, TextField itemNameField) {
+                        this.itemList = itemList;
+                        this.itemNameField = itemNameField;
+                }
+
+                @Override
+                public void valueChange(ValueChangeEvent event) {
+
+                        itemList.filterName(itemNameField.getValue());
+
                 }
         }
 }

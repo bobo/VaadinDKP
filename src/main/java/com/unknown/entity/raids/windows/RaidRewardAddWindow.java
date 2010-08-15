@@ -5,12 +5,10 @@
 package com.unknown.entity.raids.windows;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.unknown.entity.dao.CharacterDAO;
 import com.unknown.entity.dao.RaidDAO;
 import com.unknown.entity.database.CharacterDB;
 import com.unknown.entity.database.RaidDB;
-import com.unknown.entity.character.*;
 import com.unknown.entity.raids.Raid;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -20,8 +18,6 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -61,9 +57,9 @@ class RaidRewardAddWindow extends Window {
 	}
 
 
-	private void addReward(String comment, Integer shares, List<String> attendantlist, Raid raid) {
+	private void addReward(String comment, Integer shares, List<String> attendantlist) {
 		try {
-			List<String> invalidchars = findInvalidCharacters(attendantlist);
+			List<String> invalidchars = raidDao.findInvalidCharacters(attendantlist, chardao);
 			if (invalidchars.isEmpty()) {
 				raidDao.addReward(comment, shares, attendantlist, raid);
 			} else {
@@ -81,18 +77,12 @@ class RaidRewardAddWindow extends Window {
 		}
 	}
 
-	private List<String> findInvalidCharacters(List<String> attendantlist) {
-		List<String> invalid = new ArrayList<String>(attendantlist);
-		invalid.removeAll(chardao.getUserNames());
-		return ImmutableList.copyOf(invalid);
-	}
-
 	private class AddRewardListener implements ClickListener {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
 			final ImmutableList<String> attendantlist = splitCharsToArray(attendants.getValue().toString());
-			addReward(comment.getValue().toString(), Integer.parseInt(shares.getValue().toString()), attendantlist, raid);
+			addReward(comment.getValue().toString(), Integer.parseInt(shares.getValue().toString()), attendantlist);
 		}
 
 		private ImmutableList<String> splitCharsToArray(String attendants) {

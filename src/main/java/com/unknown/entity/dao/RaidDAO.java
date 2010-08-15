@@ -5,9 +5,11 @@
 package com.unknown.entity.dao;
 
 import com.unknown.entity.raids.Raid;
+import com.unknown.entity.raids.RaidChar;
 import com.unknown.entity.raids.RaidItem;
 import com.unknown.entity.raids.RaidReward;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -37,4 +39,6 @@ public interface RaidDAO {
         public int removeLootFromRaid(RaidItem item) throws SQLException;
 
         public List<String> findInvalidCharacters(List<String> attendantlist, CharacterDAO charDao);
+
+		public Collection<RaidChar> getRaidCharsForRaid(List<String> attendantlist, int raidId);
 }

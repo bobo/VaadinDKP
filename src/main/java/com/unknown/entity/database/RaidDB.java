@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -96,7 +97,6 @@ public class RaidDB implements RaidDAO {
                                 rchar.setId(rs.getInt("rewards.id"));
                                 rchar.setName(rs.getString("characters.name"));
                                 rchar.setShares(rs.getInt("rewards.number_of_shares"));
-                                rchar.setComment(rs.getString("rewards.comment"));
                                 rchar.setRaidId(rs.getInt("rewards.raid_id"));
                                 raidChars.add(rchar);
                         }
@@ -223,7 +223,6 @@ public class RaidDB implements RaidDAO {
                         while (rs.next()) {
                                 RaidChar rchar = new RaidChar();
                                 rchar.setId(rs.getInt("character_rewards.id"));
-                                rchar.setComment(rs.getString("rewards.comment"));
                                 rchar.setName(rs.getString("characters.name"));
                                 rchar.setShares(rs.getInt("rewards.number_of_shares"));
                                 rchar.setRaidId(rs.getInt("rewards.raid_id"));
@@ -492,4 +491,44 @@ public class RaidDB implements RaidDAO {
                 invalid.removeAll(charDao.getUserNames());
                 return ImmutableList.copyOf(invalid);
         }
+
+	@Override
+	public Collection<RaidChar> getRaidCharsForRaid(List<String> attendantlist, int raidId) {
+	Set<RaidChar> chars = new HashSet<RaidChar>();
+			final CharacterDB characterDB = new CharacterDB();
+			for (String string : attendantlist) {
+			try {
+				int characterId = characterDB.getCharacterId(string);
+				chars.add(getRaidChar(characterId, raidId));
+			} catch (SQLException ex) {
+				Logger.getLogger(RaidDB.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+			return chars;
+
+	}
+
+
+	 public RaidChar getRaidChar(int charId, int raidId) {
+                DBConnection c = new DBConnection();
+                RaidChar rchar = new RaidChar();
+				try {
+				        PreparedStatement p = c.prepareStatement("SELECT * FROM rewards JOIN character_rewards JOIN characters ON rewards.raid_id=? AND rewards.id=character_rewards.reward_id AND character_rewards.character_id=?");
+                        p.setInt(1, raidId);
+                       p.setInt(2, charId);
+						ResultSet rs = p.executeQuery();
+                        while (rs.next()) {      
+                                rchar.setId(rs.getInt("characters.id"));
+                                rchar.setName(rs.getString("characters.name"));
+                                rchar.setShares(rs.getInt("rewards.number_of_shares"));
+                                rchar.setRaidId(rs.getInt("rewards.raid_id"));
+                                
+                        }
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                }
+
+                return rchar;
+        }
+
 }

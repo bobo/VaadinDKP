@@ -18,7 +18,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,7 +62,7 @@ public class RaidRewardAddWindow extends Window {
 			List<String> invalidchars = findInvalidCharacters(attendantlist);
 			if (invalidchars.isEmpty()) {
 				RaidReward raidReward = new RaidReward(comment, -1, raid.getId(), shares);
-				raidReward.addRewardChars()
+				raidReward.addRewardChars(raidDao.getRaidCharsForRaid(attendantlist, raid.getId()));
 				raidDao.addReward(raidReward);
 			} else {
 				showInvalidUsers(invalidchars);
@@ -88,7 +88,8 @@ public class RaidRewardAddWindow extends Window {
 		@Override
 		public void buttonClick(ClickEvent event) {
 			final ImmutableList<String> attendantlist = splitCharsToArray(attendants.getValue().toString());
-			addReward(comment.getValue().toString(), Integer.parseInt(shares.getValue().toString()), attendantlist);
+			
+			addReward(comment.getValue().toString(), Integer.parseInt(shares.getValue().toString()), attendantlist,raid);
 		}
 
 		private ImmutableList<String> splitCharsToArray(String attendants) {

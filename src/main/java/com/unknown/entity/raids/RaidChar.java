@@ -13,7 +13,6 @@ public class RaidChar {
 	private int id;
         private int raidid;
 	private String name;
-        private String comment;
         private int shares;
 
         public int getRaidId() {
@@ -23,14 +22,7 @@ public class RaidChar {
         public void setRaidId(int raidid) {
                 this.raidid = raidid;
         }
-        public String getComment() {
-                return comment;
-        }
-        public void setComment(String comment) {
-                this.comment = comment;
-        }
-        
-	public int getId() {
+		public int getId() {
 		return id;
 	}
 

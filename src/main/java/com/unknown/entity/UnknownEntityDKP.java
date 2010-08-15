@@ -30,12 +30,13 @@ import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.util.Collection;
@@ -79,8 +80,51 @@ public class UnknownEntityDKP extends Application {
                 VerticalLayout vertItem = new VerticalLayout();
                 vertItem.addComponent(new Label("Items"));
                 vertItem.addComponent(itemList);
+                HorizontalLayout hzl = new HorizontalLayout();
+                TextField itemname = itemNameFilterField(itemList);
+                ComboBox itemslot = itemSlotFilterBox(itemList);
+                ComboBox itemtype = itemTypeFilterBox(itemList);
+                hzl.addComponent(itemname);
+                hzl.addComponent(itemslot);
+                hzl.addComponent(itemtype);
+                vertItem.addComponent(hzl);
                 itemList.printList();
                 return vertItem;
+        }
+
+        private TextField itemNameFilterField(ItemList itemList) {
+                TextField itemname = new TextField("Filter itemname");
+                itemname.setImmediate(true);
+                itemname.addListener(new ItemNameFieldValueChangeListener(itemList, itemname));
+                return itemname;
+        }
+
+        private ComboBox itemSlotFilterBox(final ItemList itemList) throws ReadOnlyException, ConversionException, UnsupportedOperationException {
+                ComboBox itemslot = new ComboBox("Filter itemslot");
+                itemslot.addItem("<none>");
+                for (Slots slot : Slots.values()) {
+                        itemslot.addItem(slot);
+                }
+                itemslot.setNullSelectionAllowed(false);
+                Collection<?> itemIds = itemslot.getItemIds();
+                itemslot.setValue(itemIds.iterator().next());
+                itemslot.setImmediate(true);
+                itemslot.addListener(new ItemSlotFilterBoxChangeListener(itemList, itemslot));
+                return itemslot;
+        }
+
+        private ComboBox itemTypeFilterBox(final ItemList itemList) throws UnsupportedOperationException, ReadOnlyException, ConversionException {
+                ComboBox itemtype = new ComboBox("Filter itemtype");
+                itemtype.addItem("<none>");
+                for (Type type : Type.values()) {
+                        itemtype.addItem(type);
+                }
+                itemtype.setNullSelectionAllowed(false);
+                Collection<?> itemIds = itemtype.getItemIds();
+                itemtype.setValue(itemIds.iterator().next());
+                itemtype.setImmediate(true);
+                itemtype.addListener(new ItemTypeFilterBoxChangeListener(itemList, itemtype));
+                return itemtype;
         }
 
         private VerticalLayout VerticalDKPListLayout(final DkpList dkpList) throws UnsupportedOperationException {
@@ -106,13 +150,13 @@ public class UnknownEntityDKP extends Application {
                 filterDkp.setNullSelectionAllowed(false);
                 Collection<?> itemIds = filterDkp.getItemIds();
                 filterDkp.setValue(itemIds.iterator().next());
-                filterDkp.addListener(new filterChangeListener(dkpList, filterDkp));
+                filterDkp.addListener(new DkpFilterChangeListener(dkpList, filterDkp));
         }
 
         @Override
         public void init() {
                 window = new Window("Unknown Entity DKP");
-    //            window.setTheme("ue");
+                //            window.setTheme("ue");
                 //        window.setTheme("chameleon-ue");
                 setMainWindow(window);
 
@@ -151,14 +195,7 @@ public class UnknownEntityDKP extends Application {
         }
 
         private void UpdateButton(final Button updateButton) {
-                updateButton.addListener(new Button.ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                                window.removeAllComponents();
-                                Drawings();
-                        }
-                });
+                updateButton.addListener(new UpdateButtonListener());
                 window.addComponent(updateButton);
         }
 
@@ -169,12 +206,12 @@ public class UnknownEntityDKP extends Application {
                 window.addComponent(hzChar);
         }
 
-        private static class filterChangeListener implements ValueChangeListener {
+        private static class DkpFilterChangeListener implements ValueChangeListener {
 
                 private final DkpList dkpList;
                 private final ComboBox filterDkp;
 
-                public filterChangeListener(DkpList dkpList, ComboBox filterDkp) {
+                public DkpFilterChangeListener(DkpList dkpList, ComboBox filterDkp) {
                         this.dkpList = dkpList;
                         this.filterDkp = filterDkp;
                 }
@@ -186,6 +223,73 @@ public class UnknownEntityDKP extends Application {
                         } else {
                                 dkpList.filter(filterDkp.getValue());
                         }
+                }
+        }
+
+        private class UpdateButtonListener implements ClickListener {
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        window.removeAllComponents();
+                        Drawings();
+                }
+        }
+
+        private class ItemTypeFilterBoxChangeListener implements ValueChangeListener {
+
+                private final ItemList itemList;
+                private final ComboBox itemTypeFilterBox;
+
+                public ItemTypeFilterBoxChangeListener(ItemList itemList, ComboBox itemTypeFilterBox) {
+                        this.itemList = itemList;
+                        this.itemTypeFilterBox = itemTypeFilterBox;
+                }
+
+                @Override
+                public void valueChange(ValueChangeEvent event) {
+                        if (itemTypeFilterBox.getValue().equals("<none>")) {
+                                itemList.filterType(null);
+                        } else {
+                                itemList.filterType(itemTypeFilterBox.getValue());
+                        }
+                }
+        }
+
+        private class ItemSlotFilterBoxChangeListener implements ValueChangeListener {
+
+                private final ItemList itemList;
+                private final ComboBox itemSlotFilterBox;
+
+                private ItemSlotFilterBoxChangeListener(ItemList itemList, ComboBox itemSlotFilterBox) {
+                        this.itemList = itemList;
+                        this.itemSlotFilterBox = itemSlotFilterBox;
+                }
+
+                @Override
+                public void valueChange(ValueChangeEvent event) {
+                        if (itemSlotFilterBox.getValue().equals("<none>")) {
+                                itemList.filterSlot(null);
+                        } else {
+                                itemList.filterSlot(itemSlotFilterBox.getValue());
+                        }
+                }
+        }
+
+        private static class ItemNameFieldValueChangeListener implements ValueChangeListener {
+
+                private final ItemList itemList;
+                private final TextField itemNameField;
+
+                private ItemNameFieldValueChangeListener(ItemList itemList, TextField itemNameField) {
+                        this.itemList = itemList;
+                        this.itemNameField = itemNameField;
+                }
+
+                @Override
+                public void valueChange(ValueChangeEvent event) {
+
+                        itemList.filterName(itemNameField.getValue());
+
                 }
         }
 }

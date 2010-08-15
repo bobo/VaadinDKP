@@ -4,6 +4,7 @@
  */
 package com.unknown.entity.items;
 
+import com.unknown.entity.PopUpControl;
 import com.unknown.entity.items.windows.ItemEditWindow;
 import com.unknown.entity.items.windows.ItemInfoWindow;
 import com.unknown.entity.dao.ItemDAO;
@@ -74,15 +75,8 @@ public class ItemList extends Table {
                 public void itemClick(ItemClickEvent event) {
                         if (event.isCtrlKey()) {
                                 Items item = (Items) event.getItemId();
-                                if (isAdmin()) {
-                                        ItemEditWindow info = new ItemEditWindow(item);
-                                        info.printInfo();
-                                        getApplication().getMainWindow().addWindow(info);
-                                } else {
-                                        ItemInfoWindow info = new ItemInfoWindow(item);
-                                        info.printInfo();
-                                        getApplication().getMainWindow().addWindow(info);
-                                }
+                                PopUpControl pop = new PopUpControl(ItemList.this.getApplication());
+                                pop.showProperItemWindow(item);
                         }
                 }
         }

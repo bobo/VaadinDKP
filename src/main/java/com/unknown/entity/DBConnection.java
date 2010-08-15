@@ -34,11 +34,14 @@ public final class DBConnection {
 
 	}
 
-	private Connection connect() throws SQLException {
-		close();
-		conn = DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("db.url") + ":" + properties.getProperty("db.port") + "/" + properties.getProperty("db.db"), properties.getProperty("db.username"), properties.getProperty("db.password"));
-		return conn;
-
+	private Connection connect()  {
+		try {
+			close();
+			conn = DriverManager.getConnection("jdbc:mysql://" + properties.getProperty("db.url") + ":" + properties.getProperty("db.port") + "/" + properties.getProperty("db.db"), properties.getProperty("db.username"), properties.getProperty("db.password"));
+			return conn;
+		} catch (SQLException ex) {
+			throw new SQLRuntimeException(ex);
+		}
 	}
 
 	public Connection getConnection() throws SQLException {
@@ -46,8 +49,9 @@ public final class DBConnection {
 	}
 
 	public PreparedStatement prepareStatement(String string) {
-		closeStatement();
+		connect();
 		try {
+
 			ps = conn.prepareStatement(string);
 		} catch (SQLException ex) {
 			throw new SQLRuntimeException(ex);
@@ -58,8 +62,8 @@ public final class DBConnection {
 	public void close() {
 		closeStatement();
 		try {
-			if(conn!=null) {
-			conn.close();
+			if (conn != null) {
+				conn.close();
 			}
 		} catch (SQLException ex) {
 			//Ignore

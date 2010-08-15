@@ -81,10 +81,10 @@ class RaidRewardAddWindow extends Window {
 		}
 	}
 
-	private ImmutableList<String> findInvalidCharacters(List<String> attendantlist) {
-		List<String> invalidUsers = new ArrayList<String>(attendantlist);
-		invalidUsers.removeAll(chardao.getUserNames());
-		return ImmutableList.copyOf(invalidUsers);
+	private List<String> findInvalidCharacters(List<String> attendantlist) {
+		List<String> invalid = new ArrayList<String>(attendantlist);
+		invalid.removeAll(chardao.getUserNames());
+		return ImmutableList.copyOf(invalid);
 	}
 
 	private class AddRewardListener implements ClickListener {

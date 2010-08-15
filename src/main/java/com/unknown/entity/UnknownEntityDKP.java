@@ -241,9 +241,9 @@ public class UnknownEntityDKP extends Application {
                 @Override
                 public void valueChange(ValueChangeEvent event) {
                         if (itemTypeFilterBox.getValue().equals("<none>")) {
-                                itemList.filter(null, "Type");
+                                itemList.filterType(null);
                         } else {
-                                itemList.filter(itemTypeFilterBox.getValue(), "Type");
+                                itemList.filterType(itemTypeFilterBox.getValue());
                         }
                 }
         }
@@ -261,9 +261,9 @@ public class UnknownEntityDKP extends Application {
                 @Override
                 public void valueChange(ValueChangeEvent event) {
                         if (itemSlotFilterBox.getValue().equals("<none>")) {
-                                itemList.filter(null, "Slot");
+                                itemList.filterSlot(null);
                         } else {
-                                itemList.filter(itemSlotFilterBox.getValue(), "Slot");
+                                itemList.filterSlot(itemSlotFilterBox.getValue());
                         }
                 }
         }

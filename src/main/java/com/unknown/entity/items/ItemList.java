@@ -23,7 +23,6 @@ import java.util.List;
 public class ItemList extends Table {
 
         private ItemDAO itemDAO;
-
         IndexedContainer ic;
 
         public ItemList(ItemDAO itemDAO) {
@@ -65,10 +64,6 @@ public class ItemList extends Table {
                         itemListAddRow(addItem, item);
                 }
         }
-        public void filter(Object value, String column) {
-                ic.removeAllContainerFilters();
-                ic.addContainerFilter(column, filterString(value), true, false);
-        }
 
         private String filterString(Object value) {
                 if (value == null) {
@@ -78,9 +73,14 @@ public class ItemList extends Table {
                 }
         }
 
-        private boolean isAdmin() {
-                final SiteUser siteUser = (SiteUser) getApplication().getUser();
-                return siteUser != null && siteUser.getLevel() == 1;
+        public void filterSlot(Object value) {
+                ic.removeContainerFilters("Slot");
+                ic.addContainerFilter("Slot", filterString(value), true, false);
+        }
+
+        public void filterType(Object value) {
+                ic.removeContainerFilters("Type");
+                ic.addContainerFilter("Type", filterString(value), true, false);
         }
 
         private class ItemListClickListener implements ItemClickListener {

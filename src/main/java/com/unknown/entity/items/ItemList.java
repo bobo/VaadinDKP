@@ -67,7 +67,7 @@ public class ItemList extends Table {
         }
         public void filter(Object value, String column) {
                 ic.removeAllContainerFilters();
-                ic.addContainerFilter("Armor", filterString(value), true, false);
+                ic.addContainerFilter(column, filterString(value), true, false);
         }
 
         private String filterString(Object value) {

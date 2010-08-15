@@ -66,6 +66,7 @@ public class RaidRewardAddWindow extends Window {
 			List<String> invalidchars = findInvalidCharacters(attendantlist);
 			if (invalidchars.isEmpty()) {
 				RaidReward raidReward = new RaidReward(comment, -1, raid.getId(), shares);
+				raidReward.addRewardChars()
 				raidDao.addReward(raidReward);
 			} else {
 				showInvalidUsers(invalidchars);

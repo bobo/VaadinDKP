@@ -195,7 +195,6 @@ public class UnknownEntityDKP extends Application {
 
                 // Update Button ---- TO BE REMOVED EVENTUALLY
                 UpdateButton(updateButton);
-//				FileResource f = new FileResource("db.properties", this);
 
         }
 
@@ -280,7 +279,7 @@ public class UnknownEntityDKP extends Application {
                 }
         }
 
-        private static class ItemNameFieldValueChangeListener implements ValueChangeListener {
+        private class ItemNameFieldValueChangeListener implements ValueChangeListener {
 
                 private final ItemList itemList;
                 private final TextField itemNameField;

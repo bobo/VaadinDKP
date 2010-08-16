@@ -31,7 +31,12 @@ public class RaidList extends Table {
                 this.setWidth("300px");
                 this.addListener(new RaidListClickListener());
                 raidListSetHeaders();
+        }
 
+        private void update() {
+                ic.removeAllItems();
+                ic.removeAllContainerFilters();
+                printList();
         }
 
         private boolean isAdmin() {
@@ -39,7 +44,7 @@ public class RaidList extends Table {
                 return siteUser != null && siteUser.getLevel() == 1;
         }
 
-        private void RaidListAddRow(Item addItem, final Raid raid) throws ReadOnlyException, ConversionException {
+        private void raidListAddRow(Item addItem, final Raid raid) throws ReadOnlyException, ConversionException {
                 addItem.getItemProperty("Zone").setValue(raid.getName());
                 addItem.getItemProperty("Comment").setValue(raid.getComment());
                 addItem.getItemProperty("Date").setValue(raid.getDate());
@@ -62,7 +67,7 @@ public class RaidList extends Table {
 
                 for (final Raid raid : raids) {
                         Item addItem = addItem(raid);
-                        RaidListAddRow(addItem, raid);
+                        raidListAddRow(addItem, raid);
 
                 }
         }

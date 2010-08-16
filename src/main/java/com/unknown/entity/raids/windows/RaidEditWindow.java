@@ -16,6 +16,7 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
@@ -142,22 +143,7 @@ public class RaidEditWindow extends Window {
                 addComponent(hzl);
                 addComponent(updateButton);
 
-                updateButton.addListener(new Button.ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                                final String raidzoneName = zone.getValue().toString();
-                                final String raidcomment = comment.getValue().toString();
-                                final String raiddate = datum.getValue().toString();
-                                final int success;
-                                try {
-                                        success = updateRaid(raidzoneName, raidcomment, raiddate);
-                                        addComponent(new Label("Success: " + success));
-                                } catch (SQLException ex) {
-                                        Logger.getLogger(RaidEditWindow.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                        }
-                });
+                updateButton.addListener(new UpdateButtonListener(zone, comment, datum));
         }
 
         private int updateRaid(String raidzoneName, String raidcomment, String raiddate) throws SQLException {
@@ -170,7 +156,6 @@ public class RaidEditWindow extends Window {
                 RaidInfoWindowLootListSetHeaders(tbl);
                 tbl.setHeight(150);
                 for (RaidItem item : raid.getRaidItems()) {
-//                        Item addItem = tbl.addItem(new Integer(item.getId()));
                         Item addItem = tbl.addItem(item);
                         RaidInfoWindowLootListAddRow(addItem, item);
                 }
@@ -215,6 +200,33 @@ public class RaidEditWindow extends Window {
                         return rewards;
                 } else {
                         return new Label("No rewards in this raid.");
+                }
+        }
+
+        private class UpdateButtonListener implements ClickListener {
+
+                private final ComboBox zone;
+                private final TextField comment;
+                private final TextField datum;
+
+                public UpdateButtonListener(ComboBox zone, TextField comment, TextField datum) {
+                        this.zone = zone;
+                        this.comment = comment;
+                        this.datum = datum;
+                }
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        final String raidzoneName = zone.getValue().toString();
+                        final String raidcomment = comment.getValue().toString();
+                        final String raiddate = datum.getValue().toString();
+                        final int success;
+                        try {
+                                success = updateRaid(raidzoneName, raidcomment, raiddate);
+                                addComponent(new Label("Success: " + success));
+                        } catch (SQLException ex) {
+                                Logger.getLogger(RaidEditWindow.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                 }
         }
 }

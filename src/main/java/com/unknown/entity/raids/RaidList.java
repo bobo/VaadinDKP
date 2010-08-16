@@ -26,12 +26,12 @@ public class RaidList extends Table {
         public RaidList(RaidDAO raidDAO) {
                 this.raidDAO = raidDAO;
                 this.ic = new IndexedContainer();
-
-                raidListSetHeaders();
-
+                this.setSelectable(true);
                 this.setHeight("500px");
                 this.setWidth("300px");
                 this.addListener(new RaidListClickListener());
+                raidListSetHeaders();
+
         }
 
         private boolean isAdmin() {

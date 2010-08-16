@@ -31,6 +31,7 @@ public class DkpList extends Table {
                 this.characterDAO = characterDAO;
                 this.ic = new IndexedContainer();
                 dkpListSetColumnHeaders();
+                this.setSelectable(true);
                 this.setWidth("180px");
                 this.setHeight("500px");
 

@@ -29,6 +29,7 @@ public class ItemList extends Table {
                 this.itemDAO = itemDAO;
                 this.ic = new IndexedContainer();
                 this.setHeight("500px");
+                this.setSelectable(true);
 
                 this.addListener(new ItemListClickListener());
         }
@@ -89,9 +90,6 @@ public class ItemList extends Table {
         }
 
         private class ItemListClickListener implements ItemClickListener {
-
-                public ItemListClickListener() {
-                }
 
                 @Override
                 public void itemClick(ItemClickEvent event) {

@@ -87,6 +87,7 @@ public class UnknownEntityDKP extends Application {
                 hzl.addComponent(itemname);
                 hzl.addComponent(itemslot);
                 hzl.addComponent(itemtype);
+                hzl.setSpacing(true);
                 vertItem.addComponent(hzl);
                 itemList.printList();
                 return vertItem;
@@ -101,6 +102,8 @@ public class UnknownEntityDKP extends Application {
 
         private ComboBox itemSlotFilterBox(final ItemList itemList) throws ReadOnlyException, ConversionException, UnsupportedOperationException {
                 ComboBox itemslot = new ComboBox("Filter itemslot");
+                itemslot.addStyleName("select-button");
+                itemslot.setWidth("180px");
                 itemslot.addItem("<none>");
                 for (Slots slot : Slots.values()) {
                         itemslot.addItem(slot);
@@ -115,6 +118,8 @@ public class UnknownEntityDKP extends Application {
 
         private ComboBox itemTypeFilterBox(final ItemList itemList) throws UnsupportedOperationException, ReadOnlyException, ConversionException {
                 ComboBox itemtype = new ComboBox("Filter itemtype");
+                itemtype.addStyleName("select-button");
+                itemtype.setWidth("180px");
                 itemtype.addItem("<none>");
                 for (Type type : Type.values()) {
                         itemtype.addItem(type);
@@ -156,8 +161,8 @@ public class UnknownEntityDKP extends Application {
         @Override
         public void init() {
                 window = new Window("Unknown Entity DKP");
-                //            window.setTheme("ue");
-                //        window.setTheme("chameleon-ue");
+                  //          window.setTheme("ue");
+                //window.setTheme("chameleon-ue");
                 setMainWindow(window);
 
                 Drawings();

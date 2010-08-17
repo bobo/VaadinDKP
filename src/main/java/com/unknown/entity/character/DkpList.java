@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  *
  * @author bobo
  */
-public class DkpList extends Table {
+public class DkpList extends Table implements CharacterInfoListener {
 
         private CharacterDAO characterDAO;
         IndexedContainer ic;
@@ -53,6 +53,17 @@ public class DkpList extends Table {
 
         public void clear() {
                 this.removeAllItems();
+        }
+
+        @Override
+        public void onCharacterInfoChange() {
+                update();
+        }
+
+        private void update() {
+                ic.removeAllItems();
+                ic.removeAllContainerFilters();
+                printList();
         }
 
         public void printList() {
@@ -90,7 +101,7 @@ public class DkpList extends Table {
                 }
         }
 
-        private  class dkpListClickListener implements ItemClickListener {
+        private class dkpListClickListener implements ItemClickListener {
 
                 public dkpListClickListener() {
                 }
@@ -98,9 +109,9 @@ public class DkpList extends Table {
                 @Override
                 public void itemClick(ItemClickEvent event) {
                         if (event.isCtrlKey()) {
-					User user = (User) event.getItemId();
+                                User user = (User) event.getItemId();
                                 PopUpControl pop = new PopUpControl(DkpList.this.getApplication());
-								pop.showProperCharWindow(user);
+                                pop.showProperCharWindow(user);
                         }
                 }
         }

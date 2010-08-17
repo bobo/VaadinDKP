@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @author bobo
  */
-public class CharacterList extends HorizontalLayout {
+public class CharacterList extends HorizontalLayout implements CharacterInfoListener {
 
         CharacterDAO characterDAO;
 
@@ -70,6 +70,15 @@ public class CharacterList extends HorizontalLayout {
         private boolean isAdmin() {
                 final SiteUser siteUser = (SiteUser) getApplication().getUser();
                 return siteUser != null && siteUser.getLevel() == 1;
+        }
+
+        @Override
+        public void onCharacterInfoChange() {
+                update();
+        }
+
+        public void update() {
+                printList();
         }
 
         private static class ToStringComparator implements Comparator<Role> {

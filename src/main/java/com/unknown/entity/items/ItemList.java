@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author bobo
  */
-public class ItemList extends Table {
+public class ItemList extends Table implements ItemInfoListener{
 
         private ItemDAO itemDAO;
         IndexedContainer ic;
@@ -87,6 +87,17 @@ public class ItemList extends Table {
         public void filterName(Object value) {
                 ic.removeContainerFilters("Name");
                 ic.addContainerFilter("Name", filterString(value), true, false);
+        }
+
+        @Override
+        public void onItemInfoChange() {
+                update();
+        }
+
+        private void update() {
+                ic.removeAllItems();
+                ic.removeAllContainerFilters();
+                printList();
         }
 
         private class ItemListClickListener implements ItemClickListener {

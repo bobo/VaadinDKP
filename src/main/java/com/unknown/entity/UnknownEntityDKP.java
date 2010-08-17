@@ -161,8 +161,6 @@ public class UnknownEntityDKP extends Application {
         @Override
         public void init() {
                 window = new Window("Unknown Entity DKP");
-                  //          window.setTheme("ue");
-                //window.setTheme("chameleon-ue");
                 setMainWindow(window);
 
                 Drawings();
@@ -187,6 +185,9 @@ public class UnknownEntityDKP extends Application {
                 window.addComponent(adminPanel);
                 adminPanel.init();
                 adminPanel.setRaidList(raidList);
+                adminPanel.setItemList(itemList);
+                adminPanel.setCharacterList(charList);
+                adminPanel.setDkpList(dKPList);
 
                 // Character List based on Character Class
                 characterListOnCharacterClass(charList);

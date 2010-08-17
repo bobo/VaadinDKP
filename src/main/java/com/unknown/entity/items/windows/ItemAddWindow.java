@@ -9,6 +9,7 @@ import com.unknown.entity.database.ItemDB;
 import com.unknown.entity.Slots;
 import com.unknown.entity.Type;
 import com.unknown.entity.items.DefaultPrices;
+import com.unknown.entity.items.ItemInfoListener;
 import com.unknown.entity.items.ItemPrices;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -33,6 +34,8 @@ import java.util.logging.Logger;
  * @author alde
  */
 public class ItemAddWindow extends Window {
+
+        private List<ItemInfoListener> listeners = new ArrayList<ItemInfoListener>();
 
         public ItemAddWindow() {
                 this.setCaption("Add Item");
@@ -112,6 +115,16 @@ public class ItemAddWindow extends Window {
                 return itemDao.addItem(name, wowid, wowid_hc, price, price_hc, slot, type, isLegendary);
         }
 
+        public void addItemInfoListener(ItemInfoListener listener) {
+                listeners.add(listener);
+        }
+
+        private void notifyListeners() {
+                for (ItemInfoListener characterListener : listeners) {
+                        characterListener.onItemInfoChange();
+                }
+        }
+
         private static class SlotComboBoxValueChangeListener implements ValueChangeListener {
 
                 private final ComboBox slot;
@@ -181,6 +194,8 @@ public class ItemAddWindow extends Window {
                                 Logger.getLogger(ItemAddWindow.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         addComponent(new Label("Update :" + success));
+                        notifyListeners();
+                        close();
                 }
         }
 

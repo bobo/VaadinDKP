@@ -13,6 +13,7 @@ import com.unknown.entity.items.Items;
 import com.unknown.entity.items.windows.ItemEditWindow;
 import com.unknown.entity.items.windows.ItemInfoWindow;
 import com.unknown.entity.raids.Raid;
+import com.unknown.entity.raids.RaidList;
 import com.unknown.entity.raids.windows.RaidEditWindow;
 import com.unknown.entity.raids.windows.RaidInfoWindow;
 import com.vaadin.Application;
@@ -26,6 +27,7 @@ import com.vaadin.ui.Window;
 public class PopUpControl extends Window {
 
         private ItemList itemList;
+        private RaidList raidList;
         private final Application app;
 
         public PopUpControl(Application app) {
@@ -98,6 +100,11 @@ public class PopUpControl extends Window {
         private void showRaidEditWindow(Raid raid) throws NullPointerException, IllegalArgumentException {
                 RaidEditWindow info = new RaidEditWindow(raid);
                 info.printInfo();
+                info.addRaidInfoListener(raidList);
                 app.getMainWindow().addWindow(info);
+        }
+
+        public void setRaidList(RaidList raidList) {
+                this.raidList = raidList;
         }
 }

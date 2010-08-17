@@ -212,7 +212,7 @@ public class UnknownEntityDKP extends Application {
                 window.addComponent(hzChar);
         }
 
-        private static class DkpFilterChangeListener implements ValueChangeListener {
+        private class DkpFilterChangeListener implements ValueChangeListener {
 
                 private final DkpList dkpList;
                 private final ComboBox filterDkp;

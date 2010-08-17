@@ -6,22 +6,22 @@ package com.unknown.entity.raids;
 
 import com.unknown.entity.PopUpControl;
 import com.unknown.entity.dao.*;
-import com.unknown.entity.panel.MyLoginListener;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Table;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author alde
  */
-public class RaidList extends Table  implements RaidInfoListener {
+public class RaidList extends Table implements RaidInfoListener {
+
         private RaidDAO raidDAO;
         IndexedContainer ic;
+        private final RaidList raidList = this;
 
         public RaidList(RaidDAO raidDAO) {
                 this.raidDAO = raidDAO;
@@ -57,7 +57,7 @@ public class RaidList extends Table  implements RaidInfoListener {
         }
 
         public void printList() {
-     //           clear();
+                //           clear();
                 List<Raid> raids = raidDAO.getRaids();
 
                 for (final Raid raid : raids) {
@@ -80,11 +80,11 @@ public class RaidList extends Table  implements RaidInfoListener {
                 }
         }
 
-                @Override
+        @Override
         public void onRaidInfoChanged() {
                 update();
         }
-                
+
         private class RaidListClickListener implements ItemClickListener {
 
                 @Override
@@ -92,6 +92,7 @@ public class RaidList extends Table  implements RaidInfoListener {
                         if (event.isCtrlKey()) {
                                 Raid raid = (Raid) event.getItemId();
                                 PopUpControl pop = new PopUpControl(RaidList.this.getApplication());
+                                pop.setRaidList(raidList);
                                 pop.showProperRaidWindow(raid);
                         }
                 }

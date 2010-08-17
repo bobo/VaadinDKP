@@ -143,6 +143,7 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
                 public void buttonClick(ClickEvent event) {
                         ItemAddWindow addItem = new ItemAddWindow();
                         addItem.printInfo();
+                        addItem.addItemInfoListener(itemList);
                         getMainWindow().addWindow(addItem);
                 }
         }

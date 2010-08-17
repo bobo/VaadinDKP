@@ -120,8 +120,8 @@ public class ItemAddWindow extends Window {
         }
 
         private void notifyListeners() {
-                for (ItemInfoListener characterListener : listeners) {
-                        characterListener.onItemInfoChange();
+                for (ItemInfoListener itemInfoListener : listeners) {
+                        itemInfoListener.onItemInfoChange();
                 }
         }
 

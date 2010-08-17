@@ -24,6 +24,7 @@ public class ItemList extends Table implements ItemInfoListener{
 
         private ItemDAO itemDAO;
         IndexedContainer ic;
+        private final ItemList itemList = this;
 
         public ItemList(ItemDAO itemDAO) {
                 this.itemDAO = itemDAO;
@@ -107,6 +108,7 @@ public class ItemList extends Table implements ItemInfoListener{
                         if (event.isCtrlKey()) {
                                 Items item = (Items) event.getItemId();
                                 PopUpControl pop = new PopUpControl(ItemList.this.getApplication());
+                                pop.setItemList(itemList);
                                 pop.showProperItemWindow(item);
                         }
                 }

@@ -8,6 +8,7 @@ import com.unknown.entity.character.SiteUser;
 import com.unknown.entity.character.User;
 import com.unknown.entity.character.windows.CharacterEditWindow;
 import com.unknown.entity.character.windows.CharacterInfoWindow;
+import com.unknown.entity.items.ItemList;
 import com.unknown.entity.items.Items;
 import com.unknown.entity.items.windows.ItemEditWindow;
 import com.unknown.entity.items.windows.ItemInfoWindow;
@@ -15,6 +16,7 @@ import com.unknown.entity.raids.Raid;
 import com.unknown.entity.raids.windows.RaidEditWindow;
 import com.unknown.entity.raids.windows.RaidInfoWindow;
 import com.vaadin.Application;
+import com.vaadin.terminal.gwt.client.ui.Table;
 import com.vaadin.ui.Window;
 
 /**
@@ -23,12 +25,16 @@ import com.vaadin.ui.Window;
  */
 public class PopUpControl extends Window {
 
+        private ItemList itemList;
         private final Application app;
 
         public PopUpControl(Application app) {
                 this.app = app;
         }
 
+        public void setItemList(ItemList itemList) {
+                this.itemList = itemList;
+        }
         public void showProperCharWindow(User user) throws IllegalArgumentException, NullPointerException {
                 if (isAdmin()) {
                         showCharEditWindow(user);
@@ -71,6 +77,7 @@ public class PopUpControl extends Window {
         private void showItemEditWindow(Items item) throws NullPointerException, IllegalArgumentException {
                 ItemEditWindow info = new ItemEditWindow(item);
                 info.printInfo();
+                info.addItemInfoListener(itemList);
                 app.getMainWindow().addWindow(info);
         }
 

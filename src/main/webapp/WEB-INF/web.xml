@@ -14,6 +14,11 @@
             <param-name>application</param-name>
             <param-value>com.unknown.entity.UnknownEntityDKP</param-value>
         </init-param>
+	    <init-param>
+            <description>Application widgetset</description>
+            <param-name>widgetset</param-name>
+            <param-value>com.unknown.entity.gwt.MyWidgetSet</param-value>
+      </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>Vaadin Application Servlet</servlet-name>

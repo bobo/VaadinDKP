@@ -162,8 +162,6 @@ public class UnknownEntityDKP extends Application {
         @Override
         public void init() {
                 window = new Window("Unknown Entity DKP");
-                  //          window.setTheme("ue");
-                //window.setTheme("chameleon-ue");
                 setMainWindow(window);
 				window.addComponent(new SuperImmediateTextField("hej"));
                 Drawings();
@@ -188,6 +186,9 @@ public class UnknownEntityDKP extends Application {
                 window.addComponent(adminPanel);
                 adminPanel.init();
                 adminPanel.setRaidList(raidList);
+                adminPanel.setItemList(itemList);
+                adminPanel.setCharacterList(charList);
+                adminPanel.setDkpList(dKPList);
 
                 // Character List based on Character Class
                 characterListOnCharacterClass(charList);
@@ -212,7 +213,7 @@ public class UnknownEntityDKP extends Application {
                 window.addComponent(hzChar);
         }
 
-        private static class DkpFilterChangeListener implements ValueChangeListener {
+        private class DkpFilterChangeListener implements ValueChangeListener {
 
                 private final DkpList dkpList;
                 private final ComboBox filterDkp;

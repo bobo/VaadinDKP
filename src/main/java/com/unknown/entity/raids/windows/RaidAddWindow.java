@@ -30,6 +30,7 @@ import java.util.List;
  * @author alde
  */
 public class RaidAddWindow extends Window {
+
         private List<RaidInfoListener> listeners = new ArrayList<RaidInfoListener>();
 
         public RaidAddWindow() {
@@ -100,11 +101,11 @@ public class RaidAddWindow extends Window {
                 return comment;
         }
 
-                public void addRaidInfoListener(RaidInfoListener listener) {
+        public void addRaidInfoListener(RaidInfoListener listener) {
                 listeners.add(listener);
         }
 
-         private void notifyListeners() {
+        private void notifyListeners() {
                 for (RaidInfoListener raidListener : listeners) {
                         raidListener.onRaidInfoChanged();
                 }

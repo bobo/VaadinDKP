@@ -7,6 +7,7 @@ package com.unknown.entity.character.windows;
 import com.unknown.entity.dao.CharacterDAO;
 import com.unknown.entity.database.CharacterDB;
 import com.unknown.entity.Role;
+import com.unknown.entity.character.CharacterInfoListener;
 import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.ui.Button;
@@ -20,7 +21,9 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +32,8 @@ import java.util.logging.Logger;
  * @author alde
  */
 public class CharacterAddWindow extends Window {
+
+        private List<CharacterInfoListener> listeners = new ArrayList<CharacterInfoListener>();
 
         public CharacterAddWindow() {
                 this.setCaption("Add Character");
@@ -109,6 +114,16 @@ public class CharacterAddWindow extends Window {
                 }
         }
 
+        public void addCharacterInfoListener(CharacterInfoListener listener) {
+                listeners.add(listener);
+        }
+
+        private void notifyListeners() {
+                for (CharacterInfoListener characterListener : listeners) {
+                        characterListener.onCharacterInfoChange();
+                }
+        }
+
         private class addBtnClickListener implements ClickListener {
 
                 private final TextField nameField;
@@ -133,6 +148,7 @@ public class CharacterAddWindow extends Window {
                                 Logger.getLogger(CharacterAddWindow.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         addComponent(new Label("Update :" + success));
+                        notifyListeners();
                         close();
                 }
         }

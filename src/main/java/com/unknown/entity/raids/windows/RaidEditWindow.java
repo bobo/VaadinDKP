@@ -6,10 +6,7 @@ package com.unknown.entity.raids.windows;
 
 import com.unknown.entity.dao.RaidDAO;
 import com.unknown.entity.database.RaidDB;
-import com.unknown.entity.raids.Raid;
-import com.unknown.entity.raids.RaidInfoListener;
-import com.unknown.entity.raids.RaidItem;
-import com.unknown.entity.raids.RaidReward;
+import com.unknown.entity.raids.*;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
@@ -236,7 +233,7 @@ public class RaidEditWindow extends Window {
                         final int success;
                         try {
                                 success = updateRaid(raidzoneName, raidcomment, raiddate);
-                                addComponent(new Label("Success: " + success));
+                                notifyListeners();
                         } catch (SQLException ex) {
                                 Logger.getLogger(RaidEditWindow.class.getName()).log(Level.SEVERE, null, ex);
                         }

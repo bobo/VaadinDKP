@@ -8,6 +8,7 @@ import com.unknown.entity.dao.ItemDAO;
 import com.unknown.entity.database.ItemDB;
 import com.unknown.entity.Slots;
 import com.unknown.entity.Type;
+import com.unknown.entity.items.ItemInfoListener;
 import com.unknown.entity.items.ItemLooter;
 import com.unknown.entity.items.Items;
 import com.vaadin.data.Item;
@@ -27,6 +28,11 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -35,6 +41,7 @@ import com.vaadin.ui.Window;
 public class ItemEditWindow extends Window {
 
         private final Items item;
+        private List<ItemInfoListener> listeners = new ArrayList<ItemInfoListener>();
 
         public ItemEditWindow(Items item) {
                 this.item = item;
@@ -61,10 +68,14 @@ public class ItemEditWindow extends Window {
 
                 final CheckBox islegendary = new CheckBox("Legendary", item.isLegendary());
 
-                Button updateButton = new Button("Update");
-
+                Button updateButton = new Button("Update Item");
+                Button deleteButton = new Button("Delete Item");
+                deleteButton.addListener(new DeleteButtonClickListener(item));
                 updateButton.addListener(new UpdateButtonClickListener(name, slot, type, wowIdfield, wowIdfieldhc, price, pricehc, islegendary));
-                addComponent(updateButton);
+                HorizontalLayout hzl = new HorizontalLayout();
+                hzl.addComponent(updateButton);
+                hzl.addComponent(deleteButton);
+                addComponent(hzl);
                 itemLootedByTable();
         }
 
@@ -176,6 +187,11 @@ public class ItemEditWindow extends Window {
                 return itemDao.updateItem(item, newname, newslot, newtype, newwowid, newwowidhc, newprice, newpricehc, legendary);
         }
 
+        private int deleteItem(Items item) throws SQLException {
+                ItemDAO itemDao = new ItemDB();
+                return itemDao.deleteItem(item.getId());
+        }
+
         private Table lootList(Items item) {
                 Table tbl = new Table();
                 itemTableHeaders(tbl);
@@ -200,6 +216,16 @@ public class ItemEditWindow extends Window {
                 tbl.addContainerProperty("Price", Double.class, 0);
                 tbl.addContainerProperty("Raid", String.class, "");
                 tbl.addContainerProperty("Date", String.class, "");
+        }
+
+        public void addItemInfoListener(ItemInfoListener listener) {
+                listeners.add(listener);
+        }
+
+        private void notifyListeners() {
+                for (ItemInfoListener itemInfoListener : listeners) {
+                        itemInfoListener.onItemInfoChange();
+                }
         }
 
         private class UpdateButtonClickListener implements ClickListener {
@@ -237,6 +263,8 @@ public class ItemEditWindow extends Window {
                         final int success = updateItem(newname, newslot, newtype, newwowid, newwowidhc, newprice, newpricehc, legendary);
                         System.out.println("New Price Heroic" + newpricehc);
                         addComponent(new Label("Success: " + success));
+                        notifyListeners();
+                        close();
                 }
         }
 
@@ -255,6 +283,26 @@ public class ItemEditWindow extends Window {
                 public void buttonClick(ClickEvent event) {
                         String url = "http://www.wowhead.com/item=" + item.getWowId();
                         getWindow().open(new ExternalResource(url), "_blank");
+                }
+        }
+
+        private class DeleteButtonClickListener implements ClickListener {
+
+                private final Items item;
+
+                private DeleteButtonClickListener(Items item) {
+                        this.item = item;
+                }
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        try {
+                                deleteItem(item);
+                                notifyListeners();
+                                close();
+                        } catch (SQLException ex) {
+                                Logger.getLogger(ItemEditWindow.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                 }
         }
 }

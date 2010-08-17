@@ -7,8 +7,11 @@ package com.unknown.entity.panel;
 import com.unknown.entity.character.windows.AddNewUserWindow;
 import com.unknown.entity.items.windows.EditDefaultPricesWindow;
 import com.unknown.entity.LoginWindow;
+import com.unknown.entity.character.CharacterList;
+import com.unknown.entity.character.DkpList;
 import com.unknown.entity.character.windows.CharacterAddWindow;
 import com.unknown.entity.character.SiteUser;
+import com.unknown.entity.items.ItemList;
 import com.unknown.entity.items.windows.ItemAddWindow;
 import com.unknown.entity.raids.RaidInfoListener;
 import com.unknown.entity.raids.RaidList;
@@ -43,6 +46,9 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
         private final Button logOutButton = new Button("");
         private final ComboBox themeBox = new ComboBox("Select Theme");
         RaidList raidList = null;
+        CharacterList characterList = null;
+        DkpList dkpList = null;
+        ItemList itemList = null;
 
         public AdminPanel() {
                 setListeners();
@@ -119,12 +125,25 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
                 this.raidList = raidList;
         }
 
+        public void setItemList(ItemList itemList) {
+                this.itemList = itemList;
+        }
+
+        public void setDkpList(DkpList dkpList) {
+                this.dkpList = dkpList;
+        }
+
+        public void setCharacterList(CharacterList characterList) {
+                this.characterList = characterList;
+        }
+
         private class AddItemListener implements ClickListener {
 
                 @Override
                 public void buttonClick(ClickEvent event) {
                         ItemAddWindow addItem = new ItemAddWindow();
                         addItem.printInfo();
+                        addItem.addItemInfoListener(itemList);
                         getMainWindow().addWindow(addItem);
                 }
         }
@@ -144,9 +163,11 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
 
                 @Override
                 public void buttonClick(ClickEvent event) {
-                        CharacterAddWindow addUser = new CharacterAddWindow();
-                        addUser.printInfo();
-                        getMainWindow().addWindow(addUser);
+                        CharacterAddWindow addChar = new CharacterAddWindow();
+                        addChar.printInfo();
+                        addChar.addCharacterInfoListener(characterList);
+                        addChar.addCharacterInfoListener(dkpList);
+                        getMainWindow().addWindow(addChar);
                 }
         }
 

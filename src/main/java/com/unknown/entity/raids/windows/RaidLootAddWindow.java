@@ -10,16 +10,17 @@ import com.unknown.entity.dao.RaidDAO;
 import com.unknown.entity.database.CharacterDB;
 import com.unknown.entity.database.ItemDB;
 import com.unknown.entity.database.RaidDB;
-import com.unknown.entity.character.*;
 import com.unknown.entity.items.*;
 import com.unknown.entity.raids.Raid;
 import com.unknown.entity.raids.RaidChar;
+import com.unknown.entity.raids.RaidInfoListener;
 import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
@@ -43,6 +44,7 @@ public class RaidLootAddWindow extends Window {
         RaidDAO raidDao;
         ItemDAO itemDao;
         CharacterDAO characterDao;
+        private List<RaidInfoListener> listeners = new ArrayList<RaidInfoListener>();
 
         RaidLootAddWindow(Raid raid) {
                 this.raid = raid;
@@ -56,47 +58,37 @@ public class RaidLootAddWindow extends Window {
 
         public void printInfo() throws SQLException {
                 final ComboBox boss = bossListComboBox();
-                addComponent(boss);
                 HashSet<Items> lootlist = getLootList();
                 final ComboBox loots = lootListComboBox(lootlist);
-                addComponent(loots);
                 final CheckBox heroic = new CheckBox("Heroic");
-                addComponent(heroic);
                 final TextField price = new TextField("Price");
-                addComponent(price);
                 final ComboBox name = nameComboList();
+                final Button addButton = new Button("Add");
+                
+                addComponent(boss);
+                addComponent(loots);
+                addComponent(heroic);
+                addComponent(price);
                 addComponent(name);
+                addComponent(addButton);
 
+                setImmediates(price, heroic, loots, boss, name);
+                setListeners(loots, price, heroic, addButton, boss, name);
+
+        }
+
+        private void setListeners(final ComboBox loots, final TextField price, final CheckBox heroic, final Button addButton, final ComboBox boss, final ComboBox name) {
+                loots.addListener(new LootChangeListener(price, loots, heroic));
+                heroic.addListener(new HeroicChangeListener(price, loots, heroic));
+                addButton.addListener(new AddRaidListener(boss, name, loots, heroic, price));
+        }
+
+        private void setImmediates(final TextField price, final CheckBox heroic, final ComboBox loots, final ComboBox boss, final ComboBox name) {
                 price.setImmediate(true);
                 heroic.setImmediate(true);
                 loots.setImmediate(true);
                 boss.setImmediate(true);
                 name.setImmediate(true);
-
-                loots.addListener(new ValueChangeListener() {
-
-                        @Override
-                        public void valueChange(ValueChangeEvent event) {
-                                price.setValue(getItemPrice(loots.getValue().toString(), heroic.booleanValue()));
-                        }
-                });
-                heroic.addListener(new ValueChangeListener() {
-
-                        @Override
-                        public void valueChange(ValueChangeEvent event) {
-                                price.setValue(getItemPrice(loots.getValue().toString(), heroic.booleanValue()));
-                        }
-                });
-
-                Button addButton = new Button("Add");
-                addButton.addListener(new Button.ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                                addRaidLoot(boss.getValue().toString(), name.getValue().toString(), loots.getValue().toString(), Boolean.parseBoolean(heroic.getValue().toString()), Double.parseDouble(price.getValue().toString()));
-                        }
-                });
-                addComponent(addButton);
         }
 
         private void addRaidLoot(String boss, String name, String loot, boolean isheroic, double price) {
@@ -166,5 +158,73 @@ public class RaidLootAddWindow extends Window {
                 HashSet<Items> lootlist = new HashSet<Items>();
                 lootlist.addAll(itemDao.getItems());
                 return lootlist;
+        }
+
+        public void addRaidInfoListener(RaidInfoListener listener) {
+                listeners.add(listener);
+        }
+
+         private void notifyListeners() {
+                for (RaidInfoListener raidListener : listeners) {
+                        raidListener.onRaidInfoChanged();
+                }
+        }
+        private class LootChangeListener implements ValueChangeListener {
+
+                private final TextField price;
+                private final ComboBox loots;
+                private final CheckBox heroic;
+
+                public LootChangeListener(TextField price, ComboBox loots, CheckBox heroic) {
+                        this.price = price;
+                        this.loots = loots;
+                        this.heroic = heroic;
+                }
+
+                @Override
+                public void valueChange(ValueChangeEvent event) {
+                        price.setValue(getItemPrice(loots.getValue().toString(), heroic.booleanValue()));
+                }
+        }
+
+        private class HeroicChangeListener implements ValueChangeListener {
+
+                private final TextField price;
+                private final ComboBox loots;
+                private final CheckBox heroic;
+
+                public HeroicChangeListener(TextField price, ComboBox loots, CheckBox heroic) {
+                        this.price = price;
+                        this.loots = loots;
+                        this.heroic = heroic;
+                }
+
+                @Override
+                public void valueChange(ValueChangeEvent event) {
+                        price.setValue(getItemPrice(loots.getValue().toString(), heroic.booleanValue()));
+                }
+        }
+
+        private class AddRaidListener implements ClickListener {
+
+                private final ComboBox boss;
+                private final ComboBox name;
+                private final ComboBox loots;
+                private final CheckBox heroic;
+                private final TextField price;
+
+                public AddRaidListener(ComboBox boss, ComboBox name, ComboBox loots, CheckBox heroic, TextField price) {
+                        this.boss = boss;
+                        this.name = name;
+                        this.loots = loots;
+                        this.heroic = heroic;
+                        this.price = price;
+                }
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        addRaidLoot(boss.getValue().toString(), name.getValue().toString(), loots.getValue().toString(), Boolean.parseBoolean(heroic.getValue().toString()), Double.parseDouble(price.getValue().toString()));
+                        notifyListeners();
+                }
         }
 }

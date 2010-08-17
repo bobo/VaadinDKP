@@ -6,6 +6,7 @@ package com.unknown.entity.raids.windows;
 
 import com.unknown.entity.dao.RaidDAO;
 import com.unknown.entity.database.RaidDB;
+import com.unknown.entity.raids.RaidInfoListener;
 import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.ui.Button;
@@ -19,6 +20,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +30,7 @@ import java.util.List;
  * @author alde
  */
 public class RaidAddWindow extends Window {
+        private List<RaidInfoListener> listeners = new ArrayList<RaidInfoListener>();
 
         public RaidAddWindow() {
                 this.setCaption("Add Raid");
@@ -97,6 +100,16 @@ public class RaidAddWindow extends Window {
                 return comment;
         }
 
+                public void addRaidInfoListener(RaidInfoListener listener) {
+                listeners.add(listener);
+        }
+
+         private void notifyListeners() {
+                for (RaidInfoListener raidListener : listeners) {
+                        raidListener.onRaidInfoChanged();
+                }
+        }
+
         private ComboBox raidAddWindowZoneComboBox(List<String> zoneList) throws ReadOnlyException, ConversionException, UnsupportedOperationException {
                 final ComboBox zone = new ComboBox("Zone");
                 for (String zones : zoneList) {
@@ -133,6 +146,7 @@ public class RaidAddWindow extends Window {
                         String rdate = datum.getValue().toString();
                         int success = addRaid(rzone, rcomment, rdate);
                         addComponent(new Label("Update :" + success));
+                        notifyListeners();
                 }
         }
 }

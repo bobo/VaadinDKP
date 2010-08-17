@@ -187,6 +187,7 @@ public class UnknownEntityDKP extends Application {
 
                 window.addComponent(adminPanel);
                 adminPanel.init();
+                adminPanel.setRaidList(raidList);
 
                 // Character List based on Character Class
                 characterListOnCharacterClass(charList);
@@ -196,7 +197,6 @@ public class UnknownEntityDKP extends Application {
 
                 // Update Button ---- TO BE REMOVED EVENTUALLY
                 UpdateButton(updateButton);
-//				FileResource f = new FileResource("db.properties", this);
 
         }
 
@@ -281,7 +281,7 @@ public class UnknownEntityDKP extends Application {
                 }
         }
 
-        private static class ItemNameFieldValueChangeListener implements ValueChangeListener {
+        private class ItemNameFieldValueChangeListener implements ValueChangeListener {
 
                 private final ItemList itemList;
                 private final TextField itemNameField;

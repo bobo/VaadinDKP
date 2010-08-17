@@ -218,7 +218,7 @@ public class ItemDB implements ItemDAO {
                         p.setString(1, name);
                         ResultSet rs = p.executeQuery();
                         while (rs.next()) {
-                                                           String temp = rs.getString("type");
+                                String temp = rs.getString("type");
                                 Type tempType;
                                 if (temp.toString().equals("Hunter, Shaman, Warrior")) {
                                         tempType = Type.protector;
@@ -235,7 +235,7 @@ public class ItemDB implements ItemDAO {
                 } catch (SQLException e) {
                         e.printStackTrace();
                 } finally {
-                        if (c!=null) {
+                        if (c != null) {
                                 try {
                                         c.close();
                                 } catch (SQLException ex) {
@@ -249,24 +249,41 @@ public class ItemDB implements ItemDAO {
         @Override
         public void updateDefaultPrice(String slot, double normalprice, double heroicprice) {
                 Connection c = null;
-                int success =0;
-                try
-                {
+                int success = 0;
+                try {
                         c = new DBConnection().getConnection();
                         PreparedStatement p = c.prepareStatement("UPDATE default_prices SET price_normal=? , price_heroic=? WHERE slot=? ");
                         p.setDouble(1, normalprice);
                         p.setDouble(2, heroicprice);
                         p.setString(3, slot);
                         success = p.executeUpdate();
-                        System.out.println("Default prices changed for "+success+" slots");
-                } catch (SQLException e) {e.printStackTrace();
+                        System.out.println("Default prices changed for " + success + " slots");
+                } catch (SQLException e) {
+                        e.printStackTrace();
                 } finally {
-                        if (c!=null)
+                        if (c != null) {
                                 try {
-                                c.close();
-                        } catch (SQLException ex) {
-                                Logger.getLogger(ItemDB.class.getName()).log(Level.SEVERE, null, ex);
+                                        c.close();
+                                } catch (SQLException ex) {
+                                        Logger.getLogger(ItemDB.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                         }
                 }
+        }
+
+        @Override
+        public int deleteItem(int id) throws SQLException {
+                DBConnection c = new DBConnection();
+                int success = 0;
+                PreparedStatement p = c.prepareStatement("DELETE FROM items WHERE id=?");
+                p.setInt(1, id);
+                success += p.executeUpdate();
+                c.closeStatement();
+                p = c.prepareStatement("DELETE FROM loots WHERE item_id=?");
+                p.setInt(1, id);
+                success += p.executeUpdate();
+                c.closeStatement();
+                c.close();
+                return success;
         }
 }

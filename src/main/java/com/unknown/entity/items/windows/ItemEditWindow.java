@@ -28,8 +28,11 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -65,10 +68,14 @@ public class ItemEditWindow extends Window {
 
                 final CheckBox islegendary = new CheckBox("Legendary", item.isLegendary());
 
-                Button updateButton = new Button("Update");
-
+                Button updateButton = new Button("Update Item");
+                Button deleteButton = new Button("Delete Item");
+                deleteButton.addListener(new DeleteButtonClickListener(item));
                 updateButton.addListener(new UpdateButtonClickListener(name, slot, type, wowIdfield, wowIdfieldhc, price, pricehc, islegendary));
-                addComponent(updateButton);
+                HorizontalLayout hzl = new HorizontalLayout();
+                hzl.addComponent(updateButton);
+                hzl.addComponent(deleteButton);
+                addComponent(hzl);
                 itemLootedByTable();
         }
 
@@ -180,6 +187,11 @@ public class ItemEditWindow extends Window {
                 return itemDao.updateItem(item, newname, newslot, newtype, newwowid, newwowidhc, newprice, newpricehc, legendary);
         }
 
+        private int deleteItem(Items item) throws SQLException {
+                ItemDAO itemDao = new ItemDB();
+                return itemDao.deleteItem(item.getId());
+        }
+
         private Table lootList(Items item) {
                 Table tbl = new Table();
                 itemTableHeaders(tbl);
@@ -271,6 +283,26 @@ public class ItemEditWindow extends Window {
                 public void buttonClick(ClickEvent event) {
                         String url = "http://www.wowhead.com/item=" + item.getWowId();
                         getWindow().open(new ExternalResource(url), "_blank");
+                }
+        }
+
+        private class DeleteButtonClickListener implements ClickListener {
+
+                private final Items item;
+
+                private DeleteButtonClickListener(Items item) {
+                        this.item = item;
+                }
+
+                @Override
+                public void buttonClick(ClickEvent event) {
+                        try {
+                                deleteItem(item);
+                                notifyListeners();
+                                close();
+                        } catch (SQLException ex) {
+                                Logger.getLogger(ItemEditWindow.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                 }
         }
 }

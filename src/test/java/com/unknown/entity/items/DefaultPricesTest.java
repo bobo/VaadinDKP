@@ -75,6 +75,11 @@ public class DefaultPricesTest {
                 public void updateDefaultPrice(String slot, double normalprice, double heroicprice) {
                         throw new UnsupportedOperationException("Not supported yet.");
                 }
+
+                @Override
+                public int deleteItem(int id) throws SQLException {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                }
 	}
 
 }

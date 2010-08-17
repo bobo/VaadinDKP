@@ -36,4 +36,6 @@ public interface ItemDAO {
 
         public void updateDefaultPrice(String slot, double normalprice, double heroicprice);
 
+        public int deleteItem(int id) throws SQLException;
+
 }

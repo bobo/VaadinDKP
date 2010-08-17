@@ -7,6 +7,7 @@ package com.unknown.entity.raids.windows;
 import com.unknown.entity.dao.RaidDAO;
 import com.unknown.entity.database.RaidDB;
 import com.unknown.entity.raids.Raid;
+import com.unknown.entity.raids.RaidInfoListener;
 import com.unknown.entity.raids.RaidItem;
 import com.unknown.entity.raids.RaidReward;
 import com.vaadin.data.Item;
@@ -25,6 +26,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +38,7 @@ import java.util.logging.Logger;
 public class RaidEditWindow extends Window {
 
         private final Raid raid;
+           private List<RaidInfoListener> listeners = new ArrayList<RaidInfoListener>();
 
         public RaidEditWindow(Raid raid) {
                 this.raid = raid;
@@ -200,6 +203,16 @@ public class RaidEditWindow extends Window {
                         return rewards;
                 } else {
                         return new Label("No rewards in this raid.");
+                }
+        }
+
+                public void addRaidInfoListener(RaidInfoListener listener) {
+                listeners.add(listener);
+        }
+
+        private void notifyListeners() {
+                for (RaidInfoListener raidListener : listeners) {
+                        raidListener.onRaidInfoChanged();
                 }
         }
 

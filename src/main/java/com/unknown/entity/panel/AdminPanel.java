@@ -10,10 +10,11 @@ import com.unknown.entity.LoginWindow;
 import com.unknown.entity.character.windows.CharacterAddWindow;
 import com.unknown.entity.character.SiteUser;
 import com.unknown.entity.items.windows.ItemAddWindow;
+import com.unknown.entity.raids.RaidInfoListener;
+import com.unknown.entity.raids.RaidList;
 import com.unknown.entity.raids.windows.RaidAddWindow;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.terminal.FileResource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -40,6 +41,8 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
         private final Button editDefaultBtn = new Button("Edit Default prices");
         private final Button addUserBtn = new Button("Add User");
         private final Button logOutButton = new Button("");
+        private final ComboBox themeBox = new ComboBox("Select Theme");
+        RaidList raidList = null;
 
         public AdminPanel() {
                 setListeners();
@@ -67,7 +70,7 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
         public void init() {
                 if (!isAdmin()) {
                         addComponent(loginBtn);
-            //            themeBox();
+                //        themeBox();
                 }
         }
 
@@ -83,11 +86,10 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
                 } else {
                         addComponent(loginBtn);
                 }
-        //        themeBox();
+                // themeBox();
         }
 
         private void themeBox() throws UnsupportedOperationException {
-                ComboBox themeBox = new ComboBox();
                 themeBox.addItem("chameleon-blue");
                 themeBox.addItem("chameleon-green");
                 themeBox.addItem("chameleon-dark");
@@ -95,6 +97,7 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
                 themeBox.setImmediate(true);
                 this.addComponent(themeBox);
                 themeBox.addListener(new ThemeChangeListener(themeBox));
+            //    themeBox.addStyleName(".topright { position: absolute; top: 5px; right: 5px; text-align: right; }");
                 this.setComponentAlignment(themeBox, Alignment.TOP_RIGHT);
         }
 
@@ -110,6 +113,10 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
         @Override
         public void onLogin() {
                 login();
+        }
+
+        public void setRaidList(RaidList raidList) {
+                this.raidList = raidList;
         }
 
         private class AddItemListener implements ClickListener {
@@ -128,6 +135,7 @@ public class AdminPanel extends HorizontalLayout implements MyLoginListener {
                 public void buttonClick(ClickEvent event) {
                         RaidAddWindow addRaid = new RaidAddWindow();
                         addRaid.printInfo();
+                        addRaid.addRaidInfoListener(raidList);
                         getMainWindow().addWindow(addRaid);
                 }
         }

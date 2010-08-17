@@ -6,20 +6,20 @@ package com.unknown.entity.raids;
 
 import com.unknown.entity.PopUpControl;
 import com.unknown.entity.dao.*;
-import com.unknown.entity.character.SiteUser;
+import com.unknown.entity.panel.MyLoginListener;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author alde
  */
-public class RaidList extends Table {
-
+public class RaidList extends Table  implements RaidInfoListener {
         private RaidDAO raidDAO;
         IndexedContainer ic;
 
@@ -37,11 +37,6 @@ public class RaidList extends Table {
                 ic.removeAllItems();
                 ic.removeAllContainerFilters();
                 printList();
-        }
-
-        private boolean isAdmin() {
-                final SiteUser siteUser = (SiteUser) getApplication().getUser();
-                return siteUser != null && siteUser.getLevel() == 1;
         }
 
         private void raidListAddRow(Item addItem, final Raid raid) throws ReadOnlyException, ConversionException {
@@ -62,7 +57,7 @@ public class RaidList extends Table {
         }
 
         public void printList() {
-                clear();
+     //           clear();
                 List<Raid> raids = raidDAO.getRaids();
 
                 for (final Raid raid : raids) {
@@ -85,6 +80,11 @@ public class RaidList extends Table {
                 }
         }
 
+                @Override
+        public void onRaidInfoChanged() {
+                update();
+        }
+                
         private class RaidListClickListener implements ItemClickListener {
 
                 @Override

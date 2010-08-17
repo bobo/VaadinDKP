@@ -186,6 +186,7 @@ public class UnknownEntityDKP extends Application {
 
                 window.addComponent(adminPanel);
                 adminPanel.init();
+                adminPanel.setRaidList(raidList);
 
                 // Character List based on Character Class
                 characterListOnCharacterClass(charList);

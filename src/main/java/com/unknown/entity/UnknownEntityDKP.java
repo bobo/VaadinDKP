@@ -40,6 +40,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.util.Collection;
+import org.vaadin.henrik.superimmediatetextfield.SuperImmediateTextField;
 
 /**
  * The Application's "main" class
@@ -164,7 +165,7 @@ public class UnknownEntityDKP extends Application {
                   //          window.setTheme("ue");
                 //window.setTheme("chameleon-ue");
                 setMainWindow(window);
-
+				window.addComponent(new SuperImmediateTextField("hej"));
                 Drawings();
         }
 

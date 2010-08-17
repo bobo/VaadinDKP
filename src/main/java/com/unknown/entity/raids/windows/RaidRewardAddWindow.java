@@ -67,8 +67,6 @@ public class RaidRewardAddWindow extends Window {
 			} else {
 				showInvalidUsers(invalidchars);
 			}
-		
-
 	}
 	private void showInvalidUsers(List<String> invalidchars) {
 		addComponent(new Label("Invalid characters"));
@@ -87,11 +85,10 @@ public class RaidRewardAddWindow extends Window {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			final ImmutableList<String> attendantlist = splitCharsToArray(attendants.getValue().toString());
-			
+			final ImmutableList<String> attendantlist = splitCharsToArray(attendants.getValue().toString());	
 			addReward(comment.getValue().toString(), Integer.parseInt(shares.getValue().toString()), attendantlist,raid);
 		}
-
+		
 		private ImmutableList<String> splitCharsToArray(String attendants) {
 			String[] parts = attendants.split("\n");
 			return ImmutableList.of(parts);
